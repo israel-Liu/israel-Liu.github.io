@@ -411,7 +411,7 @@ async function uploadAll() {
         category: currentCategory,
         date: new Date().toISOString()
       });
-    } catch (err) { f.status = 'error'; console.error(err); }
+    } catch (err) { f.status = 'error'; console.error(err); showToast('❌ ' + (err.message || err)); }
     done++;
     fill.style.width = (done/total*100)+'%';
     renderPreview();
@@ -433,10 +433,15 @@ async function uploadToGithub(file, filename) {
   const base64 = await fileToBase64(file);
   const res = await fetch(`${GITHUB_API}/repos/${config.repo}/contents/${path}`, {
     method: 'PUT',
-    headers: { 'Authorization': `token ${config.token}`, 'Content-Type': 'application/json' },
+    headers: {
+      'Authorization': `Bearer ${config.token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
     body: JSON.stringify({ message: `upload: ${safeName}`, content: base64, branch: 'main' })
   });
-  if (!res.ok) throw new Error((await res.json()).message);
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.status); }
   return { safeName };
 }
 
@@ -525,7 +530,12 @@ async function publishPost() {
 
     const res = await fetch(`${GITHUB_API}/repos/${config.blogRepo}/contents/${path}`, {
       method: 'PUT',
-      headers: { 'Authorization': `token ${config.token}`, 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${config.token}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
       body: JSON.stringify({
         message: `post: ${result.title}`,
         content: content,
@@ -534,7 +544,7 @@ async function publishPost() {
     });
 
     if (!res.ok) {
-      const errData = await res.json();
+      const errData = await res.json().catch(() => ({}));
       throw new Error(errData.message || `HTTP ${res.status}`);
     }
 
@@ -558,15 +568,20 @@ async function publishPost() {
     localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
 
   } catch (err) {
+    let detail = err.message || String(err);
+    if (detail === 'Failed to fetch') {
+      detail = '网络请求失败。请检查：\n1. 手机网络是否正常\n2. Token 是否正确\n3. 仓库名是否填对（设置页面）';
+    }
     statusEl.innerHTML = `
       <div class="publish-status">
         <div style="font-size:48px;margin-bottom:12px;">❌</div>
         <h3>发布失败</h3>
-        <p style="color:var(--danger);font-size:13px;margin-top:8px;">${err.message}</p>
+        <p style="color:var(--danger);font-size:13px;margin-top:8px;white-space:pre-line;">${detail}</p>
+        <p style="font-size:11px;color:var(--text-light);margin-top:8px;">博客仓库: ${config.blogRepo || '未设置'}<br>分支: master</p>
         <div style="height:16px;"></div>
         <button class="btn btn-warning" onclick="publishPost()">🔄 重试</button>
       </div>`;
-    showToast('❌ 发布失败: ' + err.message);
+    showToast('❌ 发布失败');
   }
 
   btn.disabled = false; btn.textContent = '🚀 发布到博客';
