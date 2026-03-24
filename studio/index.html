@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="博客相册">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100' rx='20'/><text y='68' x='50' text-anchor='middle' font-size='50'>📷</text></svg>">
+<link rel="manifest" href="manifest.json">
+<title>博客相册</title>
+<style>
+:root {
+  --primary: #667eea;
+  --primary-dark: #5a67d8;
+  --bg: #f7f8fc;
+  --card: #ffffff;
+  --text: #2d3748;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --success: #48bb78;
+  --danger: #fc8181;
+  --warning: #ed8936;
+  --radius: 16px;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+  padding-top: var(--safe-top);
+  padding-bottom: calc(70px + var(--safe-bottom));
+  -webkit-tap-highlight-color: transparent;
+}
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px; padding-top: calc(12px + var(--safe-top));
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .subtitle { font-size: 12px; color: var(--text-light); }
+.tab-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding-bottom: var(--safe-bottom);
+}
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0; font-size: 10px; color: var(--text-light);
+  cursor: pointer; border: none; background: none; transition: color 0.2s;
+}
+.tab-item.active { color: var(--primary); }
+.tab-item .icon { font-size: 24px; margin-bottom: 2px; }
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
+.setup-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.setup-card h3 { margin-bottom: 16px; font-size: 16px; }
+.input-group { margin-bottom: 16px; }
+.input-group label { display: block; font-size: 13px; color: var(--text-light); margin-bottom: 6px; }
+.input-group input, .input-group textarea {
+  width: 100%; padding: 12px; border: 1px solid var(--border);
+  border-radius: 10px; font-size: 16px; outline: none; transition: border-color 0.2s;
+  font-family: inherit;
+}
+.input-group input:focus, .input-group textarea:focus { border-color: var(--primary); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 24px; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; width: 100%;
+}
+.btn:disabled { opacity: 0.5; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:active { background: var(--primary-dark); transform: scale(0.98); }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-success { background: var(--success); color: white; }
+.btn-warning { background: var(--warning); color: white; }
+.upload-zone {
+  background: var(--card); border: 2px dashed var(--border);
+  border-radius: var(--radius); padding: 40px 20px; text-align: center;
+  margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s;
+}
+.upload-zone:active { border-color: var(--primary); }
+.upload-zone .icon { font-size: 48px; margin-bottom: 12px; }
+.upload-zone p { color: var(--text-light); font-size: 14px; }
+.category-selector {
+  display: flex; gap: 8px; margin-bottom: 16px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.category-chip {
+  flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--card);
+  font-size: 14px; cursor: pointer; transition: all 0.2s;
+}
+.category-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+.preview-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  margin-bottom: 16px; border-radius: var(--radius); overflow: hidden;
+}
+.preview-item { position: relative; aspect-ratio: 1; overflow: hidden; }
+.preview-item img { width: 100%; height: 100%; object-fit: cover; }
+.preview-item .remove {
+  position: absolute; top: 4px; right: 4px; width: 24px; height: 24px;
+  background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%;
+  font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.preview-item .status {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 4px;
+  text-align: center; font-size: 11px; color: white; font-weight: 600;
+}
+.preview-item .status.uploading { background: rgba(102,126,234,0.8); }
+.preview-item .status.done { background: rgba(72,187,120,0.8); }
+.preview-item .status.error { background: rgba(252,129,129,0.8); }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 16px; overflow: hidden; display: none; }
+.progress-bar.active { display: block; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.3s; width: 0%; }
+.uploaded-list { background: var(--card); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.img-group-header {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  background: var(--bg); user-select: none;
+  font-size: 13px; font-weight: 600; color: var(--text-light);
+  border-bottom: 1px solid var(--border);
+}
+.img-group-header .ig-left { display: flex; align-items: center; gap: 8px; flex: 1; cursor: pointer; }
+.img-group-header .ig-left:active { opacity: 0.6; }
+.img-group-header .ig-arrow { transition: transform 0.2s; font-size: 12px; }
+.img-group-header.collapsed .ig-arrow { transform: rotate(-90deg); }
+.img-group-header .ig-info { font-size: 11px; font-weight: 400; }
+.img-group-header .ig-sel-btn {
+  padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 500;
+  border: 1px solid var(--primary); color: var(--primary); background: white;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+}
+.img-group-header .ig-sel-btn:active { background: rgba(102,126,234,0.1); }
+.img-group-header .ig-sel-btn.active {
+  background: var(--primary); color: white; border-color: var(--primary);
+}
+.img-group-body { padding: 8px; }
+.img-group-body.collapsed { display: none; }
+.img-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
+.img-thumb {
+  position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
+  cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s;
+}
+.img-thumb.selected { border-color: var(--primary); }
+.img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-thumb .it-check {
+  position: absolute; top: 4px; right: 4px; width: 20px; height: 20px;
+  border-radius: 50%; border: 2px solid rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.3); display: flex; align-items: center;
+  justify-content: center; font-size: 11px; color: white;
+}
+.img-thumb.selected .it-check {
+  background: var(--primary); border-color: var(--primary);
+}
+.blog-form { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.output-area {
+  background: #1a202c; color: #68d391; border-radius: var(--radius); padding: 16px;
+  font-family: "SF Mono", monospace; font-size: 13px; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-all;
+  max-height: 250px; overflow-y: auto; margin-bottom: 12px; -webkit-overflow-scrolling: touch;
+}
+.toast {
+  position: fixed; top: calc(60px + var(--safe-top)); left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(0,0,0,0.8); color: white; padding: 10px 20px;
+  border-radius: 10px; font-size: 14px; z-index: 200;
+  opacity: 0; transition: all 0.3s; pointer-events: none; max-width: 90%; text-align: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.search-box {
+  position: relative; margin-bottom: 12px;
+}
+.search-box input {
+  width: 100%; padding: 10px 14px 10px 36px; border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 14px; background: var(--card);
+  color: var(--text); outline: none; box-sizing: border-box;
+}
+.search-box input:focus { border-color: var(--primary); }
+.search-box .s-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; color: var(--text-light); pointer-events: none;
+}
+.search-box .s-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; font-size: 16px; color: var(--text-light);
+  cursor: pointer; padding: 4px; display: none;
+}
+.article-item {
+  display: flex; align-items: center; padding: 14px; gap: 12px;
+  border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s;
+}
+.article-item:active { background: var(--bg); }
+.article-item:last-child { border-bottom: none; }
+.article-item .a-icon { font-size: 28px; flex-shrink: 0; }
+.article-item .a-info { flex: 1; min-width: 0; }
+.article-item .a-title { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.article-item .a-meta { font-size: 11px; color: var(--text-light); margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.article-item .a-arrow { color: var(--text-light); font-size: 16px; flex-shrink: 0; }
+.a-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 8px;
+  font-size: 10px; background: rgba(102,126,234,0.12); color: var(--primary);
+}
+.a-date { white-space: nowrap; }
+.month-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; background: var(--bg);
+  font-size: 13px; font-weight: 600; color: var(--text-light);
+  position: sticky; top: 0; z-index: 1; cursor: pointer; user-select: none;
+}
+.month-header:active { background: var(--border); }
+.month-header .m-icon { font-size: 15px; transition: transform 0.2s; }
+.month-header.collapsed .m-icon { transform: rotate(-90deg); }
+.month-header .m-count { margin-left: auto; font-weight: 400; font-size: 11px; }
+.month-group.collapsed .article-item { display: none; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+  border-radius: 20px; font-size: 12px; font-weight: 500;
+  height: 32px; line-height: 1;
+}
+.status-badge.connected { background: #c6f6d5; color: #276749; }
+.status-badge.disconnected { background: #fed7d7; color: #9b2c2c; }
+.publish-status {
+  background: var(--card); border-radius: var(--radius); padding: 24px;
+  text-align: center; margin-top: 16px;
+}
+.publish-status .spinner {
+  display: inline-block; width: 40px; height: 40px;
+  border: 4px solid var(--border); border-top-color: var(--primary);
+  border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-group { display: flex; gap: 8px; margin-top: 12px; }
+.btn-group .btn { flex: 1; }
+.insert-btn {
+  padding: 8px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card); font-size: 13px; cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.insert-btn:active { background: var(--bg); transform: scale(0.96); }
+.dialog-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: var(--safe-bottom);
+}
+.dialog-box {
+  background: var(--card); border-radius: 20px 20px 0 0;
+  padding: 24px; width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.platform-tabs { display: flex; gap: 8px; }
+.platform-tab {
+  flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card); font-size: 13px; cursor: pointer; text-align: center;
+  transition: all 0.2s;
+}
+.platform-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+.video-hint { font-size: 12px; color: var(--text-light); margin-bottom: 12px; }
+.video-preview {
+  background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 16/9;
+}
+.video-preview iframe { width: 100%; height: 100%; border: none; }
+.tpl-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;
+}
+.tpl-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 4px; border: 2px solid var(--border); border-radius: 12px;
+  background: var(--card); cursor: pointer; transition: all 0.2s; font-size: 12px;
+  text-align: center; color: var(--text);
+}
+.tpl-card:active, .tpl-card.active { border-color: var(--primary); background: rgba(102,126,234,0.06); }
+.tpl-card .tpl-icon { font-size: 24px; }
+.tpl-card .tpl-name { font-weight: 500; line-height: 1.3; }
+.ai-bar {
+  display: flex; gap: 8px; margin-bottom: 16px; align-items: stretch;
+}
+.ai-bar .ai-input {
+  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13px; background: var(--card); color: var(--text); outline: none;
+}
+.ai-bar .ai-input:focus { border-color: var(--primary); }
+.ai-bar .ai-btn {
+  padding: 10px 16px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.ai-bar .ai-btn:disabled { opacity: 0.5; }
+.ai-bar .ai-btn:active { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <h1>📷 博客相册</h1>
+      <div class="subtitle">上传照片 · 发布文章 · 全在手机上</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="/" style="font-size:18px;text-decoration:none;color:var(--primary);display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(102,126,234,0.1);" title="返回主页">🏠</a>
+      <span id="statusBadge" class="status-badge disconnected">未配置</span>
+    </div>
+  </div>
+</div>
+
+<div id="pageSetup" class="page">
+  <div class="setup-card">
+    <h3>📡 当前工作平台</h3>
+    <div class="platform-tabs" style="margin-bottom:8px;">
+      <button class="platform-tab" id="activeBtnGithub" onclick="setActivePlatform('github')">🐙 GitHub</button>
+      <button class="platform-tab" id="activeBtnCodeup" onclick="setActivePlatform('codeup')">☁️ Codeup</button>
+    </div>
+    <p style="font-size:12px;color:var(--text-light);">上传和发布将使用选中平台的配置</p>
+  </div>
+
+  <div class="setup-card">
+    <div class="platform-tabs" style="margin-bottom:16px;">
+      <button class="platform-tab active" id="cfgTabGithub" onclick="showConfigTab('github')">🐙 GitHub 配置</button>
+      <button class="platform-tab" id="cfgTabCodeup" onclick="showConfigTab('codeup')">☁️ Codeup 配置</button>
+    </div>
+
+    <div id="configGithub">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">通过 GitHub API 上传图片和发布文章。</p>
+      <div class="input-group"><label>GitHub Token</label><input type="password" id="inputGhToken" placeholder="ghp_xxxxxxxxxxxx"></div>
+      <div class="input-group"><label>图床仓库</label><input type="text" id="inputGhRepo" value="israel-Liu/blog-images"></div>
+      <div class="input-group"><label>博客源码仓库</label><input type="text" id="inputGhBlogRepo" value="israel-Liu/theForger"></div>
+      <div class="input-group"><label>CDN 域名前缀</label><input type="text" id="inputGhCdn" value="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main"></div>
+      <button class="btn btn-primary" onclick="savePlatformConfig('github')">💾 保存 GitHub 配置</button>
+    </div>
+
+    <div id="configCodeup" style="display:none;">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">通过 Codeup API 上传图片和发布文章。</p>
+      <div class="input-group"><label>Codeup Token</label><input type="password" id="inputCuToken" placeholder="pt-xxxxxxxxxxxx"></div>
+      <div class="input-group"><label>图床仓库路径</label><input type="text" id="inputCuRepo" placeholder="组织ID/项目组/仓库名"></div>
+      <div class="input-group"><label>博客仓库路径</label><input type="text" id="inputCuBlogRepo" value="69c25a5b43d4694d6a528ca9/blog/zybb"></div>
+      <div class="input-group"><label>图片URL前缀</label><input type="text" id="inputCuCdn" value="/images"></div>
+      <p style="font-size:11px;color:var(--text-light);margin-top:-10px;margin-bottom:12px;">默认使用相对路径（构建时图片自动打包进博客）。如有 OSS 可替换为完整 URL。</p>
+      <button class="btn btn-primary" onclick="savePlatformConfig('codeup')">💾 保存 Codeup 配置</button>
+    </div>
+  </div>
+
+  <div class="setup-card">
+    <h3 style="margin-bottom:12px;">✨ AI 写作配置</h3>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:16px;">配置大模型 API，让 AI 帮你写文章。支持通义千问、DeepSeek、OpenAI 等兼容接口。</p>
+    <div class="input-group">
+      <label>API 地址</label>
+      <input type="text" id="inputAiEndpoint" placeholder="例如：https://dashscope.aliyuncs.com/compatible-mode/v1">
+    </div>
+    <div class="input-group">
+      <label>API Key</label>
+      <input type="password" id="inputAiKey" placeholder="sk-xxxxxxxxxxxx">
+    </div>
+    <div class="input-group">
+      <label>模型名称</label>
+      <input type="text" id="inputAiModel" placeholder="例如：qwen-plus">
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:-8px;margin-bottom:12px;">
+      推荐：通义千问 qwen-plus（阿里云）、deepseek-chat（DeepSeek）
+    </p>
+    <button class="btn btn-primary" onclick="saveAiConfig()">💾 保存 AI 配置</button>
+  </div>
+
+  <div class="setup-card">
+    <h3 style="margin-bottom:12px;">🖼️ 博客外观</h3>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:16px;">设置博客主页和文章的默认背景图。粘贴图片 URL（支持已上传的图床链接）。</p>
+    <div class="input-group">
+      <label>主页背景图</label>
+      <input type="text" id="inputHomeBg" placeholder="https://cdn.jsdelivr.net/gh/...">
+    </div>
+    <div class="input-group">
+      <label>默认文章封面图</label>
+      <input type="text" id="inputDefaultCover" placeholder="留空则使用主题默认">
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:-8px;margin-bottom:12px;">
+      提示：修改后需重新构建部署才能在博客上生效。保存后会自动更新 _config.butterfly.yml 中的对应字段。
+    </p>
+    <button class="btn btn-primary" onclick="saveBlogAppearance()">💾 保存外观配置</button>
+  </div>
+</div>
+
+<div id="pageUpload" class="page">
+  <div class="category-selector" id="categorySelector">
+    <div class="category-chip active" data-cat="life">🏠 生活</div>
+    <div class="category-chip" data-cat="travel">✈️ 旅行</div>
+    <div class="category-chip" data-cat="food">🍜 美食</div>
+    <div class="category-chip" data-cat="daily">📱 日常</div>
+    <div class="category-chip" data-cat="tech">💻 技术</div>
+  </div>
+  <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+    <div class="icon">📸</div>
+    <p>点击选择照片</p>
+    <p style="font-size:12px;margin-top:4px;">支持多选</p>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" multiple hidden>
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="preview-grid" id="previewGrid"></div>
+  <div id="uploadActions" style="display:none;">
+    <button class="btn btn-primary" id="btnUpload" onclick="uploadAll()">⬆️ 上传全部</button>
+    <div style="height:8px;"></div>
+    <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+  </div>
+  <div id="errorLog" style="display:none;margin-bottom:16px;">
+    <div class="setup-card" style="padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="font-size:14px;color:var(--danger);">📋 错误日志</h3>
+        <button style="background:none;border:none;font-size:12px;color:var(--text-light);cursor:pointer;" onclick="document.getElementById('errorLogBody').textContent='';document.getElementById('errorLog').style.display='none';">清空</button>
+      </div>
+      <pre id="errorLogBody" style="font-size:11px;color:var(--text);background:var(--bg);padding:10px;border-radius:8px;max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;"></pre>
+    </div>
+  </div>
+  <div id="uploadResult" style="display:none;margin-top:16px;">
+    <div class="setup-card" style="text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">✅</div>
+      <h3 id="resultText">上传完成！</h3>
+      <p style="color:var(--text-light);font-size:13px;margin-top:8px;">可在「写文章」中使用这些图片</p>
+      <div style="height:16px;"></div>
+      <button class="btn btn-primary" onclick="switchTab('blog')">✍️ 去写文章</button>
+    </div>
+  </div>
+</div>
+
+<div id="pageBlog" class="page">
+  <div class="blog-form">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 id="blogFormTitle">✍️ 写文章</h3>
+      <button class="insert-btn" id="btnCancelEdit" style="display:none;color:#e53e3e;" onclick="cancelEdit()">✕ 取消编辑</button>
+    </div>
+
+    <div id="templateSection">
+      <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block;">选择模板</label>
+      <div class="tpl-grid">
+        <div class="tpl-card" onclick="applyTemplate('baby')"><div class="tpl-icon">👶</div><div class="tpl-name">宝宝日常</div></div>
+        <div class="tpl-card" onclick="applyTemplate('outing')"><div class="tpl-icon">🌸</div><div class="tpl-name">出行游玩</div></div>
+        <div class="tpl-card" onclick="applyTemplate('food')"><div class="tpl-icon">🍜</div><div class="tpl-name">美食记录</div></div>
+        <div class="tpl-card" onclick="applyTemplate('pet')"><div class="tpl-icon">🐾</div><div class="tpl-name">萌宠动物</div></div>
+        <div class="tpl-card" onclick="applyTemplate('scenery')"><div class="tpl-icon">🌅</div><div class="tpl-name">风景随拍</div></div>
+        <div class="tpl-card" onclick="applyTemplate('free')"><div class="tpl-icon">📝</div><div class="tpl-name">自由创作</div></div>
+      </div>
+
+      <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block;">✨ AI 智能写文章</label>
+      <div class="ai-bar">
+        <input type="text" class="ai-input" id="aiPrompt" placeholder="简单描述：宝宝今天学会走路了...">
+        <button class="ai-btn" id="btnAiGen" onclick="aiGenerate()">✨ AI写</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-light);margin:-8px 0 16px;">AI 会根据你的描述和选中的图片，自动生成标题、标签和正文</p>
+    </div>
+
+    <div class="input-group">
+      <label>文章标题</label>
+      <input type="text" id="blogTitle" placeholder="例如：周末郊游">
+    </div>
+    <div class="input-group">
+      <label>标签（逗号分隔）</label>
+      <input type="text" id="blogTags" placeholder="例如：旅行, 春天">
+    </div>
+    <div class="input-group">
+      <label>分类</label>
+      <input type="text" id="blogCategory" value="生活">
+    </div>
+    <div class="input-group">
+      <label>简介</label>
+      <input type="text" id="blogDesc" placeholder="一句话描述">
+    </div>
+    <div class="input-group">
+      <label>封面图（可选）</label>
+      <input type="text" id="blogCover" placeholder="留空则自动使用第一张选中图片">
+      <p style="font-size:11px;color:var(--text-light);margin-top:4px;">粘贴图片 URL，或留空使用默认逻辑</p>
+    </div>
+    <div class="input-group">
+      <label>正文（可选，支持 Markdown）</label>
+      <textarea id="blogBody" rows="6" placeholder="写点什么..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+        <button class="insert-btn" id="btnInsertImg" onclick="triggerInlineUpload()">📷 插入图片</button>
+        <button class="insert-btn" onclick="showVideoDialog()">🎬 插入视频</button>
+        <button class="insert-btn" onclick="insertDivider()">➖ 分隔线</button>
+        <button class="insert-btn" onclick="insertQuote()">💬 引用</button>
+      </div>
+      <div id="inlineUploadStatus" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(102,126,234,0.08);font-size:12px;color:var(--primary);"></div>
+    </div>
+  </div>
+
+  <div id="videoDialog" class="dialog-overlay" style="display:none;">
+    <div class="dialog-box">
+      <h3 style="margin-bottom:12px;">🎬 插入视频</h3>
+      <div class="platform-tabs">
+        <button class="platform-tab active" data-platform="bilibili" onclick="selectPlatform(this)">📺 B站</button>
+        <button class="platform-tab" data-platform="youtube" onclick="selectPlatform(this)">▶️ YouTube</button>
+        <button class="platform-tab" data-platform="custom" onclick="selectPlatform(this)">🔗 其他</button>
+      </div>
+      <div class="input-group" style="margin-top:12px;">
+        <label id="videoUrlLabel">粘贴 B站 视频链接或 BV号</label>
+        <input type="text" id="videoUrlInput" placeholder="例如：BV1xx411c7mD 或完整链接">
+      </div>
+      <p id="videoHint" class="video-hint">支持格式：BV号、b23.tv短链、bilibili.com 完整链接</p>
+      <div id="videoPreviewBox" style="display:none;margin-bottom:12px;">
+        <label style="font-size:13px;color:var(--text-light);margin-bottom:6px;display:block;">预览</label>
+        <div id="videoPreview" class="video-preview"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" onclick="closeVideoDialog()" style="flex:1;">取消</button>
+        <button class="btn btn-primary" onclick="insertVideo()" style="flex:1;">插入</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px;">
+    <h3 style="font-size:15px;">选择图片（点击勾选）</h3>
+    <span id="selectedCount" style="font-size:12px;color:var(--primary);font-weight:500;"></span>
+  </div>
+  <div class="uploaded-list" id="uploadedList">
+    <div class="empty-state"><div class="icon">📭</div><p>还没有上传过图片</p></div>
+  </div>
+
+  <button class="btn btn-primary" id="btnPublish" onclick="editingArticle ? saveEdit() : publishPost()" style="margin-bottom:12px;">
+    🚀 发布到博客
+  </button>
+
+  <div id="previewSection" style="display:none;">
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:8px;">预览生成的 Markdown：</p>
+    <div class="output-area" id="markdownOutput"></div>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="copyMarkdown()">📋 复制</button>
+    </div>
+  </div>
+
+  <div id="publishStatus" style="display:none;"></div>
+</div>
+
+<div id="pageArticles" class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <h3 style="font-size:16px;">📋 文章管理</h3>
+    <div style="display:flex;gap:6px;">
+      <span id="articleCount" style="font-size:11px;color:var(--text-light);align-self:center;"></span>
+      <button class="insert-btn" onclick="loadArticles()" id="btnRefreshArticles">🔄 刷新</button>
+    </div>
+  </div>
+
+  <div id="articleFilterSection">
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">📅 按日期筛选</p>
+    <div class="category-selector" id="dateFilter" style="margin-bottom:12px;"></div>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">🏷️ 按标签筛选</p>
+    <div class="category-selector" id="tagFilter" style="margin-bottom:12px;"></div>
+    <div class="search-box">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="articleSearch" placeholder="输入关键词搜索标题..." oninput="filterArticles()">
+      <button class="s-clear" id="searchClear" onclick="clearSearch()">✕</button>
+    </div>
+  </div>
+
+  <div class="uploaded-list" id="articleList" style="max-height:calc(100vh - 340px);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div class="empty-state"><div class="icon">📋</div><p>选择日期或标签，或输入关键词搜索</p><p style="font-size:12px;margin-top:4px;color:var(--text-light);">也可点击右上角「刷新」加载全部</p></div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-item" onclick="switchTab('upload')"><span class="icon">📤</span>上传</button>
+  <button class="tab-item" onclick="switchTab('blog')"><span class="icon">✍️</span>写文章</button>
+  <button class="tab-item" onclick="switchTab('articles')"><span class="icon">📋</span>文章</button>
+  <button class="tab-item" onclick="switchTab('setup')"><span class="icon">⚙️</span>设置</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GITHUB_API = 'https://api.github.com';
+const CODEUP_API = 'https://codeup.aliyun.com/oapi/v1/codeup/organizations/repositories';
+const CODEUP_PROXY = '/.netlify/functions/codeup-proxy';
+
+function codeupFetch(apiPath, options = {}) {
+  const sep = apiPath.indexOf('?');
+  let proxyUrl;
+  if (sep >= 0) {
+    proxyUrl = `${CODEUP_PROXY}?path=${encodeURIComponent(apiPath.slice(0, sep))}&${apiPath.slice(sep + 1)}`;
+  } else {
+    proxyUrl = `${CODEUP_PROXY}?path=${encodeURIComponent(apiPath)}`;
+  }
+  return fetch(proxyUrl, options);
+}
+
+let config = {};
+let selectedFiles = [];
+let uploadedImages = [];
+let currentCategory = 'life';
+let articlesLoaded = false;
+let editingArticle = null;
+let allArticles = [];
+
+function init() {
+  config = JSON.parse(localStorage.getItem('blogUploader') || '{}');
+  if (!config.activePlatform) {
+    if (config.token) {
+      config = { activePlatform: 'github', github: { token: config.token, repo: config.repo, blogRepo: config.blogRepo, cdn: config.cdn }, codeup: {} };
+    } else {
+      config = { activePlatform: 'github', github: {}, codeup: {} };
+    }
+    localStorage.setItem('blogUploader', JSON.stringify(config));
+  }
+  uploadedImages = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
+
+  const gh = config.github || {};
+  document.getElementById('inputGhToken').value = gh.token || '';
+  document.getElementById('inputGhRepo').value = gh.repo || 'israel-Liu/blog-images';
+  document.getElementById('inputGhBlogRepo').value = gh.blogRepo || 'israel-Liu/theForger';
+  document.getElementById('inputGhCdn').value = gh.cdn || 'https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main';
+
+  const cu = config.codeup || {};
+  document.getElementById('inputCuToken').value = cu.token || '';
+  document.getElementById('inputCuRepo').value = cu.imageRepo || '';
+  document.getElementById('inputCuBlogRepo').value = cu.blogRepo || '69c25a5b43d4694d6a528ca9/blog/zybb';
+  document.getElementById('inputCuCdn').value = cu.cdn || '/images';
+
+  const ai = config.ai || {};
+  document.getElementById('inputAiEndpoint').value = ai.endpoint || 'https://ark.cn-beijing.volces.com/api/v3';
+  document.getElementById('inputAiKey').value = ai.key || 'ca1ffb31-c4d4-4e85-9781-ecbf0e98c675';
+  document.getElementById('inputAiModel').value = ai.model || 'doubao-1-5-pro-32k-250115';
+
+  const appearance = config.appearance || {};
+  document.getElementById('inputHomeBg').value = appearance.homeBg || '';
+  document.getElementById('inputDefaultCover').value = appearance.defaultCover || '';
+
+  const host = window.location.hostname;
+  const detectedPlatform = host.includes('github.io') ? 'github'
+    : (host.includes('netlify') || host.includes('zoomdev') || host.includes('aliyun')) ? 'codeup'
+    : null;
+  if (detectedPlatform && detectedPlatform !== config.activePlatform) {
+    config.activePlatform = detectedPlatform;
+    localStorage.setItem('blogUploader', JSON.stringify(config));
+  }
+
+  setActivePlatform(config.activePlatform, true);
+  const pc = getPC();
+  const savedTab = localStorage.getItem('activeTab');
+  if (!pc.token) { switchTab('setup'); }
+  else { updateStatus(true); switchTab(savedTab || 'upload'); }
+
+  document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+  document.querySelectorAll('.category-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentCategory = chip.dataset.cat;
+    });
+  });
+  renderUploadedList();
+}
+
+function getPC() {
+  if (config.activePlatform === 'codeup') return config.codeup || {};
+  return config.github || {};
+}
+
+function setActivePlatform(p, skipSave) {
+  config.activePlatform = p;
+  document.getElementById('activeBtnGithub').classList.toggle('active', p === 'github');
+  document.getElementById('activeBtnCodeup').classList.toggle('active', p === 'codeup');
+  updateStatus(!!getPC().token);
+  if (!skipSave) { localStorage.setItem('blogUploader', JSON.stringify(config)); showToast('已切换到 ' + (p === 'github' ? 'GitHub' : 'Codeup')); }
+}
+
+function showConfigTab(tab) {
+  document.getElementById('cfgTabGithub').classList.toggle('active', tab === 'github');
+  document.getElementById('cfgTabCodeup').classList.toggle('active', tab === 'codeup');
+  document.getElementById('configGithub').style.display = tab === 'github' ? 'block' : 'none';
+  document.getElementById('configCodeup').style.display = tab === 'codeup' ? 'block' : 'none';
+}
+
+function savePlatformConfig(platform) {
+  if (platform === 'github') {
+    const token = document.getElementById('inputGhToken').value.trim();
+    if (!token) { showToast('请输入 GitHub Token'); return; }
+    config.github = { token, repo: document.getElementById('inputGhRepo').value.trim(), blogRepo: document.getElementById('inputGhBlogRepo').value.trim(), cdn: document.getElementById('inputGhCdn').value.trim() };
+  } else {
+    const token = document.getElementById('inputCuToken').value.trim();
+    if (!token) { showToast('请输入 Codeup Token'); return; }
+    config.codeup = { token, imageRepo: document.getElementById('inputCuRepo').value.trim(), blogRepo: document.getElementById('inputCuBlogRepo').value.trim(), cdn: document.getElementById('inputCuCdn').value.trim() };
+  }
+  localStorage.setItem('blogUploader', JSON.stringify(config));
+  updateStatus(!!getPC().token);
+  showToast('✅ ' + (platform === 'github' ? 'GitHub' : 'Codeup') + ' 配置已保存');
+  if (getPC().token) switchTab('upload');
+}
+
+function updateStatus(ok) {
+  const b = document.getElementById('statusBadge');
+  b.className = 'status-badge ' + (ok ? 'connected' : 'disconnected');
+  b.textContent = ok ? ('✓ ' + (config.activePlatform === 'codeup' ? 'Codeup' : 'GitHub')) : '未配置';
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  const map = { upload: 'pageUpload', blog: 'pageBlog', articles: 'pageArticles', setup: 'pageSetup' };
+  document.getElementById(map[name]).classList.add('active');
+  document.querySelectorAll('.tab-item')[ {upload:0,blog:1,articles:2,setup:3}[name] ].classList.add('active');
+  if (name === 'blog') renderUploadedList();
+  if (name === 'articles') restoreOrLoadArticles();
+  localStorage.setItem('activeTab', name);
+}
+
+function handleFileSelect(e) {
+  Array.from(e.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      selectedFiles.push({ file, name: file.name, dataUrl: ev.target.result, status: 'pending' });
+      renderPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderPreview() {
+  const grid = document.getElementById('previewGrid');
+  const actions = document.getElementById('uploadActions');
+  if (!selectedFiles.length) { grid.innerHTML = ''; actions.style.display = 'none'; return; }
+  document.getElementById('uploadResult').style.display = 'none';
+  actions.style.display = 'block';
+  grid.innerHTML = selectedFiles.map((f, i) => `
+    <div class="preview-item">
+      <img src="${f.dataUrl}">
+      ${f.status === 'pending' ? `<button class="remove" onclick="selectedFiles.splice(${i},1);renderPreview()">✕</button>` : ''}
+      ${f.status === 'uploading' ? '<div class="status uploading">上传中...</div>' : ''}
+      ${f.status === 'done' ? '<div class="status done">✓</div>' : ''}
+      ${f.status === 'error' ? '<div class="status error">✕</div>' : ''}
+    </div>`).join('');
+}
+
+function clearAll() {
+  selectedFiles = [];
+  renderPreview();
+  document.getElementById('uploadResult').style.display = 'none';
+}
+
+async function uploadAll() {
+  if (!getPC().token) { showToast('请先配置'); switchTab('setup'); return; }
+  if (!selectedFiles.length) { showToast('请先选择照片'); return; }
+  const btn = document.getElementById('btnUpload');
+  btn.disabled = true; btn.textContent = '⏳ 上传中...';
+  const bar = document.getElementById('progressBar');
+  const fill = document.getElementById('progressFill');
+  bar.classList.add('active');
+  const batchId = Date.now().toString();
+  let done = 0, success = 0, total = selectedFiles.length;
+  for (const f of selectedFiles) {
+    f.status = 'uploading'; renderPreview();
+    try {
+      const result = await uploadImage(f.file, f.name);
+      f.status = 'done'; success++;
+      uploadedImages.unshift({
+        name: result.safeName,
+        cdnUrl: `${getPC().cdn}/${currentCategory}/${result.safeName}`,
+        category: currentCategory,
+        date: new Date().toISOString(),
+        batch: batchId
+      });
+    } catch (err) { f.status = 'error'; console.error(err); appendErrorLog(`${f.name}: ${err.message || err}`); showToast('❌ ' + (err.message || err)); }
+    done++;
+    fill.style.width = (done/total*100)+'%';
+    renderPreview();
+  }
+  localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+  btn.disabled = false; btn.textContent = '⬆️ 上传全部';
+  bar.classList.remove('active');
+  document.getElementById('resultText').textContent = `上传完成！${success}/${total} 张成功`;
+  document.getElementById('uploadResult').style.display = 'block';
+  if (success > 0) showToast(`✅ ${success} 张照片已上传`);
+  selectedFiles = selectedFiles.filter(f => f.status !== 'done');
+  if (selectedFiles.length) renderPreview();
+}
+
+async function uploadImage(file, filename) {
+  if (config.activePlatform === 'codeup') return uploadToCodeup(file, filename);
+  return uploadToGithub(file, filename);
+}
+
+async function uploadToGithub(file, filename) {
+  const gh = config.github;
+  file = await compressImage(file);
+  const ext = file.type === 'image/jpeg' ? 'jpg' : filename.split('.').pop();
+  const safeName = `${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext}`;
+  const path = `${currentCategory}/${safeName}`;
+  const base64 = await fileToBase64(file);
+  const res = await fetch(`${GITHUB_API}/repos/${gh.repo}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${gh.token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+    body: JSON.stringify({ message: `upload: ${safeName}`, content: base64, branch: 'main' })
+  });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.status); }
+  return { safeName };
+}
+
+async function uploadToCodeup(file, filename) {
+  const cu = config.codeup;
+  file = await compressImage(file);
+  const ext = file.type === 'image/jpeg' ? 'jpg' : filename.split('.').pop();
+  const safeName = `${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext}`;
+  const filePath = `${currentCategory}/${safeName}`;
+  const base64 = await fileToBase64(file);
+  const repoId = encodeURIComponent(cu.imageRepo);
+  const apiPath = `${repoId}/files`;
+  appendErrorLog(`[upload] repo=${cu.imageRepo} path=${filePath} file=${filename} size=${(file.size/1024).toFixed(1)}KB`);
+  const res = await codeupFetch(apiPath, {
+    method: 'POST',
+    headers: { 'x-yunxiao-token': cu.token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ branch: 'main', commitMessage: `upload: ${safeName}`, content: base64, encoding: 'base64', filePath: encodeURIComponent(filePath) })
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    appendErrorLog(`[upload FAIL] HTTP ${res.status}\nURL: ${res.url}\nResponse: ${body}`);
+    throw new Error(`HTTP ${res.status}: ${body.slice(0, 200)}`);
+  }
+  return { safeName };
+}
+
+function compressImage(file, maxLongEdge = 2560, targetMaxBytes = 3 * 1024 * 1024) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) { resolve(file); return; }
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      const longEdge = Math.max(width, height);
+      if (longEdge > maxLongEdge) {
+        const scale = maxLongEdge / longEdge;
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      let quality = 0.92;
+      const tryCompress = () => {
+        canvas.toBlob(blob => {
+          if (!blob) { resolve(file); return; }
+          if (blob.size > targetMaxBytes && quality > 0.6) {
+            quality -= 0.08;
+            tryCompress();
+          } else {
+            const origKB = (file.size / 1024).toFixed(0);
+            const newKB = (blob.size / 1024).toFixed(0);
+            if (blob.size < file.size) {
+              appendErrorLog(`[compress] ${file.name}: ${origKB}KB → ${newKB}KB (${width}x${height} q=${quality.toFixed(2)})`);
+              resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+            } else {
+              resolve(file);
+            }
+          }
+        }, 'image/jpeg', quality);
+      };
+      tryCompress();
+    };
+    img.onerror = () => resolve(file);
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function renderUploadedList() {
+  const list = document.getElementById('uploadedList');
+  const countEl = document.getElementById('selectedCount');
+  if (!uploadedImages.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>还没有上传过图片</p><p style="font-size:12px;margin-top:4px;">去「上传」页面添加照片</p></div>';
+    if (countEl) countEl.textContent = '';
+    return;
+  }
+
+  const selTotal = uploadedImages.filter(img => img.selected).length;
+  if (countEl) countEl.textContent = selTotal ? `已选 ${selTotal} 张` : '';
+
+  const batches = {};
+  uploadedImages.forEach((img, i) => {
+    let key;
+    if (img.batch) {
+      key = 'b_' + img.batch;
+    } else {
+      const d = new Date(img.date);
+      key = 'day_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    if (!batches[key]) batches[key] = { imgs: [], firstDate: img.date };
+    batches[key].imgs.push({ ...img, idx: i });
+  });
+
+  const sortedKeys = Object.keys(batches).sort((a, b) => {
+    return new Date(batches[b].firstDate) - new Date(batches[a].firstDate);
+  });
+
+  let html = '';
+  sortedKeys.forEach((key, gi) => {
+    const group = batches[key];
+    const imgs = group.imgs;
+    const selCount = imgs.filter(img => img.selected).length;
+    const allSel = selCount === imgs.length;
+    const d = new Date(group.firstDate);
+    const today = new Date();
+    const isToday = d.toDateString() === today.toDateString();
+    const yest = new Date(today); yest.setDate(yest.getDate() - 1);
+    const isYest = d.toDateString() === yest.toDateString();
+    const dayLabel = isToday ? '今天' : isYest ? '昨天' : d.toLocaleDateString('zh-CN', {month:'numeric', day:'numeric'});
+    const timeLabel = d.toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
+    const catLabel = imgs[0].category || '';
+    const collapsed = gi > 0 && !selCount;
+
+    html += `<div class="img-group-header${collapsed ? ' collapsed' : ''}">
+      <div class="ig-left" onclick="toggleImgGroup(this.parentElement)">
+        <span class="ig-arrow">▼</span>
+        <span>📷 ${dayLabel} ${timeLabel}${catLabel ? ' · ' + catLabel : ''}</span>
+        <span class="ig-info">${imgs.length} 张</span>
+      </div>
+      <button class="ig-sel-btn${allSel ? ' active' : ''}" onclick="event.stopPropagation();selectBatch('${key}',${allSel ? 'false' : 'true'})">${allSel ? '✓ 已全选' : '全选'}</button>
+    </div>`;
+    html += `<div class="img-group-body${collapsed ? ' collapsed' : ''}">`;
+    html += `<div class="img-grid">`;
+    imgs.forEach(img => {
+      html += `<div class="img-thumb${img.selected ? ' selected' : ''}" onclick="toggleCheck(${img.idx})">
+        <img src="${img.cdnUrl}" loading="lazy">
+        <div class="it-check">${img.selected ? '✓' : ''}</div>
+      </div>`;
+    });
+    html += `</div>`;
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+}
+
+function toggleImgGroup(header) {
+  header.classList.toggle('collapsed');
+  header.nextElementSibling.classList.toggle('collapsed');
+}
+
+function toggleCheck(i) {
+  uploadedImages[i].selected = !uploadedImages[i].selected;
+  localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+  renderUploadedList();
+}
+
+function selectBatch(batchKey, sel) {
+  uploadedImages.forEach(img => {
+    let key;
+    if (img.batch) {
+      key = 'b_' + img.batch;
+    } else {
+      const d = new Date(img.date);
+      key = 'day_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    if (key === batchKey) img.selected = sel;
+  });
+  localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+  renderUploadedList();
+}
+
+function buildMarkdown() {
+  const title = document.getElementById('blogTitle').value.trim();
+  const tags = document.getElementById('blogTags').value.trim();
+  const category = document.getElementById('blogCategory').value.trim();
+  const desc = document.getElementById('blogDesc').value.trim();
+  const body = document.getElementById('blogBody').value.trim();
+  const selected = uploadedImages.filter(img => img.selected);
+
+  if (!title) { showToast('请输入文章标题'); return null; }
+  if (!selected.length && !body) { showToast('请选择图片或输入正文内容'); return null; }
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const tagList = tags ? tags.split(/[,，]/).map(t => `  - ${t.trim()}`).join('\n') : '  - 生活';
+  const manualCover = document.getElementById('blogCover').value.trim();
+  const defaultCover = (config.appearance || {}).defaultCover || '';
+  const cover = manualCover || (selected.length ? selected[0].cdnUrl : '') || defaultCover;
+
+  let md = `---\ntitle: ${title}\ndate: ${dateStr}\ntags:\n${tagList}\ncategories: ${category||'生活'}\n`;
+  if (cover) md += `cover: ${cover}\n`;
+  md += `description: ${desc||title}\n---\n\n`;
+  if (body) md += body + '\n\n';
+  if (selected.length) {
+    md += '<!-- gallery -->\n';
+    selected.forEach((img, i) => { md += `![${title}-${i+1}](${img.cdnUrl})\n\n`; });
+  }
+
+  return { title, md, dateStr };
+}
+
+function utf8ToBase64(str) {
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+async function publishPost() {
+  const result = buildMarkdown();
+  if (!result) return;
+
+  document.getElementById('markdownOutput').textContent = result.md;
+  document.getElementById('previewSection').style.display = 'block';
+
+  const statusEl = document.getElementById('publishStatus');
+  const btn = document.getElementById('btnPublish');
+  btn.disabled = true; btn.textContent = '🚀 发布中...';
+
+  statusEl.style.display = 'block';
+  const pName = config.activePlatform === 'codeup' ? 'Codeup' : 'GitHub';
+  statusEl.innerHTML = `<div class="publish-status"><div class="spinner"></div><p>正在发布文章到博客...</p><p style="font-size:12px;color:var(--text-light);margin-top:4px;">通过 ${pName} API 创建文章，自动触发构建部署</p></div>`;
+
+  try {
+    const timestamp = Date.now();
+    const safeTitle = result.title.replace(/[\/\\:*?"<>|\s]/g, '-').replace(/-+/g, '-');
+    const filename = `${safeTitle}-${timestamp}`;
+    const path = `source/_posts/${filename}.md`;
+    const content = utf8ToBase64(result.md);
+    const isCodeup = config.activePlatform === 'codeup';
+    const pc = getPC();
+
+    if (isCodeup) {
+      const repoId = encodeURIComponent(pc.blogRepo);
+      const res = await codeupFetch(`${repoId}/files`, {
+        method: 'POST',
+        headers: { 'x-yunxiao-token': pc.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ branch: 'master', commitMessage: `post: ${result.title}`, content: content, encoding: 'base64', filePath: encodeURIComponent(path) })
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.errorMessage || e.message || `HTTP ${res.status}`); }
+    } else {
+      const blogRepo = pc.blogRepo || 'israel-Liu/theForger';
+      const res = await fetch(`${GITHUB_API}/repos/${blogRepo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${pc.token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+        body: JSON.stringify({ message: `post: ${result.title}`, content: content, branch: 'master' })
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || `HTTP ${res.status}`); }
+    }
+
+    const platformName = isCodeup ? 'Codeup' : 'GitHub';
+    statusEl.innerHTML = `
+      <div class="publish-status">
+        <div style="font-size:48px;margin-bottom:12px;">🎉</div>
+        <h3>发布成功！</h3>
+        <p style="color:var(--text-light);font-size:13px;margin-top:8px;">
+          文章已提交到 ${platformName}，自动构建部署中...<br>
+          约 1-2 分钟后可在网站上看到
+        </p>
+        <div style="height:16px;"></div>
+        <a href="https://israel-liu.github.io/" target="_blank" class="btn btn-success" style="text-decoration:none;">
+          🌐 打开博客查看
+        </a>
+      </div>`;
+
+    showToast('🎉 文章发布成功！');
+
+    uploadedImages.forEach(img => img.selected = false);
+    localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+
+  } catch (err) {
+    let detail = err.message || String(err);
+    const pc = getPC();
+    if (detail === 'Failed to fetch') {
+      detail = '网络请求失败。请检查：\n1. 手机网络是否正常\n2. Token 是否正确\n3. 仓库名是否填对（设置页面）';
+    }
+    statusEl.innerHTML = `
+      <div class="publish-status">
+        <div style="font-size:48px;margin-bottom:12px;">❌</div>
+        <h3>发布失败</h3>
+        <p style="color:var(--danger);font-size:13px;margin-top:8px;white-space:pre-line;">${detail}</p>
+        <p style="font-size:11px;color:var(--text-light);margin-top:8px;">平台: ${config.activePlatform}<br>博客仓库: ${pc.blogRepo || '未设置'}<br>分支: master</p>
+        <div style="height:16px;"></div>
+        <button class="btn btn-warning" onclick="publishPost()">🔄 重试</button>
+      </div>`;
+    showToast('❌ 发布失败');
+  }
+
+  btn.disabled = false; btn.textContent = '🚀 发布到博客';
+}
+
+async function copyMarkdown() {
+  const text = document.getElementById('markdownOutput').textContent;
+  try { await navigator.clipboard.writeText(text); }
+  catch { const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t); }
+  showToast('✅ 已复制');
+}
+
+let videoPlatform = 'bilibili';
+
+function showVideoDialog() {
+  document.getElementById('videoDialog').style.display = 'flex';
+  document.getElementById('videoUrlInput').value = '';
+  document.getElementById('videoPreviewBox').style.display = 'none';
+  selectPlatform(document.querySelector('.platform-tab[data-platform="bilibili"]'));
+}
+
+function closeVideoDialog() {
+  document.getElementById('videoDialog').style.display = 'none';
+}
+
+function selectPlatform(el) {
+  document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  videoPlatform = el.dataset.platform;
+  const label = document.getElementById('videoUrlLabel');
+  const hint = document.getElementById('videoHint');
+  const input = document.getElementById('videoUrlInput');
+  if (videoPlatform === 'bilibili') {
+    label.textContent = '粘贴 B站 视频链接或 BV号';
+    input.placeholder = '例如：BV1xx411c7mD 或完整链接';
+    hint.textContent = '支持格式：BV号、b23.tv短链、bilibili.com 完整链接';
+  } else if (videoPlatform === 'youtube') {
+    label.textContent = '粘贴 YouTube 视频链接或 ID';
+    input.placeholder = '例如：dQw4w9WgXcQ 或完整链接';
+    hint.textContent = '支持格式：youtu.be 短链、youtube.com 完整链接、视频 ID';
+  } else {
+    label.textContent = '粘贴视频直链（mp4 等）';
+    input.placeholder = '例如：https://example.com/video.mp4';
+    hint.textContent = '直接填写视频文件 URL，将使用 HTML5 播放器';
+  }
+  document.getElementById('videoPreviewBox').style.display = 'none';
+}
+
+function parseBilibili(input) {
+  let bvid = '';
+  const bvMatch = input.match(/BV[a-zA-Z0-9]+/i);
+  if (bvMatch) { bvid = bvMatch[0]; }
+  return bvid;
+}
+
+function parseYoutube(input) {
+  let vid = '';
+  const patterns = [
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = input.match(p);
+    if (m) { vid = m[1]; break; }
+  }
+  return vid;
+}
+
+function generateEmbed(platform, input) {
+  if (platform === 'bilibili') {
+    const bvid = parseBilibili(input);
+    if (!bvid) return null;
+    return {
+      iframe: `<iframe src="//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="500"></iframe>`,
+      previewSrc: `//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=0`
+    };
+  } else if (platform === 'youtube') {
+    const vid = parseYoutube(input);
+    if (!vid) return null;
+    return {
+      iframe: `<iframe width="100%" height="500" src="https://www.youtube.com/embed/${vid}" frameborder="0" allowfullscreen></iframe>`,
+      previewSrc: `https://www.youtube.com/embed/${vid}`
+    };
+  } else {
+    const url = input.trim();
+    if (!url) return null;
+    return {
+      iframe: `<video src="${url}" controls width="100%" style="border-radius:8px;"></video>`,
+      previewSrc: null
+    };
+  }
+}
+
+function insertVideo() {
+  const input = document.getElementById('videoUrlInput').value.trim();
+  if (!input) { showToast('请输入视频链接'); return; }
+
+  const embed = generateEmbed(videoPlatform, input);
+  if (!embed) {
+    if (videoPlatform === 'bilibili') showToast('未识别到 BV号，请检查链接');
+    else if (videoPlatform === 'youtube') showToast('未识别到 YouTube 视频 ID');
+    else showToast('请输入有效链接');
+    return;
+  }
+
+  const textarea = document.getElementById('blogBody');
+  const pos = textarea.selectionStart || textarea.value.length;
+  const before = textarea.value.substring(0, pos);
+  const after = textarea.value.substring(pos);
+  const insert = (before && !before.endsWith('\n') ? '\n\n' : '') + embed.iframe + '\n\n';
+  textarea.value = before + insert + after;
+  textarea.focus();
+
+  closeVideoDialog();
+  showToast('✅ 视频已插入');
+}
+
+function insertDivider() {
+  const textarea = document.getElementById('blogBody');
+  const pos = textarea.selectionStart || textarea.value.length;
+  const before = textarea.value.substring(0, pos);
+  const after = textarea.value.substring(pos);
+  const insert = (before && !before.endsWith('\n') ? '\n\n' : '') + '---\n\n';
+  textarea.value = before + insert + after;
+  textarea.focus();
+}
+
+function insertQuote() {
+  const textarea = document.getElementById('blogBody');
+  const pos = textarea.selectionStart || textarea.value.length;
+  const before = textarea.value.substring(0, pos);
+  const after = textarea.value.substring(pos);
+  const insert = (before && !before.endsWith('\n') ? '\n\n' : '') + '> ';
+  textarea.value = before + insert + after;
+  textarea.focus();
+  textarea.selectionStart = textarea.selectionEnd = textarea.value.length - after.length;
+}
+
+function triggerInlineUpload() {
+  const pc = getPC();
+  if (!pc.token) { showToast('请先在设置页配置 Token'); return; }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.multiple = true;
+  input.onchange = function() { doInlineUpload(Array.from(input.files)); };
+  input.click();
+}
+
+async function doInlineUpload(files) {
+  if (!files.length) return;
+  const pc = getPC();
+  const statusEl = document.getElementById('inlineUploadStatus');
+  const btn = document.getElementById('btnInsertImg');
+  statusEl.style.display = 'block';
+  btn.disabled = true;
+  btn.textContent = '⏳ 上传中...';
+
+  const textarea = document.getElementById('blogBody');
+  const batchId = Date.now().toString();
+  let success = 0;
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    statusEl.textContent = `📷 上传中 ${i+1}/${files.length}：${file.name}`;
+    try {
+      const result = await uploadImage(file, file.name);
+      const cdnUrl = `${pc.cdn}/${currentCategory}/${result.safeName}`;
+
+      uploadedImages.unshift({
+        name: result.safeName, cdnUrl, category: currentCategory,
+        date: new Date().toISOString(), batch: batchId, selected: true
+      });
+
+      const val = textarea.value;
+      const imgMd = `![${file.name}](${cdnUrl})\n\n`;
+      textarea.value = val + (val && !val.endsWith('\n') ? '\n\n' : '') + imgMd;
+      success++;
+    } catch (err) {
+      statusEl.textContent = `❌ 第 ${i+1} 张失败: ${err.message || err}`;
+      await new Promise(r => setTimeout(r, 1500));
+    }
+  }
+
+  localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+  renderUploadedList();
+  btn.disabled = false;
+  btn.textContent = '📷 插入图片';
+
+  if (success > 0) {
+    statusEl.textContent = `✅ ${success} 张图片已上传并插入正文`;
+    showToast(`✅ ${success} 张图片已插入`);
+  }
+  setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+}
+
+/* ===== 模板与 AI 生成 ===== */
+
+const TEMPLATES = {
+  baby: {
+    title: '宝宝的一天', tags: '宝宝, 成长记录, 日常', category: '宝宝',
+    desc: '记录宝宝的可爱瞬间',
+    body: '## 今日记录\n\n宝宝今天又有了新的进步～\n\n## 成长点滴\n\n> 每一天都是新的冒险 🌟\n\n'
+  },
+  outing: {
+    title: '周末出游记', tags: '出行, 游玩, 周末', category: '旅行',
+    desc: '一次愉快的出行',
+    body: '## 出发！\n\n阳光正好，出发去玩啦～ ☀️\n\n## 沿途风景\n\n## 美好回忆\n\n> 生活不止眼前，还有诗和远方 🌈\n\n'
+  },
+  food: {
+    title: '今日美食', tags: '美食, 生活, 记录', category: '美食',
+    desc: '好吃的要记录下来',
+    body: '## 今天吃了什么\n\n来看看今天的美食吧 🍽️\n\n## 味道如何\n\n---\n\n> 唯有美食不可辜负 😋\n\n'
+  },
+  pet: {
+    title: '萌宠时刻', tags: '宠物, 动物, 可爱', category: '生活',
+    desc: '毛茸茸的快乐',
+    body: '## 今日份可爱\n\n看看这些小可爱们 🐾\n\n## 有趣瞬间\n\n> 你是我的小天使 💕\n\n'
+  },
+  scenery: {
+    title: '风景随拍', tags: '风景, 摄影, 自然', category: '摄影',
+    desc: '用镜头记录美好',
+    body: '## 今日所见\n\n偶然发现的美景，用镜头留下来 📸\n\n## 光影之间\n\n> 世界那么美，要用心去看 🌍\n\n'
+  },
+  free: {
+    title: '', tags: '', category: '生活', desc: '', body: ''
+  }
+};
+
+function applyTemplate(key) {
+  if (editingArticle) return;
+  const tpl = TEMPLATES[key];
+  if (!tpl) return;
+  document.querySelectorAll('.tpl-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('blogTitle').value = tpl.title;
+  document.getElementById('blogTags').value = tpl.tags;
+  document.getElementById('blogCategory').value = tpl.category;
+  document.getElementById('blogDesc').value = tpl.desc;
+  document.getElementById('blogBody').value = tpl.body;
+  if (key !== 'free') showToast('已应用「' + event.currentTarget.querySelector('.tpl-name').textContent + '」模板');
+}
+
+function saveAiConfig() {
+  config.ai = {
+    endpoint: document.getElementById('inputAiEndpoint').value.trim(),
+    key: document.getElementById('inputAiKey').value.trim(),
+    model: document.getElementById('inputAiModel').value.trim()
+  };
+  localStorage.setItem('blogUploader', JSON.stringify(config));
+  showToast('✅ AI 配置已保存');
+}
+
+function saveBlogAppearance() {
+  config.appearance = {
+    homeBg: document.getElementById('inputHomeBg').value.trim(),
+    defaultCover: document.getElementById('inputDefaultCover').value.trim()
+  };
+  localStorage.setItem('blogUploader', JSON.stringify(config));
+  showToast('✅ 外观配置已保存（重新发布后生效）');
+}
+
+async function aiGenerate() {
+  const aiDef = { endpoint: 'https://ark.cn-beijing.volces.com/api/v3', key: 'ca1ffb31-c4d4-4e85-9781-ecbf0e98c675', model: 'doubao-1-5-pro-32k-250115' };
+  const ai = { ...aiDef, ...(config.ai || {}) };
+  if (!ai.endpoint || !ai.key || !ai.model) {
+    showToast('请先在设置页配置 AI API');
+    switchTab('setup');
+    return;
+  }
+
+  const prompt = document.getElementById('aiPrompt').value.trim();
+  const selected = uploadedImages.filter(img => img.selected);
+  const imgCount = selected.length;
+  const category = document.getElementById('blogCategory').value || '生活';
+
+  if (!prompt && !imgCount) {
+    showToast('请输入描述或先选择一些图片');
+    return;
+  }
+
+  const btn = document.getElementById('btnAiGen');
+  btn.disabled = true; btn.textContent = '⏳ 生成中...';
+
+  const userMsg = [
+    '请帮我写一篇博客文章。要求：',
+    '1. 生成一个吸引人的标题',
+    '2. 生成合适的标签（3-5个，逗号分隔）',
+    '3. 生成一句话简介',
+    '4. 写出200-400字的优美正文，使用 Markdown 格式，可以适当使用 emoji 让文章生动',
+    '5. 如果有图片，在正文中自然地引用它们',
+    '',
+    `分类：${category}`,
+    imgCount ? `我选了 ${imgCount} 张照片` : '',
+    prompt ? `描述：${prompt}` : '请根据分类自由发挥',
+    '',
+    '请严格按以下 JSON 格式返回，不要有其它内容：',
+    '{"title":"标题","tags":"标签1, 标签2, 标签3","desc":"一句话简介","body":"正文Markdown"}'
+  ].filter(Boolean).join('\n');
+
+  try {
+    const endpoint = ai.endpoint.replace(/\/+$/, '');
+    const url = endpoint.includes('/chat/completions') ? endpoint : endpoint + '/chat/completions';
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${ai.key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: ai.model,
+        messages: [
+          { role: 'system', content: '你是一个温暖、有文采的博客写手。擅长用生动的语言记录生活中的美好瞬间。文风亲切自然，适当使用 emoji。' },
+          { role: 'user', content: userMsg }
+        ],
+        temperature: 0.8
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || err.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content || '';
+
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('AI 返回格式异常');
+
+    const result = JSON.parse(jsonMatch[0]);
+    document.getElementById('blogTitle').value = result.title || '';
+    document.getElementById('blogTags').value = result.tags || '';
+    document.getElementById('blogDesc').value = result.desc || '';
+    document.getElementById('blogBody').value = result.body || '';
+
+    showToast('✨ AI 文章已生成！可修改后发布');
+  } catch (err) {
+    showToast('❌ AI 生成失败: ' + err.message);
+  }
+
+  btn.disabled = false; btn.textContent = '✨ AI写';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function appendErrorLog(msg) {
+  const logEl = document.getElementById('errorLog');
+  const body = document.getElementById('errorLogBody');
+  if (!logEl || !body) return;
+  const time = new Date().toLocaleTimeString();
+  body.textContent += `[${time}] ${msg}\n\n`;
+  logEl.style.display = 'block';
+  body.scrollTop = body.scrollHeight;
+}
+
+/* ===== 文章管理 ===== */
+
+function base64Decode(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+function parseFrontmatter(raw) {
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!m) return { meta: {}, body: raw };
+  const yaml = m[1], body = m[2];
+  const meta = {};
+  const lines = yaml.split('\n');
+  let currentKey = null;
+  for (const line of lines) {
+    const kv = line.match(/^(\w+):\s*(.*)$/);
+    if (kv) {
+      currentKey = kv[1];
+      const val = kv[2].trim();
+      if (val === '') { meta[currentKey] = []; }
+      else { meta[currentKey] = val; currentKey = null; }
+    } else if (currentKey && line.match(/^\s+-\s+(.*)$/)) {
+      const item = line.match(/^\s+-\s+(.*)$/)[1];
+      if (!Array.isArray(meta[currentKey])) meta[currentKey] = [];
+      meta[currentKey].push(item);
+    }
+  }
+  return { meta, body: body.trim() };
+}
+
+function processArticleItems(items) {
+  items.forEach(a => {
+    const tsMatch = a.name.match(/-(\d{13})\.md$/);
+    a.timestamp = tsMatch ? parseInt(tsMatch[1]) : 0;
+    a.displayTitle = a.name.replace(/\.md$/, '').replace(/-\d{13}$/, '').replace(/-/g, ' ');
+  });
+  items.sort((a, b) => b.timestamp - a.timestamp || b.name.localeCompare(a.name));
+  return items;
+}
+
+function applyArticleData(items, resetFilters) {
+  allArticles = items;
+  articlesLoaded = true;
+  localStorage.setItem('cachedArticles', JSON.stringify(items));
+  if (resetFilters) {
+    document.getElementById('articleSearch').value = '';
+    document.getElementById('searchClear').style.display = 'none';
+  }
+  buildFilters(items);
+  document.getElementById('articleCount').textContent = `共 ${items.length} 篇`;
+  const hasFilter = activeDate || activeTag || document.getElementById('articleSearch').value.trim();
+  if (hasFilter) {
+    renderArticleList(getFilteredArticles(), true);
+  } else {
+    const listEl = document.getElementById('articleList');
+    listEl.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>选择日期或标签，或输入关键词搜索</p><p style="font-size:12px;margin-top:4px;color:var(--text-light);">已缓存 ' + items.length + ' 篇文章</p></div>';
+  }
+}
+
+function restoreOrLoadArticles() {
+  const cached = localStorage.getItem('cachedArticles');
+  if (cached) {
+    try {
+      const items = JSON.parse(cached);
+      allArticles = processArticleItems(items);
+      articlesLoaded = true;
+      buildFilters(allArticles);
+      const listEl = document.getElementById('articleList');
+      document.getElementById('articleCount').textContent = `共 ${allArticles.length} 篇`;
+      if (!activeDate && !activeTag) {
+        listEl.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>选择日期或标签，或输入关键词搜索</p><p style="font-size:12px;margin-top:4px;color:var(--text-light);">已缓存 ' + allArticles.length + ' 篇文章</p></div>';
+      } else {
+        renderArticleList(getFilteredArticles(), true);
+      }
+      return;
+    } catch(e) {}
+  }
+  buildDefaultFilters();
+}
+
+function refreshArticlesInBackground() {
+  const btn = document.getElementById('btnRefreshArticles');
+  btn.textContent = '⏳ 同步中';
+  btn.disabled = true;
+  fetchArticleList().then(items => {
+    if (items) applyArticleData(items, false);
+    btn.textContent = '🔄 刷新';
+    btn.disabled = false;
+  }).catch(() => {
+    btn.textContent = '🔄 刷新';
+    btn.disabled = false;
+  });
+}
+
+async function fetchArticleList() {
+  const pc = getPC();
+  if (!pc.token) return null;
+  let items = [];
+  if (config.activePlatform === 'codeup') {
+    const repoId = encodeURIComponent(pc.blogRepo);
+    const res = await codeupFetch(`${repoId}/files?filePath=${encodeURIComponent('source/_posts')}&ref=master`, {
+      headers: { 'x-yunxiao-token': pc.token }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const tree = data.result || data;
+    items = (Array.isArray(tree) ? tree : []).filter(f => f.name && f.name.endsWith('.md')).map(f => ({
+      name: f.name,
+      path: f.path || `source/_posts/${f.name}`,
+      sha: f.id || ''
+    }));
+  } else {
+    const blogRepo = pc.blogRepo || 'israel-Liu/theForger';
+    const res = await fetch(`${GITHUB_API}/repos/${blogRepo}/contents/source/_posts`, {
+      headers: { 'Authorization': `Bearer ${pc.token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    items = data.filter(f => f.name.endsWith('.md')).map(f => ({
+      name: f.name,
+      path: f.path,
+      sha: f.sha
+    }));
+  }
+  return processArticleItems(items);
+}
+
+async function loadArticles() {
+  const pc = getPC();
+  if (!pc.token) { showToast('请先配置 Token'); return; }
+  const listEl = document.getElementById('articleList');
+  const hasCached = allArticles.length > 0;
+  if (!hasCached) {
+    listEl.innerHTML = '<div class="empty-state"><div class="spinner"></div><p style="margin-top:12px;">首次加载中...</p></div>';
+    document.getElementById('articleCount').textContent = '';
+  }
+  const btn = document.getElementById('btnRefreshArticles');
+  btn.textContent = '⏳ 同步中'; btn.disabled = true;
+
+  try {
+    const items = await fetchArticleList();
+    if (items) applyArticleData(items, !hasCached);
+    showToast('✅ 文章列表已更新');
+  } catch (err) {
+    if (!hasCached) {
+      listEl.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>加载失败</p><p style="font-size:12px;margin-top:4px;">${err.message}</p></div>`;
+    } else {
+      showToast('刷新失败: ' + err.message);
+    }
+  }
+  btn.textContent = '🔄 刷新'; btn.disabled = false;
+}
+
+let activeDate = null;
+let activeTag = null;
+
+function buildDefaultFilters() {
+  const now = new Date();
+  const dateEl = document.getElementById('dateFilter');
+  let dhtml = '<div class="category-chip active" data-val="" onclick="pickDate(this)">全部</div>';
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label = `${d.getFullYear()}年${d.getMonth()+1}月`;
+    dhtml += `<div class="category-chip" data-val="${key}" onclick="pickDate(this)">${label}</div>`;
+  }
+  dateEl.innerHTML = dhtml;
+
+  const tagEl = document.getElementById('tagFilter');
+  const defaultTags = ['宝宝', '旅行', '技术', '读书', '其他'];
+  let thtml = '<div class="category-chip active" data-val="" onclick="pickTag(this)">全部</div>';
+  defaultTags.forEach(t => { thtml += `<div class="category-chip" data-val="${t}" onclick="pickTag(this)">${t}</div>`; });
+  tagEl.innerHTML = thtml;
+}
+
+function buildFilters(items) {
+  const dates = new Map();
+  const tags = new Map();
+  items.forEach(a => {
+    const d = a.timestamp ? new Date(a.timestamp) : null;
+    const key = d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` : null;
+    const label = d ? `${d.getFullYear()}年${d.getMonth()+1}月` : null;
+    if (key) dates.set(key, { label, count: (dates.get(key)?.count || 0) + 1 });
+    const title = a.displayTitle.toLowerCase();
+    const guessedTags = [];
+    if (/宝宝|志云|baby/.test(title)) guessedTags.push('宝宝');
+    if (/旅|游|trip|travel/.test(title)) guessedTags.push('旅行');
+    if (/拍照|摄影|photo/.test(title)) guessedTags.push('拍照');
+    if (/c\+\+|chromium|windows|typescript|linux|api|code|hexo|git/.test(title)) guessedTags.push('技术');
+    if (/读书|reading|book/.test(title)) guessedTags.push('读书');
+    if (!guessedTags.length) guessedTags.push('其他');
+    a._tags = guessedTags;
+    guessedTags.forEach(t => tags.set(t, (tags.get(t) || 0) + 1));
+  });
+
+  const dateEl = document.getElementById('dateFilter');
+  let dhtml = '<div class="category-chip' + (!activeDate ? ' active' : '') + '" data-val="" onclick="pickDate(this)">全部</div>';
+  for (const [key, v] of [...dates.entries()].sort().reverse()) {
+    dhtml += `<div class="category-chip${activeDate===key?' active':''}" data-val="${key}" onclick="pickDate(this)">${v.label} (${v.count})</div>`;
+  }
+  dateEl.innerHTML = dhtml;
+
+  const tagEl = document.getElementById('tagFilter');
+  let thtml = '<div class="category-chip' + (!activeTag ? ' active' : '') + '" data-val="" onclick="pickTag(this)">全部</div>';
+  for (const [t, c] of [...tags.entries()].sort((a,b) => b[1] - a[1])) {
+    thtml += `<div class="category-chip${activeTag===t?' active':''}" data-val="${t}" onclick="pickTag(this)">${t} (${c})</div>`;
+  }
+  tagEl.innerHTML = thtml;
+}
+
+function pickDate(el) {
+  activeDate = el.dataset.val || null;
+  el.parentElement.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  triggerFilteredLoad();
+}
+
+function pickTag(el) {
+  activeTag = el.dataset.val || null;
+  el.parentElement.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  triggerFilteredLoad();
+}
+
+function triggerFilteredLoad() {
+  if (articlesLoaded && allArticles.length) {
+    const filtered = getFilteredArticles();
+    renderArticleList(filtered, true);
+    return;
+  }
+  loadArticles();
+}
+
+function getFilteredArticles() {
+  let list = allArticles;
+  if (activeDate) {
+    list = list.filter(a => {
+      if (!a.timestamp) return false;
+      const d = new Date(a.timestamp);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === activeDate;
+    });
+  }
+  if (activeTag) {
+    list = list.filter(a => a._tags && a._tags.includes(activeTag));
+  }
+  const q = document.getElementById('articleSearch').value.trim().toLowerCase();
+  if (q) {
+    list = list.filter(a => a.displayTitle.toLowerCase().includes(q) || a.name.toLowerCase().includes(q));
+  }
+  return list;
+}
+
+function renderArticleList(items, expandAll) {
+  const listEl = document.getElementById('articleList');
+  document.getElementById('articleCount').textContent = items.length ? `共 ${items.length} 篇` : '';
+
+  if (!items.length) {
+    listEl.innerHTML = '<div class="empty-state"><div class="icon">📝</div><p>暂无匹配文章</p></div>';
+    return;
+  }
+
+  const groups = {};
+  items.forEach(a => {
+    const d = a.timestamp ? new Date(a.timestamp) : null;
+    const key = d ? `${d.getFullYear()}年${String(d.getMonth()+1).padStart(2,'0')}月` : '未知日期';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(a);
+  });
+
+  let html = '';
+  let isFirst = true;
+  for (const [month, list] of Object.entries(groups)) {
+    const collapsed = expandAll ? false : !isFirst;
+    html += `<div class="month-group${collapsed ? ' collapsed' : ''}">`;
+    html += `<div class="month-header${collapsed ? ' collapsed' : ''}" onclick="toggleMonth(this)"><span class="m-icon">▼</span>${month}<span class="m-count">${list.length} 篇</span></div>`;
+    html += list.map(a => {
+      const d = a.timestamp ? new Date(a.timestamp) : null;
+      const dateStr = d ? `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : '';
+      const tagBadges = (a._tags||[]).map(t => `<span style="font-size:10px;background:rgba(102,126,234,0.1);color:var(--primary);padding:1px 6px;border-radius:8px;margin-left:4px;">${t}</span>`).join('');
+      return `<div class="article-item" onclick="openArticle('${encodeURIComponent(a.path)}','${a.sha}')">
+        <div class="a-icon">📄</div>
+        <div class="a-info">
+          <div class="a-title">${a.displayTitle}</div>
+          <div class="a-meta"><span class="a-date">${dateStr}</span>${tagBadges}</div>
+        </div>
+        <div class="a-arrow">›</div>
+      </div>`;
+    }).join('');
+    html += '</div>';
+    isFirst = false;
+  }
+  listEl.innerHTML = html;
+}
+
+function toggleMonth(el) {
+  const group = el.parentElement;
+  group.classList.toggle('collapsed');
+  el.classList.toggle('collapsed');
+}
+
+let _filterDebounce = null;
+function filterArticles() {
+  const q = document.getElementById('articleSearch').value.trim();
+  document.getElementById('searchClear').style.display = q ? 'block' : 'none';
+  clearTimeout(_filterDebounce);
+  _filterDebounce = setTimeout(() => {
+    if (articlesLoaded && allArticles.length) {
+      renderArticleList(getFilteredArticles(), !!(activeDate || activeTag || q));
+    } else if (q.length >= 2) {
+      loadArticles();
+    }
+  }, 300);
+}
+
+function clearSearch() {
+  document.getElementById('articleSearch').value = '';
+  document.getElementById('searchClear').style.display = 'none';
+  if (activeDate || activeTag) {
+    renderArticleList(getFilteredArticles(), true);
+  } else if (allArticles.length) {
+    const listEl = document.getElementById('articleList');
+    listEl.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>选择日期或标签，或输入关键词搜索</p><p style="font-size:12px;margin-top:4px;color:var(--text-light);">已缓存 ' + allArticles.length + ' 篇文章</p></div>';
+  }
+}
+
+async function openArticle(encodedPath, sha) {
+  const pc = getPC();
+  const filePath = decodeURIComponent(encodedPath);
+  showToast('加载文章中...');
+
+  try {
+    let content = '', fileSha = sha;
+    if (config.activePlatform === 'codeup') {
+      const repoId = encodeURIComponent(pc.blogRepo);
+      const ep = encodeURIComponent(filePath);
+      const res = await codeupFetch(`${repoId}/files/${ep}?ref=master`, {
+        headers: { 'x-yunxiao-token': pc.token }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const blob = data.result || data;
+      content = base64Decode(blob.content);
+    } else {
+      const blogRepo = pc.blogRepo || 'israel-Liu/theForger';
+      const res = await fetch(`${GITHUB_API}/repos/${blogRepo}/contents/${filePath}`, {
+        headers: { 'Authorization': `Bearer ${pc.token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      fileSha = data.sha;
+      content = base64Decode(data.content.replace(/\n/g, ''));
+    }
+
+    const { meta, body } = parseFrontmatter(content);
+
+    editingArticle = { path: filePath, sha: fileSha, rawContent: content };
+
+    document.getElementById('blogTitle').value = meta.title || '';
+    document.getElementById('blogTags').value = Array.isArray(meta.tags) ? meta.tags.join(', ') : (meta.tags || '');
+    document.getElementById('blogCategory').value = meta.categories || '生活';
+    document.getElementById('blogDesc').value = meta.description || '';
+    document.getElementById('blogBody').value = body;
+
+    document.getElementById('blogFormTitle').textContent = '✏️ 编辑文章';
+    document.getElementById('btnCancelEdit').style.display = 'block';
+    document.getElementById('btnPublish').textContent = '💾 保存修改';
+    document.getElementById('templateSection').style.display = 'none';
+
+    switchTab('blog');
+    showToast('文章已加载，可编辑后保存');
+  } catch (err) {
+    showToast('❌ 加载失败: ' + err.message);
+  }
+}
+
+function cancelEdit() {
+  editingArticle = null;
+  document.getElementById('blogFormTitle').textContent = '✍️ 写文章';
+  document.getElementById('btnCancelEdit').style.display = 'none';
+  document.getElementById('btnPublish').textContent = '🚀 发布到博客';
+  document.getElementById('templateSection').style.display = '';
+  document.getElementById('blogTitle').value = '';
+  document.getElementById('blogTags').value = '';
+  document.getElementById('blogCategory').value = '生活';
+  document.getElementById('blogDesc').value = '';
+  document.getElementById('blogBody').value = '';
+  document.getElementById('previewSection').style.display = 'none';
+  document.getElementById('publishStatus').style.display = 'none';
+}
+
+async function saveEdit() {
+  if (!editingArticle) return;
+  const title = document.getElementById('blogTitle').value.trim();
+  const tags = document.getElementById('blogTags').value.trim();
+  const category = document.getElementById('blogCategory').value.trim();
+  const desc = document.getElementById('blogDesc').value.trim();
+  const body = document.getElementById('blogBody').value.trim();
+
+  if (!title) { showToast('请输入文章标题'); return; }
+
+  const { meta: oldMeta } = parseFrontmatter(editingArticle.rawContent);
+  const dateStr = oldMeta.date || new Date().toISOString().replace('T', ' ').substring(0, 19);
+  const tagList = tags ? tags.split(/[,，]/).map(t => `  - ${t.trim()}`).join('\n') : '  - 生活';
+  const cover = oldMeta.cover || '';
+
+  let md = `---\ntitle: ${title}\ndate: ${dateStr}\ntags:\n${tagList}\ncategories: ${category || '生活'}\n`;
+  if (cover) md += `cover: ${cover}\n`;
+  md += `description: ${desc || title}\n---\n\n`;
+  if (body) md += body + '\n';
+
+  const statusEl = document.getElementById('publishStatus');
+  const btn = document.getElementById('btnPublish');
+  btn.disabled = true; btn.textContent = '💾 保存中...';
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = `<div class="publish-status"><div class="spinner"></div><p>正在保存修改...</p></div>`;
+
+  try {
+    const content = utf8ToBase64(md);
+    const pc = getPC();
+    const isCodeup = config.activePlatform === 'codeup';
+
+    if (isCodeup) {
+      const repoId = encodeURIComponent(pc.blogRepo);
+      const res = await codeupFetch(`${repoId}/files`, {
+        method: 'PUT',
+        headers: { 'x-yunxiao-token': pc.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          branch: 'master',
+          commitMessage: `edit: ${title}`,
+          content: content,
+          encoding: 'base64',
+          filePath: encodeURIComponent(editingArticle.path)
+        })
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.errorMessage || e.message || `HTTP ${res.status}`); }
+    } else {
+      const blogRepo = pc.blogRepo || 'israel-Liu/theForger';
+      const res = await fetch(`${GITHUB_API}/repos/${blogRepo}/contents/${editingArticle.path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${pc.token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+        body: JSON.stringify({
+          message: `edit: ${title}`,
+          content: content,
+          sha: editingArticle.sha,
+          branch: 'master'
+        })
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || `HTTP ${res.status}`); }
+      const data = await res.json();
+      editingArticle.sha = data.content.sha;
+    }
+
+    statusEl.innerHTML = `<div class="publish-status"><div style="font-size:48px;margin-bottom:12px;">✅</div><h3>保存成功！</h3><p style="color:var(--text-light);font-size:13px;margin-top:8px;">文章已更新，自动构建部署中...</p></div>`;
+    showToast('✅ 文章已保存');
+    articlesLoaded = false;
+  } catch (err) {
+    statusEl.innerHTML = `<div class="publish-status"><div style="font-size:48px;margin-bottom:12px;">❌</div><h3>保存失败</h3><p style="color:var(--danger);font-size:13px;margin-top:8px;">${err.message}</p><div style="height:16px;"></div><button class="btn btn-warning" onclick="saveEdit()">🔄 重试</button></div>`;
+    showToast('❌ 保存失败');
+  }
+
+  btn.disabled = false; btn.textContent = '💾 保存修改';
+}
+
+init();
+</script>
+</body>
+</html>
