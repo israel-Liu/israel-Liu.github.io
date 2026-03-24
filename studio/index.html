@@ -321,7 +321,7 @@ body {
 </div>
 
 <div id="pageSetup" class="page">
-  <div class="setup-card">
+  <div class="setup-card" id="platformSwitchCard" style="display:none;">
     <h3>📡 当前工作平台</h3>
     <div class="platform-tabs" style="margin-bottom:8px;">
       <button class="platform-tab" id="activeBtnGithub" onclick="setActivePlatform('github')">🐙 GitHub</button>
@@ -331,9 +331,12 @@ body {
   </div>
 
   <div class="setup-card">
-    <div class="platform-tabs" style="margin-bottom:16px;">
+    <div class="platform-tabs" style="margin-bottom:16px;" id="cfgTabRow">
       <button class="platform-tab active" id="cfgTabGithub" onclick="showConfigTab('github')">🐙 GitHub 配置</button>
       <button class="platform-tab" id="cfgTabCodeup" onclick="showConfigTab('codeup')">☁️ Codeup 配置</button>
+    </div>
+    <div id="platformLabel" style="display:none;margin-bottom:16px;">
+      <h3 id="platformLabelText" style="font-size:16px;"></h3>
     </div>
 
     <div id="configGithub">
@@ -342,7 +345,7 @@ body {
       <div class="input-group"><label>图床仓库</label><input type="text" id="inputGhRepo" value="israel-Liu/blog-images"></div>
       <div class="input-group"><label>博客源码仓库</label><input type="text" id="inputGhBlogRepo" value="israel-Liu/theForger"></div>
       <div class="input-group"><label>CDN 域名前缀</label><input type="text" id="inputGhCdn" value="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main"></div>
-      <button class="btn btn-primary" onclick="savePlatformConfig('github')">💾 保存 GitHub 配置</button>
+      <button class="btn btn-primary" onclick="savePlatformConfig('github')">💾 保存配置</button>
     </div>
 
     <div id="configCodeup" style="display:none;">
@@ -352,7 +355,7 @@ body {
       <div class="input-group"><label>博客仓库路径</label><input type="text" id="inputCuBlogRepo" value="69c25a5b43d4694d6a528ca9/blog/zybb"></div>
       <div class="input-group"><label>图片URL前缀</label><input type="text" id="inputCuCdn" value="/images"></div>
       <p style="font-size:11px;color:var(--text-light);margin-top:-10px;margin-bottom:12px;">默认使用相对路径（构建时图片自动打包进博客）。如有 OSS 可替换为完整 URL。</p>
-      <button class="btn btn-primary" onclick="savePlatformConfig('codeup')">💾 保存 Codeup 配置</button>
+      <button class="btn btn-primary" onclick="savePlatformConfig('codeup')">💾 保存配置</button>
     </div>
   </div>
 
@@ -645,6 +648,7 @@ function init() {
   }
 
   setActivePlatform(config.activePlatform, true);
+  applyPlatformUI(detectedPlatform);
   const pc = getPC();
   const savedTab = localStorage.getItem('activeTab');
   if (!pc.token) { switchTab('setup'); }
@@ -672,6 +676,33 @@ function setActivePlatform(p, skipSave) {
   document.getElementById('activeBtnCodeup').classList.toggle('active', p === 'codeup');
   updateStatus(!!getPC().token);
   if (!skipSave) { localStorage.setItem('blogUploader', JSON.stringify(config)); showToast('已切换到 ' + (p === 'github' ? 'GitHub' : 'Codeup')); }
+}
+
+function applyPlatformUI(detected) {
+  const switchCard = document.getElementById('platformSwitchCard');
+  const cfgTabRow = document.getElementById('cfgTabRow');
+  const platformLabel = document.getElementById('platformLabel');
+  const platformLabelText = document.getElementById('platformLabelText');
+
+  if (detected) {
+    switchCard.style.display = 'none';
+    cfgTabRow.style.display = 'none';
+    platformLabel.style.display = 'block';
+    if (detected === 'github') {
+      platformLabelText.textContent = '🐙 GitHub 配置';
+      document.getElementById('configGithub').style.display = 'block';
+      document.getElementById('configCodeup').style.display = 'none';
+    } else {
+      platformLabelText.textContent = '☁️ Codeup 配置';
+      document.getElementById('configGithub').style.display = 'none';
+      document.getElementById('configCodeup').style.display = 'block';
+    }
+  } else {
+    switchCard.style.display = 'block';
+    cfgTabRow.style.display = 'flex';
+    platformLabel.style.display = 'none';
+    showConfigTab(config.activePlatform);
+  }
 }
 
 function showConfigTab(tab) {
