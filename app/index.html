@@ -528,7 +528,8 @@ async function publishPost() {
     const path = `source/_posts/${filename}.md`;
     const content = utf8ToBase64(result.md);
 
-    const res = await fetch(`${GITHUB_API}/repos/${config.blogRepo}/contents/${path}`, {
+    const blogRepo = config.blogRepo || 'israel-Liu/theForger';
+    const res = await fetch(`${GITHUB_API}/repos/${blogRepo}/contents/${path}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${config.token}`,
