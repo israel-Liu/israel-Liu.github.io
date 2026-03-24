@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++ Primer, Fifth Edition reading-note-two | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="先写个概要内容 ##正文开始 范围for循环，前++后++，autoThe auto specifier was only allowed for objects declared at block scope or in function parameter lists. It indicated automatic storage duration, which is the default">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ Primer, Fifth Edition reading-note-two">
+<meta property="og:url" content="https://israel-liu.github.io/2016/12/02/reading-note-two/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="先写个概要内容 ##正文开始 范围for循环，前++后++，autoThe auto specifier was only allowed for objects declared at block scope or in function parameter lists. It indicated automatic storage duration, which is the default">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2016-12-02T03:01:50.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.796Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C++ Primer, Fifth Edition reading-note-two",
+  "url": "https://israel-liu.github.io/2016/12/02/reading-note-two/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2016-12-02T03:01:50.000Z",
+  "dateModified": "2026-03-24T05:43:37.796Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2016/12/02/reading-note-two/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++ Primer, Fifth Edition reading-note-two',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">C++ Primer, Fifth Edition reading-note-two</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C++ Primer, Fifth Edition reading-note-two</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2016-12-02T03:01:50.000Z" title="发表于 2016-12-02 11:01:50">2016-12-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.796Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>先写个概要内容</p>
+<p>##正文开始</p>
+<h3 id="范围for循环，前-后-，auto"><a href="#范围for循环，前-后-，auto" class="headerlink" title="范围for循环，前++后++，auto"></a>范围for循环，前++后++，auto</h3><p>The auto specifier was only allowed for objects declared at block scope or in function parameter lists. It indicated automatic storage duration, which is the default for these kinds of declarations. </p>
+<h2 id="Part-III-Tools-for-Class-Authors"><a href="#Part-III-Tools-for-Class-Authors" class="headerlink" title="Part III: Tools for Class Authors"></a>Part III: Tools for Class Authors</h2><h3 id="Chapter-13-Copy-Control"><a href="#Chapter-13-Copy-Control" class="headerlink" title="Chapter 13. Copy Control"></a>Chapter 13. Copy Control</h3><h4 id="13-1-Copy-Assign-and-Destroy"><a href="#13-1-Copy-Assign-and-Destroy" class="headerlink" title="13.1. Copy, Assign, and Destroy"></a>13.1. Copy, Assign, and Destroy</h4><p>拷贝构造的赋值可以放到初始化列表中。(也就是说构造函数都有初始列表？),拷贝初始化和直接初始化(普通函数匹配规则)的不同。<br>Copy initialization happens not only when we define variables using an &#x3D;, but also when we<br>    • Pass an object as an argument to a parameter of nonreference type<br>    • Return an object from a function that has a nonreference return type<br>    • Brace initialize the elements in an array or the members of an aggregate class</p>
+<p>emplace 使用直接初始化。剩下很多都是拷贝初始化，比如 insert 和 push。不能隐式的使用显示构造，所有拷贝构造不能用显示构造的参数。<br>拷贝构造用来初始化非引用参数 explains why the copy constructor’s own parameter must be a reference，否则会无限循环。<br>使用 () 相比使用 &#x3D; 创建对象(而不是赋值给一个已经有值的对象)，实际上是编译器选择省略了拷贝构造函数，直接创建对象。<br>When an operator is a member function, the left-hand operand is bound to the implicit this parameter (§ 7.1.2, p. 257).<br>The right-hand operand in a binary operator, such as assignment, is passed as an explicit parameter.</p>
+<p>Because 析构函数 takes no parameters, it cannot be overloaded. There is always only one destructor for a given class。<br>在析构函数中，函数体先执行，可以在这里最后使用对象，做一些资源释放。然后析构成员，析构顺序和构造顺序相反。(智能指针式对象，调用对象析构函数)<br>The implicit destruction of a member of built-in pointer type(包括指向对象的指针) does not delete the object to which that pointer points.</p>
+<pre><code>Elements in a container—whether a library container or an array—are destroyed when the container is destroyed.
+Dynamically allocated objects are destroyed when the delete operator is applied to a pointer to the object (§ 12.1.2, p. 460).
+Temporary objects are destroyed at the end of the full expression in which the temporary was created.
+</code></pre>
+<p>If a class needs a destructor, it almost surely also needs the copy-assignment operator and a copy constructor.(避免多个指针指向同一个对象，删除后还使用)<br>If we do not want the synthesized member to be an inline function, we can specify &#x3D; default on the member’s definition.<br>we cannot define variables or members of such types, we can dynamically allocate objects with a deleted destructor. However, we cannot free them.</p>
+<h4 id="13-2-Copy-Control-and-Resource-Management"><a href="#13-2-Copy-Control-and-Resource-Management" class="headerlink" title="13.2. Copy Control and Resource Management"></a>13.2. Copy Control and Resource Management</h4><p>What we do when we copy the pointer member determines whether a class like HasPtr has valuelike or pointerlike behavior.</p>
+<h4 id="13-3-Swap"><a href="#13-3-Swap" class="headerlink" title="13.3. Swap"></a>13.3. Swap</h4><p>If there is a type-specific version of swap, calls to swap will match that typespecific version.<br>If there is no type-specific version, then—assuming there is a using declaration for swap in scope.</p>
+<pre><code>// note rhs is passed by value, which means the HasPtr copy constructor
+// copies the string in the right-hand operand into rhs
+HasPtr&amp; HasPtr::operator=(HasPtr rhs)
+&#123;
+    // swap the contents of the left-hand operand with the local variable rhs
+    swap(*this, rhs); // rhs now points to the memory this object had used
+    return *this; // rhs is destroyed, which deletes the pointer in rhs
+&#125;
+</code></pre>
+<h4 id="13-4-A-Copy-Control-Example"><a href="#13-4-A-Copy-Control-Example" class="headerlink" title="13.4. A Copy-Control Example"></a>13.4. A Copy-Control Example</h4><h4 id="13-5-Classes-That-Manage-Dynamic-Memory"><a href="#13-5-Classes-That-Manage-Dynamic-Memory" class="headerlink" title="13.5. Classes That Manage Dynamic Memory"></a>13.5. Classes That Manage Dynamic Memory</h4><h4 id="13-6-Moving-Objects"><a href="#13-6-Moving-Objects" class="headerlink" title="13.6. Moving Objects"></a>13.6. Moving Objects</h4><p>Generally speaking, an lvalue expression refers to an object’s identity whereas an rvalue expression refers to an object’s value.</p>
+<pre><code>int &amp;&amp;rr1 = 42; // ok: literals are rvalues
+int &amp;&amp;rr2 = rr1; // error: the expression rr1 is an lvalue!
+</code></pre>
+<p>难道是 Cpp 实习自定义类是靠库实现的吗，为啥 noexcept 是通知标准库不抛出异常，还是异常是靠库实现的，应该是我们使用标准库存放自定义对象。(语言超集的子集)。<br>Understanding why noexcept is needed can help deepen our understanding of how the library interacts with objects of the types we write.(给库调用了)<br>The compiler will synthesize a move constructor or a move-assignment operator only if the class doesn’t define any of its own copy-control members<br>and if every nonstatic data member of the class can be moved.定义了移动构造&#x2F;赋值函数必须定义拷贝的，因为编译器会定义拷贝的为删除的。不会合成。</p>
+<pre><code>class HasPtr &#123;    // 很有趣的是，赋值运算符因为提供了拷贝和移动构造函数，而同时具备了拷贝和移动赋值操作符的功能。
+    public:
+        // added move constructor
+        HasPtr(HasPtr &amp;&amp;p) noexcept : ps(p.ps), i(p.i) &#123;p.ps = 0;&#125;
+        // assignment operator is both the move- and copy-assignment operator
+        HasPtr&amp; operator=(HasPtr rhs)
+        &#123; swap(*this, rhs); return *this; &#125;
+&#125;;
+</code></pre>
+<p>The Rule of Three &#x2F; Five，拷贝控制成员包括，copy constructor, copy-assignment operator, and destructor，控制对象拷贝，资源分配。move constructor and move-assignment operator。(3+2&#x3D;5)<br>The reference qualifier can be either &amp; or &amp;&amp;, indicating that this may point to an rvalue or lvalue, respectively. (同时出现在声明和定义的地方。同时使用放 const 后)</p>
+<pre><code>class Foo &#123;
+public:
+    Foo sorted() &amp;&amp;;
+    Foo sorted() const; // error: must have reference qualifier
+    // Comp is type alias for the function type (see § 6.7 (p. 249))
+    // that can be used to compare int values
+    using Comp = bool(const int&amp;, const int&amp;);
+    Foo sorted(Comp*); // ok: different parameter list
+    Foo sorted(Comp*) const; // ok: neither version is reference qualified
+&#125;;
+</code></pre>
+<h3 id="Chapter-14-Overloaded-Operations-and-Conversions"><a href="#Chapter-14-Overloaded-Operations-and-Conversions" class="headerlink" title="Chapter 14. Overloaded Operations and Conversions"></a>Chapter 14. Overloaded Operations and Conversions</h3><p>重载 I&#x2F;O 应该是非成员函数，If these operators are members of any class, they would have to be members of istream or ostream. ？</p>
+<pre><code>std::string&amp; operator*() const
+&#123; 
+    auto p = check(curr, &quot;dereference past end&quot;);
+    return (*p)[curr]; // (*p) is the vector to which this object points
+&#125;
+std::string* operator-&gt;() const
+&#123; 
+    // delegate the real work to the dereference operator
+    return &amp; this-&gt;operator*();
+&#125;
+</code></pre>
+<p>The overloaded arrow operator must return either a pointer to a class type or an object of a class type that defines its own operator arrow。(无限箭头)</p>
+<h3 id="Chapter-15-Object-Oriented-Programming"><a href="#Chapter-15-Object-Oriented-Programming" class="headerlink" title="Chapter 15. Object-Oriented Programming"></a>Chapter 15. Object-Oriented Programming</h3><p>A derived class may include the virtual keyword on these functions but is not required to do so.<br>The scope of a derived class is nested inside the scope of its base class.<br>If the base class has one or more virtual functions, we can use a dynamic_cast to request a conversion that is checked at run time. (运行时间可以优化)<br>Alternatively, in those cases when we know that the conversion from base to derived is safe, we can use a static_cast to override the compiler.<br>派生类的作用域嵌套在基类的作用域内，所以派生类可以使用基类成员，但是基类成员就不可以直接使用派生类成员了。<br>虚函数可以有默认实参，如果某次调用使用了默认实参，实参值由本次调用的静态类型决定。<br>可以为纯虚函数提供定义，但是函数体必须在类的外部。不能在声明 &#x3D; 0 的地方提供 {};<br>派生类对象只初始化直接基类，在构造函数初始化列表中，调用基类构造函数。<br>只能通过对象访问受保护成员，而不是类。(就是访问自己对象中的基类子对象受保护部分)<br>当对一个调用查找时候，(不停的往基类查)当定位到函数是虚函数的时候，编译器产生的代码将在运行时确定倒底运行虚函数的那个版本。<br>构造函数或析构函数调用了某个虚函数 ，应该执行与构造函数或析构函数所属类型想对应的虚函数版本，也就是类内函数调用。(之类的不行)</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>这一章，很多编译器规则还是比较难理解和记忆的，还是要不停的看理解。</p>
+<h3 id="Chapter-16-Templates-and-Generic-Programming"><a href="#Chapter-16-Templates-and-Generic-Programming" class="headerlink" title="Chapter 16. Templates and Generic Programming"></a>Chapter 16. Templates and Generic Programming</h3><p><a href="https://israel-liu.github.io/2018/04/10/reading-note-fourth/">reading-note-fourth</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2016/12/02/reading-note-two/">https://israel-liu.github.io/2016/12/02/reading-note-two/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2016/12/02/markdown-help/" title="markdown-help"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">markdown-help</div></div></div></a><a class="pagination-related  no-desc" href="/2016/12/01/reading-note-one/" title="C++ Primer, Fifth Edition reading_note_one"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">C++ Primer, Fifth Edition reading_note_one</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4for%E5%BE%AA%E7%8E%AF%EF%BC%8C%E5%89%8D-%E5%90%8E-%EF%BC%8Cauto"><span class="toc-text">范围for循环，前++后++，auto</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-III-Tools-for-Class-Authors"><span class="toc-text">Part III: Tools for Class Authors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Chapter-13-Copy-Control"><span class="toc-text">Chapter 13. Copy Control</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#13-1-Copy-Assign-and-Destroy"><span class="toc-text">13.1. Copy, Assign, and Destroy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-2-Copy-Control-and-Resource-Management"><span class="toc-text">13.2. Copy Control and Resource Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-3-Swap"><span class="toc-text">13.3. Swap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-4-A-Copy-Control-Example"><span class="toc-text">13.4. A Copy-Control Example</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-5-Classes-That-Manage-Dynamic-Memory"><span class="toc-text">13.5. Classes That Manage Dynamic Memory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-6-Moving-Objects"><span class="toc-text">13.6. Moving Objects</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chapter-14-Overloaded-Operations-and-Conversions"><span class="toc-text">Chapter 14. Overloaded Operations and Conversions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chapter-15-Object-Oriented-Programming"><span class="toc-text">Chapter 15. Object-Oriented Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chapter-16-Templates-and-Generic-Programming"><span class="toc-text">Chapter 16. Templates and Generic Programming</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Inside Windows Debugging | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ForewordIntroductionA Bit of Backgroundchapter 1 Software Development in WindowsWindows EvolutionWindows ArchitectrueWindows Developer InterfaceMicrosoft Developer ToolsPart 2 Debugging for Fun and Pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inside Windows Debugging">
+<meta property="og:url" content="https://israel-liu.github.io/2019/04/15/Inside-Windows-Debugging/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="ForewordIntroductionA Bit of Backgroundchapter 1 Software Development in WindowsWindows EvolutionWindows ArchitectrueWindows Developer InterfaceMicrosoft Developer ToolsPart 2 Debugging for Fun and Pr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2019-04-15T02:08:21.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.714Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Inside Windows Debugging",
+  "url": "https://israel-liu.github.io/2019/04/15/Inside-Windows-Debugging/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2019-04-15T02:08:21.000Z",
+  "dateModified": "2026-03-24T05:43:37.714Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2019/04/15/Inside-Windows-Debugging/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Inside Windows Debugging',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Inside Windows Debugging</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Inside Windows Debugging</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-04-15T02:08:21.000Z" title="发表于 2019-04-15 10:08:21">2019-04-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.714Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Foreword"><a href="#Foreword" class="headerlink" title="Foreword"></a>Foreword</h2><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h2 id="A-Bit-of-Background"><a href="#A-Bit-of-Background" class="headerlink" title="A Bit of Background"></a>A Bit of Background</h2><h3 id="chapter-1-Software-Development-in-Windows"><a href="#chapter-1-Software-Development-in-Windows" class="headerlink" title="chapter 1 Software Development in Windows"></a>chapter 1 Software Development in Windows</h3><h4 id="Windows-Evolution"><a href="#Windows-Evolution" class="headerlink" title="Windows Evolution"></a>Windows Evolution</h4><h4 id="Windows-Architectrue"><a href="#Windows-Architectrue" class="headerlink" title="Windows Architectrue"></a>Windows Architectrue</h4><h4 id="Windows-Developer-Interface"><a href="#Windows-Developer-Interface" class="headerlink" title="Windows Developer Interface"></a>Windows Developer Interface</h4><h4 id="Microsoft-Developer-Tools"><a href="#Microsoft-Developer-Tools" class="headerlink" title="Microsoft Developer Tools"></a>Microsoft Developer Tools</h4><h2 id="Part-2-Debugging-for-Fun-and-Profit"><a href="#Part-2-Debugging-for-Fun-and-Profit" class="headerlink" title="Part 2 Debugging for Fun and Profit"></a>Part 2 Debugging for Fun and Profit</h2><h3 id="chapter-2-Getting-Started"><a href="#chapter-2-Getting-Started" class="headerlink" title="chapter 2 Getting Started"></a>chapter 2 Getting Started</h3><h4 id="Introducing-the-Debugging-Tools"><a href="#Introducing-the-Debugging-Tools" class="headerlink" title="Introducing the Debugging Tools"></a>Introducing the Debugging Tools</h4><h4 id="User-Mode-Debugging"><a href="#User-Mode-Debugging" class="headerlink" title="User-Mode Debugging"></a>User-Mode Debugging</h4><p>You can use the .symfix debugger command and then reload the symbols(.reload)for all the loaded modules from symbols server.<br>g, bp, k, kP, kn, .frame, dv(“dump local variables”), dt(“dump type”), dt pi, dd(每次给出DWORD内存值), du(“dump as a Unicode string”)<br>Get sys local var and arg from stack pointer(esp register on x86, rsp register on x64).<br>ebp(frame pointer register) 存放返回值？还是被调用函数入口点？Save previous frame pointer.<br>eip(instruction pointer register)存储下一条要执行的指令。<br>“&#x2F;” 切换调试模式(assembly vs. source). lm(列出所有加载的符号),!sym(加载的符号是否有争议)<br>The PDB symbol files contain critical information to enable debugging,<br>such as the mappings between function names and their corresponding memory addresses, the types declared in the image, and also source-line information.</p>
+<h4 id="Kernel-Mode-Debugging"><a href="#Kernel-Mode-Debugging" class="headerlink" title="Kernel-Mode Debugging"></a>Kernel-Mode Debugging</h4><p>Setting Code Breakpoints in Kernel-Mode Memory。</p>
+<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p><a target="_blank" rel="noopener" href="http://msdl.microsoft.com/download/symbols">http://msdl.microsoft.com/download/symbols</a><br>.sympath SRV<em>G:\Symbols</em><a target="_blank" rel="noopener" href="http://msdl.microsoft.com/download/symbols">http://msdl.microsoft.com/download/symbols</a><br>symchk.exe 可以用来下载符号。</p>
+<h3 id="chapter-3-How-Windows-Debuggers-Work"><a href="#chapter-3-How-Windows-Debuggers-Work" class="headerlink" title="chapter 3 How Windows Debuggers Work"></a>chapter 3 How Windows Debuggers Work</h3><h4 id="User-Mode-Debugging-1"><a href="#User-Mode-Debugging-1" class="headerlink" title="User-Mode Debugging"></a>User-Mode Debugging</h4><p>uf debugger command to disassemble the current function.u debugger command to disassemble the code located at that address(可执行文件的代码段)<br>db (“dump memory as a sequence of bytes”).</p>
+<h4 id="Kernel-Mode-Debugging-1"><a href="#Kernel-Mode-Debugging-1" class="headerlink" title="Kernel-Mode Debugging"></a>Kernel-Mode Debugging</h4><h4 id="Managed-Code-Debugging"><a href="#Managed-Code-Debugging" class="headerlink" title="Managed-Code Debugging"></a>Managed-Code Debugging</h4><h4 id="Script-Debugging"><a href="#Script-Debugging" class="headerlink" title="Script Debugging"></a>Script Debugging</h4><h4 id="Remote-Debugging"><a href="#Remote-Debugging" class="headerlink" title="Remote Debugging"></a>Remote Debugging</h4><h4 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary"></a>Summary</h4><h3 id="Chapter-4-Postmortem-Debugging"><a href="#Chapter-4-Postmortem-Debugging" class="headerlink" title="Chapter 4 Postmortem Debugging"></a>Chapter 4 Postmortem Debugging</h3><h4 id="Just-in-Time-Debugging"><a href="#Just-in-Time-Debugging" class="headerlink" title="Just-in-Time Debugging"></a>Just-in-Time Debugging</h4><h4 id="Dump-Debugging"><a href="#Dump-Debugging" class="headerlink" title="Dump Debugging"></a>Dump Debugging</h4><p>.lastevent 查找 SEH(结构化异常处理) exceptions。可以使用dump恢复测试。</p>
+<h4 id="Summary-2"><a href="#Summary-2" class="headerlink" title="Summary"></a>Summary</h4><h2 id="Chapter-5-Beyond-the-Basics"><a href="#Chapter-5-Beyond-the-Basics" class="headerlink" title="Chapter 5 Beyond the Basics"></a>Chapter 5 Beyond the Basics</h2><h3 id="Noninvasive-Debugging"><a href="#Noninvasive-Debugging" class="headerlink" title="Noninvasive Debugging"></a>Noninvasive Debugging</h3><h3 id="Data-Breakpoints"><a href="#Data-Breakpoints" class="headerlink" title="Data Breakpoints"></a>Data Breakpoints</h3><h3 id="Scripting-the-Debugger"><a href="#Scripting-the-Debugger" class="headerlink" title="Scripting the Debugger"></a>Scripting the Debugger</h3><p>执行脚本命令 $$&gt;&lt; ， 使用 “@!“ 可以给模板符号下断点。<br><a target="_blank" rel="noopener" href="https://blogs.msdn.microsoft.com/debuggingtoolbox/">https://blogs.msdn.microsoft.com/debuggingtoolbox/</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax</a></p>
+<h3 id="WOW64-Debugging"><a href="#WOW64-Debugging" class="headerlink" title="WOW64 Debugging"></a>WOW64 Debugging</h3><h3 id="Windows-Debugging-Hooks-GFLAGS"><a href="#Windows-Debugging-Hooks-GFLAGS" class="headerlink" title="Windows Debugging Hooks (GFLAGS)"></a>Windows Debugging Hooks (GFLAGS)</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags-flag-table">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags-flag-table</a><br>这个就是设置一些钩子在系统函数，当执行到的时候断掉。</p>
+<h3 id="Summary-3"><a href="#Summary-3" class="headerlink" title="Summary"></a>Summary</h3><h2 id="Chapter-6-Code-Analysis-Tools"><a href="#Chapter-6-Code-Analysis-Tools" class="headerlink" title="Chapter 6 Code Analysis Tools"></a>Chapter 6 Code Analysis Tools</h2><h3 id="Static-Code-Analysis"><a href="#Static-Code-Analysis" class="headerlink" title="Static Code Analysis"></a>Static Code Analysis</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/sal-annotations?view=vs-2019">https://docs.microsoft.com/en-us/cpp/c-runtime-library/sal-annotations?view=vs-2019</a><br><a target="_blank" rel="noopener" href="http://phrack.org/issues/56/8.html#article">http://phrack.org/issues/56/8.html#article</a><br>OACR stands for Office Auto Code Review<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.0/bb429476(v=vs.80)">https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.0/bb429476(v=vs.80)</a><br><a target="_blank" rel="noopener" href="https://github.com/Microsoft/GSL">https://github.com/Microsoft/GSL</a><br><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Microsoft.Gsl">https://www.nuget.org/packages/Microsoft.Gsl</a><br><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Microsoft.CppCoreCheck">https://www.nuget.org/packages/Microsoft.CppCoreCheck</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/visualstudio/code-quality/code-analysis-for-c-cpp-overview?view=vs-2019">https://docs.microsoft.com/en-us/visualstudio/code-quality/code-analysis-for-c-cpp-overview?view=vs-2019</a></p>
+<h3 id="Runtime-Code-Analysis"><a href="#Runtime-Code-Analysis" class="headerlink" title="Runtime Code Analysis"></a>Runtime Code Analysis</h3><h3 id="Summary-4"><a href="#Summary-4" class="headerlink" title="Summary"></a>Summary</h3><h2 id="Chapter-7-Expert-Debugging-Tricks"><a href="#Chapter-7-Expert-Debugging-Tricks" class="headerlink" title="Chapter 7 Expert Debugging Tricks"></a>Chapter 7 Expert Debugging Tricks</h2><h3 id="Essential-Tricks"><a href="#Essential-Tricks" class="headerlink" title="Essential Tricks"></a>Essential Tricks</h3><p>you can enable using the BreakOnDllLoad Image File Execution Option(IFEO).<br>进程启动调试与脚本结合起来。<br><a target="_blank" rel="noopener" href="https://wixtoolset.org/">https://wixtoolset.org/</a></p>
+<h3 id="More-Useful-Tricks"><a href="#More-Useful-Tricks" class="headerlink" title="More Useful Tricks"></a>More Useful Tricks</h3><p>sx, sxr, <del>9f(9号线程冻结),</del>9u(unfreeze).freeze 是调试器概念。<del>n，</del>m (suspend&#x2F;resume)是操作系统概念。内核对象保存挂起计数。</p>
+<h3 id="Kernel-Mode-Debugging-Tricks"><a href="#Kernel-Mode-Debugging-Tricks" class="headerlink" title="Kernel-Mode Debugging Tricks"></a>Kernel-Mode Debugging Tricks</h3><p>eb (“edit byte”), !process -1 0, .reload &#x2F;user 内核模式调试切换到用户模式调试。<br>用户模式调试设置(gflags)都在内核代码执行后 hook，所有可以通过(overwrite)修改内核执行来实现类似的调试。</p>
+<pre><code>1: kd&gt; dt nt!_EPROCESS @eax ImageFileName
++0x16c ImageFileName: [15] &quot;notepad.exe&quot;
+1: kd&gt; .process /r /p @eax
+1: kd&gt; eb @$peb+2 1
+</code></pre>
+<p>“jump to self”</p>
+<h3 id="Summary-5"><a href="#Summary-5" class="headerlink" title="Summary"></a>Summary</h3><p><a target="_blank" rel="noopener" href="http://phrack.org/issues/56/8.html#article">http://phrack.org/issues/56/8.html#article</a></p>
+<h2 id="Chapter-8-Common-Debugging-Scenarios-Part-1"><a href="#Chapter-8-Common-Debugging-Scenarios-Part-1" class="headerlink" title="Chapter 8 Common Debugging Scenarios, Part 1"></a>Chapter 8 Common Debugging Scenarios, Part 1</h2><h3 id="Debugging-Access-Violations"><a href="#Debugging-Access-Violations" class="headerlink" title="Debugging Access Violations"></a>Debugging Access Violations</h3><p>托管代码调用本机代码<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/pinvoke">https://docs.microsoft.com/en-us/dotnet/standard/native-interop/pinvoke</a></p>
+<h3 id="Debugging-Heap-Corruptions"><a href="#Debugging-Heap-Corruptions" class="headerlink" title="Debugging Heap Corruptions"></a>Debugging Heap Corruptions</h3><p>Remember that access violations are raised by the operating system only on access to uncommitted or protected pages.<br>(!heap -p -a <address_of_corruption>),列出堆分配调用栈。?? sizeof(ntdll!_DPH_BLOCK_INFORMATION)，<br>dps (“dump memory as a sequence of function pointer values”)， .loadby sos clr，!clrstack(托管代码)。<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/diagnosing-errors-with-managed-debugging-assistants">https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/diagnosing-errors-with-managed-debugging-assistants</a></p>
+<h3 id="Debugging-Stack-Corruptions"><a href="#Debugging-Stack-Corruptions" class="headerlink" title="Debugging Stack Corruptions"></a>Debugging Stack Corruptions</h3><p>&#x2F;GS(Stack Guard). ndps esp L40(用于恢复k命令无法列出的调用栈)</p>
+<h3 id="Debugging-Stack-Overflows"><a href="#Debugging-Stack-Overflows" class="headerlink" title="Debugging Stack Overflows"></a>Debugging Stack Overflows</h3><p>kf debugger command, which displays the size of the memory consumed by each frame on the call stack,</p>
+<h3 id="Debugging-Handle-Leaks"><a href="#Debugging-Handle-Leaks" class="headerlink" title="Debugging Handle Leaks"></a>Debugging Handle Leaks</h3><p>!htrace，<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/desktop/Debug/retrieving-the-last-error-code">https://docs.microsoft.com/zh-cn/windows/desktop/Debug/retrieving-the-last-error-code</a></p>
+<h3 id="Debugging-User-Mode-Memory-Leaks"><a href="#Debugging-User-Mode-Memory-Leaks" class="headerlink" title="Debugging User-Mode Memory Leaks"></a>Debugging User-Mode Memory Leaks</h3><p>UMDH (“user-mode dump heap”) tool</p>
+<h3 id="Debugging-Kernel-Mode-Memory-Leaks"><a href="#Debugging-Kernel-Mode-Memory-Leaks" class="headerlink" title="Debugging Kernel-Mode Memory Leaks"></a>Debugging Kernel-Mode Memory Leaks</h3><p>!poolused</p>
+<h3 id="Summary-6"><a href="#Summary-6" class="headerlink" title="Summary"></a>Summary</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/desktop/Debug/system-error-codes">https://docs.microsoft.com/zh-cn/windows/desktop/Debug/system-error-codes</a></p>
+<h2 id="Chapter-9-Common-Debugging-Scenarios-Part-2"><a href="#Chapter-9-Common-Debugging-Scenarios-Part-2" class="headerlink" title="Chapter 9 Common Debugging Scenarios, Part 2"></a>Chapter 9 Common Debugging Scenarios, Part 2</h2><h2 id="Appendix-A-WinDbg-User-Mode-Debugging-Quick-Start"><a href="#Appendix-A-WinDbg-User-Mode-Debugging-Quick-Start" class="headerlink" title="Appendix A WinDbg User-Mode Debugging Quick Start"></a>Appendix A WinDbg User-Mode Debugging Quick Start</h2><p>lm(列出所有加载的模块)，lmv m 模块名(模块参数)，Code(software)Breakpoints(bp), Data(Hardware)Breakpoints(ba r4).<br>~*k(列出所有线程栈)， kP(显示函数参数)。dv(显示本地变量), dt(类型信息)， .frame (切换帧)， uf, u, ub, d, eb, q, qb</p>
+<h2 id="Appendix-B-WinDbg-Kernel-Mode-Debugging-Quick-Start"><a href="#Appendix-B-WinDbg-Kernel-Mode-Debugging-Quick-Start" class="headerlink" title="Appendix B WinDbg Kernel-Mode Debugging Quick Start"></a>Appendix B WinDbg Kernel-Mode Debugging Quick Start</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2019/04/15/Inside-Windows-Debugging/">https://israel-liu.github.io/2019/04/15/Inside-Windows-Debugging/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2019/05/20/windows-powershell-3-0-step-by-step/" title="windows_powershell_3.0_step_by_step"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">windows_powershell_3.0_step_by_step</div></div></div></a><a class="pagination-related  no-desc" href="/2019/04/13/Windows-Installer/" title="Windows Installer"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Windows Installer</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Foreword"><span class="toc-text">Foreword</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Bit-of-Background"><span class="toc-text">A Bit of Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chapter-1-Software-Development-in-Windows"><span class="toc-text">chapter 1 Software Development in Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-Evolution"><span class="toc-text">Windows Evolution</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-Architectrue"><span class="toc-text">Windows Architectrue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-Developer-Interface"><span class="toc-text">Windows Developer Interface</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Microsoft-Developer-Tools"><span class="toc-text">Microsoft Developer Tools</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-2-Debugging-for-Fun-and-Profit"><span class="toc-text">Part 2 Debugging for Fun and Profit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chapter-2-Getting-Started"><span class="toc-text">chapter 2 Getting Started</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Introducing-the-Debugging-Tools"><span class="toc-text">Introducing the Debugging Tools</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#User-Mode-Debugging"><span class="toc-text">User-Mode Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kernel-Mode-Debugging"><span class="toc-text">Kernel-Mode Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Summary"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chapter-3-How-Windows-Debuggers-Work"><span class="toc-text">chapter 3 How Windows Debuggers Work</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#User-Mode-Debugging-1"><span class="toc-text">User-Mode Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kernel-Mode-Debugging-1"><span class="toc-text">Kernel-Mode Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Managed-Code-Debugging"><span class="toc-text">Managed-Code Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Script-Debugging"><span class="toc-text">Script Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Remote-Debugging"><span class="toc-text">Remote Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Summary-1"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chapter-4-Postmortem-Debugging"><span class="toc-text">Chapter 4 Postmortem Debugging</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Just-in-Time-Debugging"><span class="toc-text">Just-in-Time Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Dump-Debugging"><span class="toc-text">Dump Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Summary-2"><span class="toc-text">Summary</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-5-Beyond-the-Basics"><span class="toc-text">Chapter 5 Beyond the Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Noninvasive-Debugging"><span class="toc-text">Noninvasive Debugging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-Breakpoints"><span class="toc-text">Data Breakpoints</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scripting-the-Debugger"><span class="toc-text">Scripting the Debugger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WOW64-Debugging"><span class="toc-text">WOW64 Debugging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-Debugging-Hooks-GFLAGS"><span class="toc-text">Windows Debugging Hooks (GFLAGS)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary-3"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-6-Code-Analysis-Tools"><span class="toc-text">Chapter 6 Code Analysis Tools</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Static-Code-Analysis"><span class="toc-text">Static Code Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Runtime-Code-Analysis"><span class="toc-text">Runtime Code Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary-4"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-7-Expert-Debugging-Tricks"><span class="toc-text">Chapter 7 Expert Debugging Tricks</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Essential-Tricks"><span class="toc-text">Essential Tricks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#More-Useful-Tricks"><span class="toc-text">More Useful Tricks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kernel-Mode-Debugging-Tricks"><span class="toc-text">Kernel-Mode Debugging Tricks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary-5"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-8-Common-Debugging-Scenarios-Part-1"><span class="toc-text">Chapter 8 Common Debugging Scenarios, Part 1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Access-Violations"><span class="toc-text">Debugging Access Violations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Heap-Corruptions"><span class="toc-text">Debugging Heap Corruptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Stack-Corruptions"><span class="toc-text">Debugging Stack Corruptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Stack-Overflows"><span class="toc-text">Debugging Stack Overflows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Handle-Leaks"><span class="toc-text">Debugging Handle Leaks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-User-Mode-Memory-Leaks"><span class="toc-text">Debugging User-Mode Memory Leaks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Kernel-Mode-Memory-Leaks"><span class="toc-text">Debugging Kernel-Mode Memory Leaks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary-6"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-9-Common-Debugging-Scenarios-Part-2"><span class="toc-text">Chapter 9 Common Debugging Scenarios, Part 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appendix-A-WinDbg-User-Mode-Debugging-Quick-Start"><span class="toc-text">Appendix A WinDbg User-Mode Debugging Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appendix-B-WinDbg-Kernel-Mode-Debugging-Quick-Start"><span class="toc-text">Appendix B WinDbg Kernel-Mode Debugging Quick Start</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

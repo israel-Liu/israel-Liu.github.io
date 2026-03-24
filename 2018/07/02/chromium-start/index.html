@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>chromium-learning | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="developers全部开发文档，有点老。 Chromium docs较新的文档。 Code Browsing in Chromium一些浏览代码的工具，我选择visual studio 。 Learning your way around the code建议的学习步骤。 Content API将Chrome开发人员与Content的内部工作隔离开来. Chrome C++ Lock and C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chromium-learning">
+<meta property="og:url" content="https://israel-liu.github.io/2018/07/02/chromium-start/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="developers全部开发文档，有点老。 Chromium docs较新的文档。 Code Browsing in Chromium一些浏览代码的工具，我选择visual studio 。 Learning your way around the code建议的学习步骤。 Content API将Chrome开发人员与Content的内部工作隔离开来. Chrome C++ Lock and C">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2018-07-02T11:24:39.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.769Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "chromium-learning",
+  "url": "https://israel-liu.github.io/2018/07/02/chromium-start/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2018-07-02T11:24:39.000Z",
+  "dateModified": "2026-03-24T05:43:37.769Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2018/07/02/chromium-start/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'chromium-learning',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">chromium-learning</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">chromium-learning</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-07-02T11:24:39.000Z" title="发表于 2018-07-02 19:24:39">2018-07-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.769Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h3 id="developers"><a href="#developers" class="headerlink" title="developers"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers">developers</a></h3><p>全部开发文档，有点老。</p>
+<h3 id="Chromium-docs"><a href="#Chromium-docs" class="headerlink" title="Chromium docs"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/docs/README.md">Chromium docs</a></h3><p>较新的文档。</p>
+<h3 id="Code-Browsing-in-Chromium"><a href="#Code-Browsing-in-Chromium" class="headerlink" title="Code Browsing in Chromium"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/code-browsing-in-chromium">Code Browsing in Chromium</a></h3><p>一些浏览代码的工具，我选择visual studio 。</p>
+<h3 id="Learning-your-way-around-the-code"><a href="#Learning-your-way-around-the-code" class="headerlink" title="Learning your way around the code"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/learning-your-way-around-the-code">Learning your way around the code</a></h3><p>建议的学习步骤。</p>
+<h3 id="Content-API"><a href="#Content-API" class="headerlink" title="Content API"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/content-module/content-api">Content API</a></h3><p>将Chrome开发人员与Content的内部工作隔离开来.</p>
+<h3 id="Chrome-C-Lock-and-ConditionVariable"><a href="#Chrome-C-Lock-and-ConditionVariable" class="headerlink" title="Chrome C++ Lock and ConditionVariable"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/lock-and-condition-variable">Chrome C++ Lock and ConditionVariable</a></h3><p>锁相关，chromium 里面通过PostTask异步很少用锁，需要使用来这里看看。</p>
+<h3 id="Design-Documents"><a href="#Design-Documents" class="headerlink" title="Design Documents"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents">Design Documents</a></h3><h3 id="servicification"><a href="#servicification" class="headerlink" title="servicification"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/servicification">servicification</a></h3><p>把各个部分拆分成服务的形式，通过 Mojo 交互。</p>
+<h3 id="Service-Development-Guidelines"><a href="#Service-Development-Guidelines" class="headerlink" title="Service Development Guidelines"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/services">Service Development Guidelines</a></h3><h3 id="The-Service-Manager-Services"><a href="#The-Service-Manager-Services" class="headerlink" title="The Service Manager &amp; Services"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/services/service_manager/README.md">The Service Manager &amp; Services</a></h3><h3 id="Network-Service-in-Chrome"><a href="#Network-Service-in-Chrome" class="headerlink" title="Network Service in Chrome"></a><a target="_blank" rel="noopener" href="https://docs.google.com/document/d/1wAHLw9h7gGuqJNCgG1mP1BmLtCGfZ2pys-PdZQ1vg7M/edit#">Network Service in Chrome</a></h3><h3 id="Mojo"><a href="#Mojo" class="headerlink" title="Mojo"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/mojo/README.md">Mojo</a></h3><p>交互接口。</p>
+<h3 id="Multi-process-Architecture"><a href="#Multi-process-Architecture" class="headerlink" title="Multi-process Architecture"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/multi-process-architecture">Multi-process Architecture</a></h3><p>chromium 分为浏览器主进程和多个渲染进程，他们直接通过ipc通信，主进程中存在和渲染进程对应的类对象。他们之间进行对应通信。</p>
+<h3 id="Inter-process-Communication-IPC"><a href="#Inter-process-Communication-IPC" class="headerlink" title="Inter-process Communication (IPC)"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/inter-process-communication">Inter-process Communication (IPC)</a></h3><p>通过 IPC::Channel 进行通信，通过使用 IPC::ChannelProxy 可以把一些资源请求筛选掉，放到 io 线程处理</p>
+<h3 id="How-Chromium-Displays-Web-Pages"><a href="#How-Chromium-Displays-Web-Pages" class="headerlink" title="How Chromium Displays Web Pages"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/displaying-a-web-page-in-chrome">How Chromium Displays Web Pages</a></h3><p>The WebKit glue 作为 chromium 使用 webkit 的一层接口，这样可以剥离对 webkit 的直接使用，这才是使用第三方库的正确姿势。<br>渲染和排版都弄好了那边传到 WebContents 然后又给chrome浏览器的都是需要做什么平台相关的事情，还是说真正的渲染？那前面渲染进程中都做啥了除了排版。<br>Life of a “set cursor” message 和 Life of a “mouse click” message 两个例子需要再好好理解一下，明确每个部分倒底做了什么事情。</p>
+<h3 id="Multi-process-Resource-Loading"><a href="#Multi-process-Resource-Loading" class="headerlink" title="Multi-process Resource Loading"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/multi-process-resource-loading">Multi-process Resource Loading</a></h3><p>Blink(ResourceLoader::WebURLLoader, ResourceLoader:WebURLLoaderClient(Renderer_Callback))&lt;—&gt;<br>Renderer(WebURLLoader::WebURLLoaderImpl, ResourceDispatcher(发送), RequestPeer(接受))&lt;—&gt;<br>Browser(RenderProcessHost(接受renderer，ipc请求)——&gt; 发送到 ResourceDispatcherHost转换为URLRequest对象，发送到具体的URLRequestJob处理)然后返回请求响应。<br>等下写那个 web source load 转换的时候参考一下。</p>
+<h3 id="Content-module"><a href="#Content-module" class="headerlink" title="Content module"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/content-module">Content module</a></h3><p>核心 render a page 功能被单独放到 src&#x2F;content 作为一层， chrome等应用可以直接使用，通过 content api 也可以反过来调用chrome函数。</p>
+<h3 id="Layered-Components-Design"><a href="#Layered-Components-Design" class="headerlink" title="Layered Components: Design"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/layered-components-design">Layered Components: Design</a></h3><p>分成设计，主要为了ios上可用。</p>
+<h3 id="How-to-Add-New-Features"><a href="#How-to-Add-New-Features" class="headerlink" title="How to Add New Features"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/multi-process-architecture/how-to-add-new-features">How to Add New Features</a></h3><p>为了不膨胀原有代码添加新功能在各处，需要自己实现对应接口。当初在B站要是可以做到这些，应该会不太一样吧。虽然现在也不能。后面尝试一些。</p>
+<h3 id="Content-API-1"><a href="#Content-API-1" class="headerlink" title="Content API"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/content-module/content-api">Content API</a></h3><p>DEPS rules would prevent chrome from reaching to the implementation files ??? 那我上面岂不是说反了，后续看代码确认，那些是底层那些是顶层。大概就是写代码的规则吧。</p>
+<h3 id="Process-Models"><a href="#Process-Models" class="headerlink" title="Process Models"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/process-models">Process Models</a></h3><p>讲 chrome 依据站点或者tab页创建各种进程的方式，一共有4中，每种都有自己的优缺点，通过命令行设置使用哪一种。早上不是很清醒需要再看。</p>
+<h3 id="Site-Isolation-Design-Document"><a href="#Site-Isolation-Design-Document" class="headerlink" title="Site Isolation Design Document"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/site-isolation">Site Isolation Design Document</a></h3><p>承接上一节，后面再看，目前继续往下。</p>
+<h3 id="Threading-and-Tasks-in-Chrome"><a href="#Threading-and-Tasks-in-Chrome" class="headerlink" title="Threading and Tasks in Chrome"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/docs/threading_and_tasks.md">Threading and Tasks in Chrome</a></h3><p>Task 要执行的任务，通过提过几种runner可以让任务并行多个thread上运行，或者串行多个或者单个thread上运行。<br>If one thread updates it based on expensive computation or through disk access, then that slow work should be done without holding the lock.<br>Only when the result is available should the lock be used to swap in the new data.<br>To post a task to the current thread, use base::ThreadTaskRunnerHandle，post到任意线程 base::SequencedTaskRunnerHandle::Get()。<br>base::TaskTraits encapsulate information about a task that helps the thread pool make better scheduling decisions.</p>
+<h3 id="Threading-and-Tasks-in-Chrome-FAQ"><a href="#Threading-and-Tasks-in-Chrome-FAQ" class="headerlink" title="Threading and Tasks in Chrome - FAQ"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/docs/threading_and_tasks_faq.md">Threading and Tasks in Chrome - FAQ</a></h3><h3 id="Chrome-C-Lock-and-ConditionVariable-1"><a href="#Chrome-C-Lock-and-ConditionVariable-1" class="headerlink" title="Chrome C++ Lock and ConditionVariable"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/lock-and-condition-variable">Chrome C++ Lock and ConditionVariable</a></h3><h3 id="Getting-Around-the-Chromium-Source-Code-Directory-Structure"><a href="#Getting-Around-the-Chromium-Source-Code-Directory-Structure" class="headerlink" title="Getting Around the Chromium Source Code Directory Structure"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/getting-around-the-chrome-source-code">Getting Around the Chromium Source Code Directory Structure</a></h3><p><a href="https://israel-liu.github.io/2018/06/12/Chromium-Source-Code-Directory-Structure/">Chromium-Source-Code-Directory-Structure</a><br>目录结构。Application startup, Tab startup &amp; initial navigation, Navigating from the URL bar, Navigations and session history</p>
+<h3 id="Important-Abstractions-and-Data-Structures"><a href="#Important-Abstractions-and-Data-Structures" class="headerlink" title="Important Abstractions and Data Structures"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/coding-style/important-abstractions-and-data-structures">Important Abstractions and Data Structures</a></h3><p>其实就是一些重要轮子，这里没有全部列出，自己也要撸这些轮子才行。<br>TaskRunner &amp; SequencedTaskRunner &amp; SingleThreadTaskRunner, MessageLoop &amp; MessageLoopProxy &amp; BrowserThread &amp; RunLoop<br>base::SequencedWorkerPool &amp; base::WorkerPool, base::Callback and base::Bind(), Singleton &amp; base::LazyInstance</p>
+<h3 id="Smart-Pointer-Guidelines"><a href="#Smart-Pointer-Guidelines" class="headerlink" title="Smart Pointer Guidelines"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/smart-pointer-guidelines">Smart Pointer Guidelines</a></h3><p>就是把指针用对象包装起来，提供指针访问操作符。利用生命周期自动析构。RAII - Resource Acquisition Is Initialization.</p>
+<h3 id="Chromium-String-usage"><a href="#Chromium-String-usage" class="headerlink" title="Chromium String usage"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/chromium-string-usage">Chromium String usage</a></h3><p>In the frontend, we use std::string&#x2F;char for UTF-8 and string16&#x2F;char16 for UTF-16 on all platforms.<br>临时字符串对象拷贝，Each copy makes a call to malloc, which needs a lock, and slows things down. </p>
+<h3 id="How-Blink-works"><a href="#How-Blink-works" class="headerlink" title="How Blink works"></a><a target="_blank" rel="noopener" href="https://docs.google.com/document/d/1aitSOucL0VHZa9Z2vbRJSyAIsAz24kX8LFByQ5xQnUg/edit#heading=h.v5plba74lfde">How Blink works</a></h3><h3 id="Sandbox"><a href="#Sandbox" class="headerlink" title="Sandbox"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/docs/design/sandbox.md">Sandbox</a></h3><h3 id="Net-stack"><a href="#Net-stack" class="headerlink" title="Net stack"></a><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/src/+/master/net/docs/life-of-a-url-request.md#life-of-a-urlrequest">Net stack</a></h3><p>网络栈实现，具体怎么发送请求。处理请求。</p>
+<h3 id="Network-stack"><a href="#Network-stack" class="headerlink" title="Network-stack"></a><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/design-documents/network-stack">Network-stack</a></h3><p>老版本网络栈代码描述</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2018/07/02/chromium-start/">https://israel-liu.github.io/2018/07/02/chromium-start/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2018/09/12/Get-Started-with-Win32-and-C/" title="Get Started with Win32 and C++"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Get Started with Win32 and C++</div></div></div></a><a class="pagination-related  no-desc" href="/2018/06/21/chromium-base-callback/" title="chromium_base_callback"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">chromium_base_callback</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#developers"><span class="toc-text">developers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chromium-docs"><span class="toc-text">Chromium docs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Code-Browsing-in-Chromium"><span class="toc-text">Code Browsing in Chromium</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Learning-your-way-around-the-code"><span class="toc-text">Learning your way around the code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Content-API"><span class="toc-text">Content API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chrome-C-Lock-and-ConditionVariable"><span class="toc-text">Chrome C++ Lock and ConditionVariable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Design-Documents"><span class="toc-text">Design Documents</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#servicification"><span class="toc-text">servicification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-Development-Guidelines"><span class="toc-text">Service Development Guidelines</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Service-Manager-Services"><span class="toc-text">The Service Manager &amp; Services</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Network-Service-in-Chrome"><span class="toc-text">Network Service in Chrome</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mojo"><span class="toc-text">Mojo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-process-Architecture"><span class="toc-text">Multi-process Architecture</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inter-process-Communication-IPC"><span class="toc-text">Inter-process Communication (IPC)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-Chromium-Displays-Web-Pages"><span class="toc-text">How Chromium Displays Web Pages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-process-Resource-Loading"><span class="toc-text">Multi-process Resource Loading</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Content-module"><span class="toc-text">Content module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layered-Components-Design"><span class="toc-text">Layered Components: Design</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Add-New-Features"><span class="toc-text">How to Add New Features</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Content-API-1"><span class="toc-text">Content API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Process-Models"><span class="toc-text">Process Models</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Site-Isolation-Design-Document"><span class="toc-text">Site Isolation Design Document</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threading-and-Tasks-in-Chrome"><span class="toc-text">Threading and Tasks in Chrome</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threading-and-Tasks-in-Chrome-FAQ"><span class="toc-text">Threading and Tasks in Chrome - FAQ</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chrome-C-Lock-and-ConditionVariable-1"><span class="toc-text">Chrome C++ Lock and ConditionVariable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-Around-the-Chromium-Source-Code-Directory-Structure"><span class="toc-text">Getting Around the Chromium Source Code Directory Structure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Important-Abstractions-and-Data-Structures"><span class="toc-text">Important Abstractions and Data Structures</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Smart-Pointer-Guidelines"><span class="toc-text">Smart Pointer Guidelines</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chromium-String-usage"><span class="toc-text">Chromium String usage</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-Blink-works"><span class="toc-text">How Blink works</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sandbox"><span class="toc-text">Sandbox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Net-stack"><span class="toc-text">Net stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Network-stack"><span class="toc-text">Network-stack</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

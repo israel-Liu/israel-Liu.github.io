@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Advanced C and C++ Compiling | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Creating the source code  2. Compiling PrecompiledCompilerModern Compiler Design编译器分三个阶段处理:front end -&gt; middle end -&gt; back end Front end: Preprocessing, lexical analysis, syntax analysis, seman">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Advanced C and C++ Compiling">
+<meta property="og:url" content="https://israel-liu.github.io/2017/11/16/Advanced-C-and-C-Compiling/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="Creating the source code  2. Compiling PrecompiledCompilerModern Compiler Design编译器分三个阶段处理:front end -&gt; middle end -&gt; back end Front end: Preprocessing, lexical analysis, syntax analysis, seman">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2017-11-16T07:54:11.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.677Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Advanced C and C++ Compiling",
+  "url": "https://israel-liu.github.io/2017/11/16/Advanced-C-and-C-Compiling/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2017-11-16T07:54:11.000Z",
+  "dateModified": "2026-03-24T05:43:37.677Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2017/11/16/Advanced-C-and-C-Compiling/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Advanced C and C++ Compiling',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Advanced C and C++ Compiling</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Advanced C and C++ Compiling</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2017-11-16T07:54:11.000Z" title="发表于 2017-11-16 15:54:11">2017-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.677Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ol>
+<li>Creating the source code</li>
+</ol>
+<h2 id="2-Compiling-Precompiled"><a href="#2-Compiling-Precompiled" class="headerlink" title="2. Compiling Precompiled"></a>2. Compiling <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/preprocessor/phases-of-translation">Precompiled</a></h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Compiler">Compiler</a><br><a target="_blank" rel="noopener" href="https://books.google.com/books?id=zkpFTBtK7a4C&printsec=frontcover&dq=compiler+design+pdf&hl=en&sa=X&ved=2ahUKEwiU2trIzvLjAhVPs54KHaI6CC0Q6AEwAXoECAUQAg#v=onepage&q=compiler%20design%20pdf&f=false">Modern Compiler Design</a><br>编译器分三个阶段处理:front end -&gt; middle end -&gt; back end</p>
+<p>Front end: Preprocessing, lexical analysis, syntax analysis, semantic analysis.<br>Middle end: Analysis, Optimization<br>Back end: Code generation</p>
+<ol start="3">
+<li>Linking</li>
+<li>Loading</li>
+<li>Executing</li>
+</ol>
+<h2 id="Chapter-1-Multitasking-OS-Basics"><a href="#Chapter-1-Multitasking-OS-Basics" class="headerlink" title="Chapter 1 Multitasking OS Basics"></a>Chapter 1 Multitasking OS Basics</h2><p>动态链接库加载到进程模型的时候，数据区和命令区都是统一存放的吗。如何分离数据和指令的。<br>The program binaries carry the details of the blueprint of the running process memory map.<br><a target="_blank" rel="noopener" href="https://manybutfinite.com/post/anatomy-of-a-program-in-memory/">https://manybutfinite.com/post/anatomy-of-a-program-in-memory/</a></p>
+<h3 id="The-Roles-of-Binaries-Compiler-Linker-and-Loader"><a href="#The-Roles-of-Binaries-Compiler-Linker-and-Loader" class="headerlink" title="The Roles of Binaries, Compiler, Linker, and Loader"></a>The Roles of Binaries, Compiler, Linker, and Loader</h3><p>编译器负责生成二进制文件，连接器把他们连接生成可执行文件。加载器打开二进制文件读取信息映射到进程。populates the process memory map structure.</p>
+<h2 id="Chapter-2-Simple-Program-Lifetime-Stages"><a href="#Chapter-2-Simple-Program-Lifetime-Stages" class="headerlink" title="Chapter 2 Simple Program Lifetime Stages"></a>Chapter 2 Simple Program Lifetime Stages</h2><p>对象文件基本确定了最后二进制文件需要的东西。所以理论上一个对象文件可以是一个可执行文件。多个好管理但需要拼装。</p>
+<h2 id="Chapter-3-Program-Execution-Stages"><a href="#Chapter-3-Program-Execution-Stages" class="headerlink" title="Chapter 3 Program Execution Stages"></a>Chapter 3 Program Execution Stages</h2><p>真正跑起来的时候才加载到进程map，前面load只是填充信息结构体。调用main之前做了一些系统函数调用。做准备工作。</p>
+<h2 id="Chapter-4-The-Impact-of-Reusing-Concept"><a href="#Chapter-4-The-Impact-of-Reusing-Concept" class="headerlink" title="Chapter 4 The Impact of Reusing Concept"></a>Chapter 4 The Impact of Reusing Concept</h2><p>静态连接可以是ob文件直接被连接器连接到目标文件，也可以是先打包ob文件然后连接到目标文件。最后都是各段拼到各段。<br>LoadLibrary是在运行时加载到进程空间(process memory map)。#pragma comment ( lib,”xxx.lib” )和工程中设置是一样的。<br>静态链接库中在client bin 文件中不适用的函数并不连接进去的。当然单位是ob文件。也就是说使用一个ob文件的一个函数，就包含整个ob文件。</p>
+<p>An interesting twist happens when the static library’s functionality needs to be presented to the binary clients through the intermediary dynamic library</p>
+<h2 id="Chapter-5-Working-with-Static-Libraries"><a href="#Chapter-5-Working-with-Static-Libraries" class="headerlink" title="Chapter 5 Working with Static Libraries"></a>Chapter 5 Working with Static Libraries</h2><p>静态库被连接的时候，只连接那些真正被使用的ob文件。</p>
+<h2 id="Chapter-6-Designing-Dynamic-Libraries-Basics"><a href="#Chapter-6-Designing-Dynamic-Libraries-Basics" class="headerlink" title="Chapter 6 Designing Dynamic Libraries: Basics"></a>Chapter 6 Designing Dynamic Libraries: Basics</h2><p>静态方式动态库加载应该就是使用宏命令 #pragma comment(lib, “&lt;import library name, full path, or relative path&gt;”);<br>和工程中设置，动态方式加载动态库，就是使用LoadLibrary函数了。</p>
+<h2 id="Chapter-7-Locating-the-Libraries"><a href="#Chapter-7-Locating-the-Libraries" class="headerlink" title="Chapter 7 Locating the Libraries"></a>Chapter 7 Locating the Libraries</h2><p>系统会预加载一些库，程序运行的时候就不需要再加载了。这种方式可以动态替换程序要加载的库版本。</p>
+<h2 id="Chapter-8-Designing-Dynamic-Libraries-Advanced-Topics"><a href="#Chapter-8-Designing-Dynamic-Libraries-Advanced-Topics" class="headerlink" title="Chapter 8 Designing Dynamic Libraries: Advanced Topics"></a>Chapter 8 Designing Dynamic Libraries: Advanced Topics</h2><p>就是讲动态链接库符号地址定位问题，生成的汇编需要使用绝对地址。所以需要链接器和加载器配合重现定位动态链接库里面的符合地址。</p>
+<h2 id="Chapter-9-Handling-Duplicate-Symbols-When-Linking-In-Dynamic-Libraries"><a href="#Chapter-9-Handling-Duplicate-Symbols-When-Linking-In-Dynamic-Libraries" class="headerlink" title="Chapter 9 Handling Duplicate Symbols When Linking In Dynamic Libraries"></a>Chapter 9 Handling Duplicate Symbols When Linking In Dynamic Libraries</h2><p>静态链接库不允许重复符合出现，可执行文件，静态连接，动态连接顺序使用符号。(VS上如果dll先于lib那么会报错，反过来dll被忽略)<br>两个动态连接库，谁先连接就使用谁的符号。当一个动态连接库导出符号和另外一个动态链接库 static 函数重复时候，二进制使用导出的符号，<br>但是在包含 static 函数的动态链接库内部还是使用自己的 static 函数，因为是很早就编译好的。都是本地 static 不会发生链接冲突。<br>The ultimate solution to the problem would be to host the singleton class in a dynamic library. ？？？解决单例</p>
+<h2 id="Chapter-10-Dynamic-Libraries-Versioning"><a href="#Chapter-10-Dynamic-Libraries-Versioning" class="headerlink" title="Chapter 10 Dynamic Libraries Versioning"></a>Chapter 10 Dynamic Libraries Versioning</h2><p>使用软连接避免频繁升级动态链接库，soname 就有主版本号。各种技术解决在有更改的时候如何不影响在使用的。包括接口删除添加更改符号等等。</p>
+<h2 id="Chapter-11-Dynamic-Libraries-Miscellaneous-Topics"><a href="#Chapter-11-Dynamic-Libraries-Miscellaneous-Topics" class="headerlink" title="Chapter 11 Dynamic Libraries: Miscellaneous Topics"></a>Chapter 11 Dynamic Libraries: Miscellaneous Topics</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2017/11/16/Advanced-C-and-C-Compiling/">https://israel-liu.github.io/2017/11/16/Advanced-C-and-C-Compiling/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2017/11/16/Building-C-C-Programs/" title="Building C/C++ Programs"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Building C/C++ Programs</div></div></div></a><a class="pagination-related  no-desc" href="/2017/11/16/Windows-API/" title="Windows API"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Windows API</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Compiling-Precompiled"><span class="toc-text">2. Compiling Precompiled</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-1-Multitasking-OS-Basics"><span class="toc-text">Chapter 1 Multitasking OS Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Roles-of-Binaries-Compiler-Linker-and-Loader"><span class="toc-text">The Roles of Binaries, Compiler, Linker, and Loader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-2-Simple-Program-Lifetime-Stages"><span class="toc-text">Chapter 2 Simple Program Lifetime Stages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-3-Program-Execution-Stages"><span class="toc-text">Chapter 3 Program Execution Stages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-4-The-Impact-of-Reusing-Concept"><span class="toc-text">Chapter 4 The Impact of Reusing Concept</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-5-Working-with-Static-Libraries"><span class="toc-text">Chapter 5 Working with Static Libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-6-Designing-Dynamic-Libraries-Basics"><span class="toc-text">Chapter 6 Designing Dynamic Libraries: Basics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-7-Locating-the-Libraries"><span class="toc-text">Chapter 7 Locating the Libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-8-Designing-Dynamic-Libraries-Advanced-Topics"><span class="toc-text">Chapter 8 Designing Dynamic Libraries: Advanced Topics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-9-Handling-Duplicate-Symbols-When-Linking-In-Dynamic-Libraries"><span class="toc-text">Chapter 9 Handling Duplicate Symbols When Linking In Dynamic Libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-10-Dynamic-Libraries-Versioning"><span class="toc-text">Chapter 10 Dynamic Libraries Versioning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-11-Dynamic-Libraries-Miscellaneous-Topics"><span class="toc-text">Chapter 11 Dynamic Libraries: Miscellaneous Topics</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

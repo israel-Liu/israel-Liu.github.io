@@ -1,0 +1,982 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近看了WIN核心编程后想再提升下C++语言方面的知识，访问了网站 IsoCpp，看到了几本相关书籍。    经大佬前同事推荐然后选择先看这本书，首先这本书在我两年前看C++ Primer的时候是看过的。当初是从会用的角度，再看一遍以用好为目标。 ### Looking for the authoritative tutorial and reference for the C++ standar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition">
+<meta property="og:url" content="https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="最近看了WIN核心编程后想再提升下C++语言方面的知识，访问了网站 IsoCpp，看到了几本相关书籍。    经大佬前同事推荐然后选择先看这本书，首先这本书在我两年前看C++ Primer的时候是看过的。当初是从会用的角度，再看一遍以用好为目标。 ### Looking for the authoritative tutorial and reference for the C++ standar">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2019-01-23T06:04:08.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.735Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition",
+  "url": "https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2019-01-23T06:04:08.000Z",
+  "dateModified": "2026-03-24T05:43:37.735Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">The_Cpp_Standard_Library_A_Tutorial_and_Reference_2nd_Edition</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-01-23T06:04:08.000Z" title="发表于 2019-01-23 14:04:08">2019-01-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.735Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>最近看了WIN核心编程后想再提升下C++语言方面的知识，访问了网站 <a target="_blank" rel="noopener" href="https://isocpp.org/get-started">IsoCpp</a>，看到了几本相关书籍。   </p>
+<p>经大佬前同事推荐然后选择先看这本书，首先这本书在我两年前看C++ Primer的时候是看过的。当初是从会用的角度，再看一遍以用好为目标。</p>
+<pre><code>### Looking for the authoritative tutorial and reference for the C++ standard library?    
+
+A Tutorial and Reference by renowned ISO C++ member Nicolai Josuttis is the most respected book for learning and studying the standard library.    
+
+It provides comprehensive documentation of each library component, including an introduction to its purpose and design; clearly written explanations of complex concepts;    
+
+the practical programming details needed for effective use; traps and pitfalls; the exact signature and definition of the most important classes and functions;    
+
+and numerous examples of working code. You’ll find it all here – everything from concurrency and clocks, to the new hash-based containers and regular expressions,    
+to high-quality guidance on how to use key language features like lambdas with it all.
+</code></pre>
+<h2 id="Preface-to-the-Second-Edition"><a href="#Preface-to-the-Second-Edition" class="headerlink" title="Preface to the Second Edition"></a>Preface to the Second Edition</h2><h2 id="Acknowledgments-for-the-Second-Edition"><a href="#Acknowledgments-for-the-Second-Edition" class="headerlink" title="Acknowledgments for the Second Edition"></a>Acknowledgments for the Second Edition</h2><h2 id="Preface-to-the-First-Edition"><a href="#Preface-to-the-First-Edition" class="headerlink" title="Preface to the First Edition"></a>Preface to the First Edition</h2><h2 id="Acknowledgments-for-the-First-Edition"><a href="#Acknowledgments-for-the-First-Edition" class="headerlink" title="Acknowledgments for the First Edition"></a>Acknowledgments for the First Edition</h2><h1 id="Chapter-1-About-This-Book"><a href="#Chapter-1-About-This-Book" class="headerlink" title="Chapter 1 : About This Book"></a>Chapter 1 : About This Book</h1><h3 id="1-1-Why-This-Book"><a href="#1-1-Why-This-Book" class="headerlink" title="1.1 Why This Book"></a>1.1 Why This Book</h3><p>本书从概念的角度介绍了C11的库和组件，描述了使用细节。使用示例来演示组件的精确使用。</p>
+<h3 id="1-2-Before-Reading-This-Book"><a href="#1-2-Before-Reading-This-Book" class="headerlink" title="1.2 Before Reading This Book"></a>1.2 Before Reading This Book</h3><p>主要描述库的实现细节，所以要求具备一定C++基础。</p>
+<h3 id="1-3-Style-and-Structure-of-the-Book"><a href="#1-3-Style-and-Structure-of-the-Book" class="headerlink" title="1.3 Style and Structure of the Book"></a>1.3 Style and Structure of the Book</h3><p>本书先介绍了一般概念和库使用的实用程序(utilities), 然后在一章或多章介绍components第一个介绍STL。最后描述self-explanatory components。  </p>
+<p>每个组件介绍从设计目的和用途开始，然后介绍使用方法和避免陷阱，最后细节描述和reference。</p>
+<h3 id="1-4-How-to-Read-This-Book"><a href="#1-4-How-to-Read-This-Book" class="headerlink" title="1.4 How to Read This Book"></a>1.4 How to Read This Book</h3><p>作为C++程序员就是从头阅读到位，然后自己使用组件编码。</p>
+<h2 id="Chapter-2-Introduction-to-C-and-the-Standard-Library"><a href="#Chapter-2-Introduction-to-C-and-the-Standard-Library" class="headerlink" title="Chapter 2 Introduction to C++ and the Standard Library"></a>Chapter 2 Introduction to C++ and the Standard Library</h2><h3 id="2-1-History-of-the-C-Standards"><a href="#2-1-History-of-the-C-Standards" class="headerlink" title="2.1 History of the C++ Standards"></a>2.1 History of the C++ Standards</h3><p>第一个C++标准1998年发布的C++98，2003年对第一个标准打了补丁叫C++03，2007年发布了TR1是一个库扩展技术报告包含在std::tr1命名空间。  </p>
+<p>C++0x是C++11的早期项目名称于2011年作为第二版标准发布称为C++11.这个可以本书侧重点。</p>
+<h4 id="2-1-1-Common-Questions-about-the-C-11-Standard"><a href="#2-1-1-Common-Questions-about-the-C-11-Standard" class="headerlink" title="2.1.1 Common Questions about the C++11 Standard"></a>2.1.1 Common Questions about the C++11 Standard</h4><h4 id="2-1-2-Compatibility-between-C-98-and-C-11"><a href="#2-1-2-Compatibility-between-C-98-and-C-11" class="headerlink" title="2.1.2 Compatibility between C++98 and C++11"></a>2.1.2 Compatibility between C++98 and C++11</h4><pre><code>For C++11, the following definition holds when compiling a C++ translation unit:
+#define __cplusplus 201103L
+By contrast, with both C++98 and C++03, it was:
+#define __cplusplus 199711L
+</code></pre>
+<p>C++11编译器向后兼容C++98可以正确编译C++98标准的源代码，但是符合C++11标准的连接器没法正确连接C++98编译过的二进制。</p>
+<h3 id="2-2-Complexity-and-Big-O-Notation"><a href="#2-2-Complexity-and-Big-O-Notation" class="headerlink" title="2.2 Complexity and Big-O Notation"></a>2.2 Complexity and Big-O Notation</h3><p>主要用来衡量算法效率的概念，不考虑其它时间消耗，不如插入效率不考虑内存不够需要分配内存所花费的时候。amortized？</p>
+<h2 id="Chapter-3-New-Language-Features"><a href="#Chapter-3-New-Language-Features" class="headerlink" title="Chapter 3 : New Language Features"></a>Chapter 3 : New Language Features</h2><h3 id="3-1-New-C-11-Language-Features"><a href="#3-1-New-C-11-Language-Features" class="headerlink" title="3.1 New C++11 Language Features"></a>3.1 New C++11 Language Features</h3><h4 id="3-1-1-Important-Minor-Syntax-Cleanups"><a href="#3-1-1-Important-Minor-Syntax-Cleanups" class="headerlink" title="3.1.1 Important Minor Syntax Cleanups"></a>3.1.1 Important Minor Syntax Cleanups</h4><p>nullptr 类型是 std::nullptr_t 可以赋值为各种指针类型。</p>
+<h4 id="3-1-2-Automatic-Type-Deduction-with-auto"><a href="#3-1-2-Automatic-Type-Deduction-with-auto" class="headerlink" title="3.1.2 Automatic Type Deduction with auto"></a>3.1.2 Automatic Type Deduction with auto</h4><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=wQxj20X-tIU">CppCon 2014: Scott Meyers “Type Deduction and Why You Care”</a></p>
+<h4 id="3-1-3-Uniform-Initialization-and-Initializer-Lists"><a href="#3-1-3-Uniform-Initialization-and-Initializer-Lists" class="headerlink" title="3.1.3 Uniform Initialization and Initializer Lists"></a>3.1.3 Uniform Initialization and Initializer Lists</h4><p>C++11开始所有初始化都可以使用大括号。传递错误类型可能会导致初始化失败。std::initializer_list&lt;&gt;可以用来处理一列数据。</p>
+<pre><code>int x1(5.3); // OK, but OUCH: x1 becomes 5
+int x2 = 5.3; // OK, but OUCH: x2 becomes 5
+int x3&#123;5.0&#125;; // ERROR: narrowing
+int x4 = &#123;5.3&#125;; // ERROR: narrowing
+char c1&#123;7&#125;; // OK: even though 7 is an int, this is not narrowing
+char c2&#123;99999&#125;; // ERROR: narrowing (if 99999 doesn’t fit into a char)
+std::vector&lt;int&gt; v1 &#123; 1, 2, 4, 5 &#125;; // OK
+std::vector&lt;int&gt; v2 &#123; 1, 2.3, 4, 5.6 &#125;; // ERROR: narrowing doubles to ints
+</code></pre>
+<p>explicit 关键字和 initializer lists 的结合使用，可以显示初始化多个值。</p>
+<pre><code>Because of initializer lists, explicit now also becomes relevant for constructors taking more than one argument. 
+So, you can now disable automatic type conversions from multiple values, which is also used when an initialization uses the = syntax:
+In the same manner, an explicit constructor taking an initializer list disables implicit conversions for initializer lists with zero, one, or more initial values.
+</code></pre>
+<h4 id="3-1-4-Range-Based-for-Loops"><a href="#3-1-4-Range-Based-for-Loops" class="headerlink" title="3.1.4 Range-Based for Loops"></a>3.1.4 Range-Based for Loops</h4><p>添加引用避免拷贝。auto &#x3D;&#x3D; vec 元素类型。No explicit type conversions are possible when elements are initialized as decl inside the for loop.</p>
+<pre><code>for ( auto&amp; elem : vec ) &#123;
+    elem *= 3;
+&#125;
+</code></pre>
+<h4 id="3-1-5-Move-Semantics-and-Rvalue-References"><a href="#3-1-5-Move-Semantics-and-Rvalue-References" class="headerlink" title="3.1.5 Move Semantics and Rvalue References"></a>3.1.5 Move Semantics and Rvalue References</h4><p>当调用者不再使用传递的参数时，可以使用移动语义避免拷贝。右值只能出现在等号右边为啥还可以修改？<br>使用右值构造的对象，就相当于View如果他具备Owner就可以修改内部数据。如std::string内部维护的内存字符。</p>
+<pre><code>Thus, you usually have to clear the contents of the passed argument (for example, by assigning nullptr to its internal member referring to its elements).
+</code></pre>
+<h4 id="3-1-6-New-String-Literals"><a href="#3-1-6-New-String-Literals" class="headerlink" title="3.1.6 New String Literals"></a>3.1.6 New String Literals</h4><p>原始字符串定义多用于正则表达式。</p>
+<h4 id="3-1-7-Keyword-noexcept"><a href="#3-1-7-Keyword-noexcept" class="headerlink" title="3.1.7 Keyword noexcept"></a>3.1.7 Keyword noexcept</h4><p>不确定如何补救的行为不抛出异常可以节约运行开销，只有出现异常无法执行的情况才需要抛出异常。</p>
+<pre><code>If foo() throws — the program is terminated, calling std::terminate(), which by default calls std::abort()
+</code></pre>
+<h4 id="3-1-8-Keyword-constexpr"><a href="#3-1-8-Keyword-constexpr" class="headerlink" title="3.1.8 Keyword constexpr"></a>3.1.8 Keyword constexpr</h4><p>用来在编译期确定表达式的值(metaprogramming)可以用表达式指定数值大小了。</p>
+<pre><code>std::array&lt;float, std::numeric_limits&lt;short&gt;::max()&gt; a; // Since C++ 11
+</code></pre>
+<h4 id="3-1-9-New-Template-Features"><a href="#3-1-9-New-Template-Features" class="headerlink" title="3.1.9 New Template Features"></a>3.1.9 New Template Features</h4><pre><code>Note that it is currently under discussion whether the following example also is valid. The reason is
+that formally for a single argument the variadic form is ambiguous with the nonvariadic form for a
+single argument; however, compilers usually accept this code:
+template &lt;typename T&gt;
+void print (const T&amp; arg)
+&#123;
+    std::cout &lt;&lt; arg &lt;&lt; std::endl;
+&#125;
+template &lt;typename T, typename... Types&gt;
+void print (const T&amp; firstArg, const Types&amp;... args)
+&#123;
+    std::cout &lt;&lt; firstArg &lt;&lt; std::endl; // print first argument
+    print(args...); // call print() for remaining arguments
+&#125;
+Inside variadic templates, sizeof...(args) yields the number of arguments.
+Class std::tuple&lt;&gt; makes heavy use of this feature (see Section 5.1.2, page 68).
+</code></pre>
+<h4 id="3-1-10-Lambdas"><a href="#3-1-10-Lambdas" class="headerlink" title="3.1.10 Lambdas"></a>3.1.10 Lambdas</h4><p>使用mutable可以对按值捕获的外部变量进行改变。</p>
+<h4 id="3-1-11-Keyword-decltype"><a href="#3-1-11-Keyword-decltype" class="headerlink" title="3.1.11 Keyword decltype"></a>3.1.11 Keyword decltype</h4><p>可以让编译器找到表达式类型。</p>
+<h4 id="3-1-12-New-Function-Declaration-Syntax"><a href="#3-1-12-New-Function-Declaration-Syntax" class="headerlink" title="3.1.12 New Function Declaration Syntax"></a>3.1.12 New Function Declaration Syntax</h4><pre><code>template &lt;typename T1, typename T2&gt;
+auto add(T1 x, T2 y) -&gt; decltype(x+y);
+</code></pre>
+<h4 id="3-1-13-Scoped-Enumerations"><a href="#3-1-13-Scoped-Enumerations" class="headerlink" title="3.1.13 Scoped Enumerations"></a>3.1.13 Scoped Enumerations</h4><p>使用std::underlying_type可以获取底层类型。<br>    enum class Salutation : char { mr, ms, co, none }; </p>
+<h4 id="3-1-14-New-Fundamental-Data-Types"><a href="#3-1-14-New-Fundamental-Data-Types" class="headerlink" title="3.1.14 New Fundamental Data Types"></a>3.1.14 New Fundamental Data Types</h4><pre><code>• char16_t and char32_t
+• long long and unsigned long long
+• std::nullptr_t
+</code></pre>
+<h3 id="3-2-Old-“New”-Language-Features"><a href="#3-2-Old-“New”-Language-Features" class="headerlink" title="3.2 Old “New” Language Features"></a>3.2 Old “New” Language Features</h3><pre><code>// Nontype Template Parameters
+bitset&lt;32&gt; flags32; // bitset with 32 bits
+bitset&lt;50&gt; flags50; // bitset with 50 bits
+
+
+
+// Default Template Parameters
+template &lt;typename T, typename container = vector&lt;T&gt;&gt;
+class MyClass;
+
+
+
+// Keyword typename 这个在STL里面太常见了，理解了可以更好理解源码
+template &lt;typename T&gt;
+class MyClass &#123;
+    typename T::SubType * ptr;  // 这里声明是SubType个类型，要求T里面提供类型SubType
+    ...
+&#125;;
+
+class Q &#123;
+    typedef int SubType;
+    ...
+&#125;;
+MyClass&lt;Q&gt; x; // OK
+
+
+
+// Member Templates 模板构造函数。C++模板还是强大啊，还需要好好理解。
+class MyClass &#123;
+    ...
+    template &lt;typename T&gt;
+    void f(T);				   // 这里f可以接收人任何类型的参数。
+&#125;;
+
+template &lt;typename T&gt;
+class MyClass &#123;
+    private:
+        T value; // Support automatic type conversions for members in class templates.
+    public:
+        void assign (const MyClass&lt;T&gt;&amp; x) &#123; // x must have same type as *this
+            value = x.value;
+        &#125;
+    ...
+&#125;;
+</code></pre>
+<h4 id="3-2-1-Explicit-Initialization-for-Fundamental-Types"><a href="#3-2-1-Explicit-Initialization-for-Fundamental-Types" class="headerlink" title="3.2.1 Explicit Initialization for Fundamental Types"></a>3.2.1 Explicit Initialization for Fundamental Types</h4><pre><code>template &lt;typename T&gt;
+void f()
+&#123;
+    T x = T(); // zero initialized 我想这是个新叫法。没有的话使用
+    ...
+&#125;
+</code></pre>
+<h4 id="3-2-2-Definition-of-main"><a href="#3-2-2-Definition-of-main" class="headerlink" title="3.2.2 Definition of main()"></a>3.2.2 Definition of main()</h4><p>return 0; 不是必须的，可以调用 exit()，quick_exit()，terminate()。</p>
+<h2 id="Chapter-4-General-Concepts"><a href="#Chapter-4-General-Concepts" class="headerlink" title="Chapter 4 General Concepts"></a>Chapter 4 General Concepts</h2><h3 id="4-1-Namespace-std"><a href="#4-1-Namespace-std" class="headerlink" title="4.1 Namespace std"></a>4.1 Namespace std</h3><p>Unlike a class, a namespace is open for extensions that might occur at any source。<br>Thus, you could use a namespace to define components that are distributed over several physical modules.<br>要小心在头文件中使用 using namespace std; 这可能会导致名字冲突或因为重载导致不同行为。</p>
+<h3 id="4-2-Header-Files"><a href="#4-2-Header-Files" class="headerlink" title="4.2 Header Files"></a>4.2 Header Files</h3><pre><code>#include &lt;string&gt; 		// 新的形式包含在 std 中
+#include &lt;cstring&gt;  	// 老式头的新文件在 std 中
+#include &lt;stdlib.h&gt; 	// 老版头在 std 和全局空间都有声明。
+#include &lt;iostream.h&gt; 	// 废弃的老版本C++头文件格式。
+</code></pre>
+<h3 id="4-3-Error-and-Exception-Handling"><a href="#4-3-Error-and-Exception-Handling" class="headerlink" title="4.3 Error and Exception Handling"></a>4.3 Error and Exception Handling</h3><p>像 string 会检查可能错误并抛出异常。STL更喜欢效率很少检查逻辑错误，只在运行时出错抛出异常。</p>
+<h4 id="4-3-1-Standard-Exception-Classes"><a href="#4-3-1-Standard-Exception-Classes" class="headerlink" title="4.3.1 Standard Exception Classes"></a>4.3.1 Standard Exception Classes</h4><p>所有异常语言的还是库的都从exception类继承。<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/exception.png"></p>
+<h4 id="4-3-2-Members-of-Exception-Classes"><a href="#4-3-2-Members-of-Exception-Classes" class="headerlink" title="4.3.2 Members of Exception Classes"></a>4.3.2 Members of Exception Classes</h4><p>错误条件(std::error_condition) -&gt; 条件枚举值，错误代码(std::error_code) -&gt; 含义。 ec is a error object.<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=LDxAgMe6D18&index=9&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&t=0s">Modernizing Legacy C++ Code</a><br>    if (ec &#x3D;&#x3D; std::errc::invalid_argument) { &#x2F;&#x2F; check for specific error condition<br>    …<br>    }<br>    if (ec &#x3D;&#x3D; std::future_errc::no_state) { &#x2F;&#x2F; check for specific error code<br>    …<br>    }</p>
+<h4 id="4-3-3-Passing-Exceptions-with-Class-exception-ptr"><a href="#4-3-3-Passing-Exceptions-with-Class-exception-ptr" class="headerlink" title="4.3.3 Passing Exceptions with Class exception_ptr"></a>4.3.3 Passing Exceptions with Class exception_ptr</h4><p>This feature is especially useful to pass exception between threads (see Section 18.2.1, page 964).</p>
+<h4 id="4-3-4-Throwing-Standard-Exceptions"><a href="#4-3-4-Throwing-Standard-Exceptions" class="headerlink" title="4.3.4 Throwing Standard Exceptions"></a>4.3.4 Throwing Standard Exceptions</h4><p>非语言基本的异常错误(bad_cast, bad_typeid, bad_exception)都可以通过 what() 返回值进行构造异常对象。<br>    throw std::out_of_range (“out_of_range (somewhere, somehow)”);<br>    throw std::system_error (std::make_error_code(std::errc::invalid_argument), “argument … is not valid”);</p>
+<h4 id="4-3-5-Deriving-from-Standard-Exception-Classes"><a href="#4-3-5-Deriving-from-Standard-Exception-Classes" class="headerlink" title="4.3.5 Deriving from Standard Exception Classes"></a>4.3.5 Deriving from Standard Exception Classes</h4><p>继承基类 exception 并且实现虚函数 what() 和 code() Shample: Stack in Section 12.1.3, page 635.</p>
+<h4 id="4-4-Callable-Objects"><a href="#4-4-Callable-Objects" class="headerlink" title="4.4 Callable Objects"></a>4.4 Callable Objects</h4><pre><code>• A function, where additional args are passed to as arguments
+• A pointer to a member function, which is called for the object passed as the first additional
+  argument (must be reference or pointer) and gets the remaining arguments as member function parameters
+• A function object (operator () for a passed object), where additional args are passed as arguments
+• A lambda (see Section 3.1.10, page 28), which strictly speaking is a kind of function object
+</code></pre>
+<h4 id="4-5-Concurrency-and-Multithreading"><a href="#4-5-Concurrency-and-Multithreading" class="headerlink" title="4.5 Concurrency and Multithreading"></a>4.5 Concurrency and Multithreading</h4><p>STL是共享的当同时使用构造的对象时候就要考虑同步。<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=y0GSc5fKtl8&t=2229s">Overview of Parallel Programming in C++</a></p>
+<h4 id="4-6-Allocators"><a href="#4-6-Allocators" class="headerlink" title="4.6 Allocators"></a>4.6 Allocators</h4><p>分配器为分配内存加了一层封装，可以指定如何分配内存。默认分配器比较常用。后面细看都可以用于共享内存等哪些实现。</p>
+<h2 id="Chapter-5-Utilities"><a href="#Chapter-5-Utilities" class="headerlink" title="Chapter 5 Utilities"></a>Chapter 5 Utilities</h2><pre><code>Type traits are used wherever complicated type conversions are necessary.
+</code></pre>
+<h3 id="5-1-Pairs-and-Tuples"><a href="#5-1-Pairs-and-Tuples" class="headerlink" title="5.1 Pairs and Tuples"></a>5.1 Pairs and Tuples</h3><h4 id="5-1-1-Pairs"><a href="#5-1-1-Pairs" class="headerlink" title="5.1.1 Pairs"></a>5.1.1 Pairs</h4><h4 id="5-1-2-Tuples"><a href="#5-1-2-Tuples" class="headerlink" title="5.1.2 Tuples"></a>5.1.2 Tuples</h4><h4 id="5-1-3-I-O-for-Tuples"><a href="#5-1-3-I-O-for-Tuples" class="headerlink" title="5.1.3 I&#x2F;O for Tuples"></a>5.1.3 I&#x2F;O for Tuples</h4><p>这个在boost里面有实现大量使用metaprogramming，并没有被移植到STL中。</p>
+<h4 id="5-1-4-Conversions-between-tuples-and-pairs"><a href="#5-1-4-Conversions-between-tuples-and-pairs" class="headerlink" title="5.1.4 Conversions between tuples and pairs"></a>5.1.4 Conversions between tuples and pairs</h4><h3 id="5-2-Smart-Pointers"><a href="#5-2-Smart-Pointers" class="headerlink" title="5.2 Smart Pointers"></a>5.2 Smart Pointers</h3><h4 id="5-2-1-Class-shared-ptr"><a href="#5-2-1-Class-shared-ptr" class="headerlink" title="5.2.1 Class shared_ptr"></a>5.2.1 Class shared_ptr</h4><p>提供 operators * and -&gt; 就像使用原始指针一样使用智能指针对象。</p>
+<h4 id="5-2-2-Class-weak-ptr"><a href="#5-2-2-Class-weak-ptr" class="headerlink" title="5.2.2 Class weak_ptr"></a>5.2.2 Class weak_ptr</h4><p>The lifetime of a reference to an object outlives the object it refers to. weak_ptr 对象生命周期长于它引用的对象。</p>
+<h4 id="5-2-3-Misusing-Shared-Pointers"><a href="#5-2-3-Misusing-Shared-Pointers" class="headerlink" title="5.2.3 Misusing Shared Pointers"></a>5.2.3 Misusing Shared Pointers</h4><p>Only one group of shared pointers owns an object. 防止多次析构。还有很多坑没搞清楚前不要乱用。</p>
+<h4 id="5-2-4-Shared-and-Weak-Pointers-in-Detail"><a href="#5-2-4-Shared-and-Weak-Pointers-in-Detail" class="headerlink" title="5.2.4 Shared and Weak Pointers in Detail"></a>5.2.4 Shared and Weak Pointers in Detail</h4><h4 id="5-2-5-Class-unique-ptr"><a href="#5-2-5-Class-unique-ptr" class="headerlink" title="5.2.5 Class unique_ptr"></a>5.2.5 Class unique_ptr</h4><h4 id="5-2-6-Class-unique-ptr-in-Detail"><a href="#5-2-6-Class-unique-ptr-in-Detail" class="headerlink" title="5.2.6 Class unique_ptr in Detail"></a>5.2.6 Class unique_ptr in Detail</h4><h4 id="5-2-7-Class-auto-ptr"><a href="#5-2-7-Class-auto-ptr" class="headerlink" title="5.2.7 Class auto_ptr"></a>5.2.7 Class auto_ptr</h4><h4 id="5-2-8-Final-Words-on-Smart-Pointers"><a href="#5-2-8-Final-Words-on-Smart-Pointers" class="headerlink" title="5.2.8 Final Words on Smart Pointers"></a>5.2.8 Final Words on Smart Pointers</h4><h3 id="5-3-Numeric-Limits"><a href="#5-3-Numeric-Limits" class="headerlink" title="5.3 Numeric Limits"></a>5.3 Numeric Limits</h3><p>模板特殊化numeric_limits可以使用依赖平台的基础类型</p>
+<h3 id="5-4-Type-Traits-and-Type-Utilities"><a href="#5-4-Type-Traits-and-Type-Utilities" class="headerlink" title="5.4 Type Traits and Type Utilities"></a>5.4 Type Traits and Type Utilities</h3><h4 id="5-4-1-Purpose-of-Type-Traits"><a href="#5-4-1-Purpose-of-Type-Traits" class="headerlink" title="5.4.1 Purpose of Type Traits"></a>5.4.1 Purpose of Type Traits</h4><pre><code>template &lt;typename T1, typename T2&gt;
+struct common_type&lt;T1, T2&gt; &#123;
+    typedef decltype(true ? declval&lt;T1&gt;() : declval&lt;T2&gt;()) type; // true ?
+&#125;;
+</code></pre>
+<h4 id="5-4-2-Type-Traits-in-Detail"><a href="#5-4-2-Type-Traits-in-Detail" class="headerlink" title="5.4.2 Type Traits in Detail"></a>5.4.2 Type Traits in Detail</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LaoJiu_/article/details/66472089">trivial type</a><br>Note again that a reference to a constant type is not constant, so you can’t remove constness there.</p>
+<h4 id="5-4-3-Reference-Wrappers"><a href="#5-4-3-Reference-Wrappers" class="headerlink" title="5.4.3 Reference Wrappers"></a>5.4.3 Reference Wrappers</h4><pre><code>std::vector&lt;std::reference_wrapper&lt;MyClass&gt;&gt; coll;
+</code></pre>
+<h4 id="5-4-4-Function-Type-Wrappers"><a href="#5-4-4-Function-Type-Wrappers" class="headerlink" title="5.4.4 Function Type Wrappers"></a>5.4.4 Function Type Wrappers</h4><pre><code>class C &#123;
+public:
+    void memfunc (int x, int y) const;
+&#125;;
+std::function&lt;void(const C&amp;,int,int)&gt; mf;
+mf = &amp;C::memfunc;
+mf(C(),42,77);
+</code></pre>
+<h3 id="5-5-Auxiliary-Functions"><a href="#5-5-Auxiliary-Functions" class="headerlink" title="5.5 Auxiliary Functions"></a>5.5 Auxiliary Functions</h3><h4 id="5-5-1-Processing-the-Minimum-and-Maximum"><a href="#5-5-1-Processing-the-Minimum-and-Maximum" class="headerlink" title="5.5.1 Processing the Minimum and Maximum"></a>5.5.1 Processing the Minimum and Maximum</h4><p>For an initializer list, you need an internal temporary, so returning a reference would return a dangling reference.</p>
+<h4 id="5-5-2-Swapping-Two-Values"><a href="#5-5-2-Swapping-Two-Values" class="headerlink" title="5.5.2 Swapping Two Values"></a>5.5.2 Swapping Two Values</h4><h4 id="5-5-3-Supplementary-Comparison-Operators"><a href="#5-5-3-Supplementary-Comparison-Operators" class="headerlink" title="5.5.3 Supplementary Comparison Operators"></a>5.5.3 Supplementary Comparison Operators</h4><h3 id="5-6-Compile-Time-Fractional-Arithmetic-with-Class-ratio"><a href="#5-6-Compile-Time-Fractional-Arithmetic-with-Class-ratio" class="headerlink" title="5.6 Compile-Time Fractional Arithmetic with Class ratio&lt;&gt;"></a>5.6 Compile-Time Fractional Arithmetic with Class ratio&lt;&gt;</h3><pre><code>namespace std &#123;
+    template &lt;intmax_t N, intmax_t D = 1&gt;
+    class ratio &#123;
+    public:
+        typedef ratio&lt;num,den&gt; type;
+        static constexpr intmax_t num;
+        static constexpr intmax_t den;
+    &#125;;
+&#125;
+</code></pre>
+<h3 id="5-7-Clocks-and-Timers"><a href="#5-7-Clocks-and-Timers" class="headerlink" title="5.7 Clocks and Timers"></a>5.7 Clocks and Timers</h3><p>C++ standard library provides the basic C and POSIX interfaces to deal with calendar time.<br><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/ClocksAndTime.png"></p>
+<h4 id="5-7-1-Overview-of-the-Chrono-Library"><a href="#5-7-1-Overview-of-the-Chrono-Library" class="headerlink" title="5.7.1 Overview of the Chrono Library"></a>5.7.1 Overview of the Chrono Library</h4><pre><code>template &lt;typename V, typename R&gt;
+    ostream&amp; operator &lt;&lt; (ostream&amp; s, const chrono::duration&lt;V,R&gt;&amp; d)
+    &#123;
+        s &lt;&lt; &quot;[&quot; &lt;&lt; d.count() &lt;&lt; &quot; of &quot; &lt;&lt; R::num &lt;&lt; &quot;/&quot; &lt;&lt; R::den &lt;&lt; &quot;]&quot;;
+        return s;
+    &#125;
+</code></pre>
+<h4 id="5-7-3-Clocks-and-Timepoints"><a href="#5-7-3-Clocks-and-Timepoints" class="headerlink" title="5.7.3 Clocks and Timepoints"></a>5.7.3 Clocks and Timepoints</h4><p>系统时间调整？原点坐标调整吗，3种时钟还是有点没理解。各种定义比 Unicode 还难理解。<br>UNIX epoch, January 1, 1970 ？ universal time (UTC) ？ 00:00 in Greenwich, UK. ？summertime ？</p>
+<h4 id="5-7-4-Date-and-Time-Functions-by-C-and-POSIX"><a href="#5-7-4-Date-and-Time-Functions-by-C-and-POSIX" class="headerlink" title="5.7.4 Date and Time Functions by C and POSIX"></a>5.7.4 Date and Time Functions by C and POSIX</h4><p>time_t usually is just the number of seconds since the UNIX epoch, which is January 1, 1970.</p>
+<h4 id="5-7-5-Blocking-with-Timers"><a href="#5-7-5-Blocking-with-Timers" class="headerlink" title="5.7.5 Blocking with Timers"></a>5.7.5 Blocking with Timers</h4><p>计时器时间并不靠谱，包括一些没计算的耗时，还可能根据系统时间调整而变化。</p>
+<h3 id="5-8-Header-Files-and"><a href="#5-8-Header-Files-and" class="headerlink" title="5.8 Header Files , , and "></a>5.8 Header Files <cstddef>, <cstdlib>, and <cstring></h3><p>主要就是C里面一些重要的东西在C++里的定义</p>
+<h4 id="5-8-2-Definitions-in"><a href="#5-8-2-Definitions-in" class="headerlink" title="5.8.2 Definitions in "></a>5.8.2 Definitions in <cstdlib></h4><pre><code>...
+</code></pre>
+<h2 id="Chapter-6-The-Standard-Template-Library"><a href="#Chapter-6-The-Standard-Template-Library" class="headerlink" title="Chapter 6 The Standard Template Library"></a>Chapter 6 The Standard Template Library</h2><h3 id="6-1-STL-Components"><a href="#6-1-STL-Components" class="headerlink" title="6.1 STL Components"></a>6.1 STL Components</h3><h3 id="6-2-Containers"><a href="#6-2-Containers" class="headerlink" title="6.2 Containers"></a>6.2 Containers</h3><h4 id="6-2-1-Sequence-Containers"><a href="#6-2-1-Sequence-Containers" class="headerlink" title="6.2.1 Sequence Containers"></a>6.2.1 Sequence Containers</h4><h4 id="6-2-2-Associative-Containers"><a href="#6-2-2-Associative-Containers" class="headerlink" title="6.2.2 Associative Containers"></a>6.2.2 Associative Containers</h4><h4 id="6-2-4-Associative-Arrays"><a href="#6-2-4-Associative-Arrays" class="headerlink" title="6.2.4 Associative Arrays"></a>6.2.4 Associative Arrays</h4><h4 id="6-2-5-Other-Containers"><a href="#6-2-5-Other-Containers" class="headerlink" title="6.2.5 Other Containers"></a>6.2.5 Other Containers</h4><h4 id="6-2-6-Container-Adapters"><a href="#6-2-6-Container-Adapters" class="headerlink" title="6.2.6 Container Adapters"></a>6.2.6 Container Adapters</h4><h3 id="6-3-Iterators"><a href="#6-3-Iterators" class="headerlink" title="6.3 Iterators"></a>6.3 Iterators</h3><p>Thus,<br>    for (type elem : coll) {<br>        …<br>    }<br>is interpreted as<br>    for (auto pos&#x3D;coll.begin(), end&#x3D;coll.end(); pos!&#x3D;end; ++pos) {<br>        type elem &#x3D; *pos;<br>        …<br>    }</p>
+<h4 id="6-3-1-Further-Examples-of-Using-Associative-and-Unordered-Containers"><a href="#6-3-1-Further-Examples-of-Using-Associative-and-Unordered-Containers" class="headerlink" title="6.3.1 Further Examples of Using Associative and Unordered Containers"></a>6.3.1 Further Examples of Using Associative and Unordered Containers</h4><h4 id="6-3-2-Iterator-Categories"><a href="#6-3-2-Iterator-Categories" class="headerlink" title="6.3.2 Iterator Categories"></a>6.3.2 Iterator Categories</h4><h3 id="6-4-Algorithms"><a href="#6-4-Algorithms" class="headerlink" title="6.4 Algorithms"></a>6.4 Algorithms</h3><h4 id="6-4-1-Ranges"><a href="#6-4-1-Ranges" class="headerlink" title="6.4.1 Ranges"></a>6.4.1 Ranges</h4><p>要保证区间的有效性，防止结尾区间大于开始区间。</p>
+<h4 id="6-4-2-Handling-Multiple-Ranges"><a href="#6-4-2-Handling-Multiple-Ranges" class="headerlink" title="6.4.2 Handling Multiple Ranges"></a>6.4.2 Handling Multiple Ranges</h4><h3 id="6-5-Iterator-Adapters"><a href="#6-5-Iterator-Adapters" class="headerlink" title="6.5 Iterator Adapters"></a>6.5 Iterator Adapters</h3><h4 id="6-5-1-Insert-Iterators"><a href="#6-5-1-Insert-Iterators" class="headerlink" title="6.5.1 Insert Iterators"></a>6.5.1 Insert Iterators</h4><p>分别使用了成员函数所以要求提供了相应的成员函数才可以使用。back_inserter –&gt; push_back(val)</p>
+<h4 id="6-5-2-Stream-Iterators"><a href="#6-5-2-Stream-Iterators" class="headerlink" title="6.5.2 Stream Iterators"></a>6.5.2 Stream Iterators</h4><h4 id="6-5-3-Reverse-Iterators"><a href="#6-5-3-Reverse-Iterators" class="headerlink" title="6.5.3 Reverse Iterators"></a>6.5.3 Reverse Iterators</h4><p>Create reverse iterators via their member functions rbegin() and rend().</p>
+<h4 id="6-5-4-Move-Iterators"><a href="#6-5-4-Move-Iterators" class="headerlink" title="6.5.4 Move Iterators"></a>6.5.4 Move Iterators</h4><h3 id="6-6-User-Defined-Generic-Functions"><a href="#6-6-User-Defined-Generic-Functions" class="headerlink" title="6.6 User-Defined Generic Functions"></a>6.6 User-Defined Generic Functions</h3><h3 id="6-7-Manipulating-Algorithms"><a href="#6-7-Manipulating-Algorithms" class="headerlink" title="6.7 Manipulating Algorithms"></a>6.7 Manipulating Algorithms</h3><p>These aspects are surprising and show the price of the STL concept that separates containers and algorithms with great flexibility.</p>
+<h4 id="6-7-1-“Removing”-Elements"><a href="#6-7-1-“Removing”-Elements" class="headerlink" title="6.7.1 “Removing” Elements"></a>6.7.1 “Removing” Elements</h4><p>迭代器不知道他们的容器. 使用迭代器的算法不能访问容器的成员函数。不能真正erase元素。</p>
+<h4 id="6-7-2-Manipulating-Associative-and-Unordered-Containers"><a href="#6-7-2-Manipulating-Associative-and-Unordered-Containers" class="headerlink" title="6.7.2 Manipulating Associative and Unordered Containers"></a>6.7.2 Manipulating Associative and Unordered Containers</h4><p>使用提供的成员函数操作元素。</p>
+<h4 id="6-7-3-Algorithms-versus-Member-Functions"><a href="#6-7-3-Algorithms-versus-Member-Functions" class="headerlink" title="6.7.3 Algorithms versus Member Functions"></a>6.7.3 Algorithms versus Member Functions</h4><p>如果存在成员函数比通用算法效率更高更准确使用成员函数代替算法。</p>
+<h3 id="6-8-Functions-as-Algorithm-Arguments"><a href="#6-8-Functions-as-Algorithm-Arguments" class="headerlink" title="6.8 Functions as Algorithm Arguments"></a>6.8 Functions as Algorithm Arguments</h3><h4 id="6-8-1-Using-Functions-as-Algorithm-Arguments"><a href="#6-8-1-Using-Functions-as-Algorithm-Arguments" class="headerlink" title="6.8.1 Using Functions as Algorithm Arguments"></a>6.8.1 Using Functions as Algorithm Arguments</h4><h4 id="6-8-2-Predicates"><a href="#6-8-2-Predicates" class="headerlink" title="6.8.2 Predicates"></a>6.8.2 Predicates</h4><p>They should always yield the same result for the same value.</p>
+<h3 id="6-9-Using-Lambdas"><a href="#6-9-Using-Lambdas" class="headerlink" title="6.9 Using Lambdas"></a>6.9 Using Lambdas</h3><p>不能保存状态，必须在外部定义，在内部捕捉引用。函数对象可以在内部保存状态，在不同地方使用。</p>
+<h3 id="6-10-Function-Objects"><a href="#6-10-Function-Objects" class="headerlink" title="6.10 Function Objects"></a>6.10 Function Objects</h3><h4 id="6-10-1-Definition-of-Function-Objects"><a href="#6-10-1-Definition-of-Function-Objects" class="headerlink" title="6.10.1 Definition of Function Objects"></a>6.10.1 Definition of Function Objects</h4><p>Rarely are things not possible in C++.</p>
+<h4 id="6-10-2-Predefined-Function-Objects"><a href="#6-10-2-Predefined-Function-Objects" class="headerlink" title="6.10.2 Predefined Function Objects"></a>6.10.2 Predefined Function Objects</h4><p>用于set等构造函数排序方式，用在算法中。</p>
+<h4 id="6-10-3-Binders"><a href="#6-10-3-Binders" class="headerlink" title="6.10.3 Binders"></a>6.10.3 Binders</h4><p>也叫做函数适配器，通过低级函数对象组成高级函数对象。</p>
+<h3 id="6-11-Container-Elements"><a href="#6-11-Container-Elements" class="headerlink" title="6.11 Container Elements"></a>6.11 Container Elements</h3><h4 id="6-11-1-Requirements-for-Container-Elements"><a href="#6-11-1-Requirements-for-Container-Elements" class="headerlink" title="6.11.1 Requirements for Container Elements"></a>6.11.1 Requirements for Container Elements</h4><p>自定义对象作为容器元素的时候需要满足这些条件，例如提供 operator &lt;</p>
+<h4 id="6-11-2-Value-Semantics-or-Reference-Semantics"><a href="#6-11-2-Value-Semantics-or-Reference-Semantics" class="headerlink" title="6.11.2 Value Semantics or Reference Semantics"></a>6.11.2 Value Semantics or Reference Semantics</h4><p>STL容器提供值语义，放入容器中的是原始值的副本。可以通过其它方式实现引用语义，比如使用智能指针或者std::reference_wrapper&lt;&gt;</p>
+<h4 id="6-12-Errors-and-Exceptions-inside-the-STL"><a href="#6-12-Errors-and-Exceptions-inside-the-STL" class="headerlink" title="6.12 Errors and Exceptions inside the STL"></a>6.12 Errors and Exceptions inside the STL</h4><h4 id="6-12-1-Error-Handling"><a href="#6-12-1-Error-Handling" class="headerlink" title="6.12.1 Error Handling"></a>6.12.1 Error Handling</h4><p>可以使用安全版本的STL库。</p>
+<h4 id="6-12-2-Exception-Handling"><a href="#6-12-2-Exception-Handling" class="headerlink" title="6.12.2 Exception Handling"></a>6.12.2 Exception Handling</h4><p>STL提供了一些保证，在析构函数不抛出异常的情况，很多操作要么成功要么没有影响，出错不抛出异常。</p>
+<h3 id="6-13-Extending-the-STL"><a href="#6-13-Extending-the-STL" class="headerlink" title="6.13 Extending the STL"></a>6.13 Extending the STL</h3><h4 id="6-13-1-Integrating-Additional-Types"><a href="#6-13-1-Integrating-Additional-Types" class="headerlink" title="6.13.1 Integrating Additional Types"></a>6.13.1 Integrating Additional Types</h4><h4 id="6-13-2-Deriving-from-STL-Types"><a href="#6-13-2-Deriving-from-STL-Types" class="headerlink" title="6.13.2 Deriving from STL Types"></a>6.13.2 Deriving from STL Types</h4><p>出于性能原因STL类没有提供虚函数，所以不能通过继承提供多态性，可以在内部使用STL类来定义新类。</p>
+<h2 id="Chapter-7-STL-Containers"><a href="#Chapter-7-STL-Containers" class="headerlink" title="Chapter 7 STL Containers"></a>Chapter 7 STL Containers</h2><h3 id="7-1-Common-Container-Abilities-and-Operations"><a href="#7-1-Common-Container-Abilities-and-Operations" class="headerlink" title="7.1 Common Container Abilities and Operations"></a>7.1 Common Container Abilities and Operations</h3><h4 id="7-1-1-Container-Abilities"><a href="#7-1-1-Container-Abilities" class="headerlink" title="7.1.1 Container Abilities"></a>7.1.1 Container Abilities</h4><p>提供值语义，保证在不更改的前提下多次访问结果相同，不跑出异常需要调用者满足调用要求。</p>
+<h4 id="7-1-2-Container-Operations"><a href="#7-1-2-Container-Operations" class="headerlink" title="7.1.2 Container Operations"></a>7.1.2 Container Operations</h4><p>() 和 &#x3D; 构造有啥区别？<br>    &#x2F;&#x2F; move all elements of the list into a vector<br>    std::vector<a href="std::string">std::string</a> c(std::make_move_iterator(l.begin()), std::make_move_iterator(l.end()));</p>
+<h4 id="7-1-3-Container-Types"><a href="#7-1-3-Container-Types" class="headerlink" title="7.1.3 Container Types"></a>7.1.3 Container Types</h4><p>使用 typedef 和 typename 定义了一些类型 </p>
+<h3 id="7-2-Arrays"><a href="#7-2-Arrays" class="headerlink" title="7.2 Arrays"></a>7.2 Arrays</h3><h4 id="7-2-1-Abilities-of-Arrays"><a href="#7-2-1-Abilities-of-Arrays" class="headerlink" title="7.2.1 Abilities of Arrays"></a>7.2.1 Abilities of Arrays</h4><p>So, iterators and references refer to the same container but different elements afterward. 这点和其它容器不同。</p>
+<h4 id="7-2-2-Array-Operations"><a href="#7-2-2-Array-Operations" class="headerlink" title="7.2.2 Array Operations"></a>7.2.2 Array Operations</h4><h4 id="7-2-3-Using-arrays-as-C-Style-Arrays"><a href="#7-2-3-Using-arrays-as-C-Style-Arrays" class="headerlink" title="7.2.3 Using arrays as C-Style Arrays"></a>7.2.3 Using arrays as C-Style Arrays</h4><p>Use data() where the ordinary C-style interface is required.</p>
+<h4 id="7-2-4-Exception-Handling"><a href="#7-2-4-Exception-Handling" class="headerlink" title="7.2.4 Exception Handling"></a>7.2.4 Exception Handling</h4><h4 id="7-2-5-Tuple-Interface"><a href="#7-2-5-Tuple-Interface" class="headerlink" title="7.2.5 Tuple Interface"></a>7.2.5 Tuple Interface</h4><pre><code>typedef std::array&lt;std::string,5&gt; FiveStrings;
+FiveStrings a = &#123; &quot;hello&quot;, &quot;nico&quot;, &quot;how&quot;, &quot;are&quot;, &quot;you&quot; &#125;;
+std::tuple_size&lt;FiveStrings&gt;::value // yields 5
+std::tuple_element&lt;1,FiveStrings&gt;::type // yields std::string
+std::get&lt;1&gt;(a) // yields std::string(&quot;nico&quot;)
+</code></pre>
+<h4 id="7-2-6-Examples-of-Using-Arrays"><a href="#7-2-6-Examples-of-Using-Arrays" class="headerlink" title="7.2.6 Examples of Using Arrays"></a>7.2.6 Examples of Using Arrays</h4><h3 id="7-3-Vectors"><a href="#7-3-Vectors" class="headerlink" title="7.3 Vectors"></a>7.3 Vectors</h3><p>使用 reserve() 成员函数分配大小，避免复杂类型初始化影响性能。</p>
+<h4 id="7-3-1-Abilities-of-Vectors"><a href="#7-3-1-Abilities-of-Vectors" class="headerlink" title="7.3.1 Abilities of Vectors"></a>7.3.1 Abilities of Vectors</h4><p>std::vector<T>(v).swap(v); 缩小容器后iter有效，shrink_to_fit()(C++11)缩小容器大小后iter无效。</p>
+<h4 id="7-3-2-Vector-Operations"><a href="#7-3-2-Vector-Operations" class="headerlink" title="7.3.2 Vector Operations"></a>7.3.2 Vector Operations</h4><p>使用成员函数 at() 访问元素有范围检查，会抛出 out_of_range 异常。</p>
+<h4 id="7-3-3-Using-Vectors-as-C-Style-Arrays"><a href="#7-3-3-Using-Vectors-as-C-Style-Arrays" class="headerlink" title="7.3.3 Using Vectors as C-Style Arrays"></a>7.3.3 Using Vectors as C-Style Arrays</h4><h4 id="7-3-4-Exception-Handling"><a href="#7-3-4-Exception-Handling" class="headerlink" title="7.3.4 Exception Handling"></a>7.3.4 Exception Handling</h4><h4 id="7-3-5-Examples-of-Using-Vectors"><a href="#7-3-5-Examples-of-Using-Vectors" class="headerlink" title="7.3.5 Examples of Using Vectors"></a>7.3.5 Examples of Using Vectors</h4><p>一般实现是默认申请 2k 空间，如果不够用翻倍。</p>
+<h4 id="7-3-6-Class-vector"><a href="#7-3-6-Class-vector" class="headerlink" title="7.3.6 Class vector"></a>7.3.6 Class vector<bool></h4><p>vector<bool> 是动态调整的 bit 数组，如果你想使用固定大小的 bit 数组。使用 bitset。</p>
+<pre><code>namespace std &#123;
+    template &lt;typename Allocator&gt; class vector&lt;bool,Allocator&gt; &#123;
+        public:
+            // auxiliary proxy type for element modifications:
+            class reference &#123;
+                ...
+                public:
+                    reference&amp; operator= (const bool) noexcept; // assignments
+                    reference&amp; operator= (const reference&amp;) noexcept;
+                    operator bool() const noexcept; // automatic type conversion to bool
+                    void flip() noexcept; // bit complement
+            &#125;;
+            ...
+            // operations for element access return reference proxy instead of bool:
+            reference operator[](size_type idx);
+            reference at(size_type idx);
+            reference front();
+            reference back();
+            ...
+    &#125;;
+&#125;
+</code></pre>
+<h4 id="7-4-Deques"><a href="#7-4-Deques" class="headerlink" title="7.4 Deques"></a>7.4 Deques</h4><p>Deque is typically implemented as a bunch of individual blocks, 第一个和最后一个增长方向相反。</p>
+<h4 id="7-4-1-Abilities-of-Deques"><a href="#7-4-1-Abilities-of-Deques" class="headerlink" title="7.4.1 Abilities of Deques"></a>7.4.1 Abilities of Deques</h4><h4 id="7-4-2-Deque-Operations"><a href="#7-4-2-Deque-Operations" class="headerlink" title="7.4.2 Deque Operations"></a>7.4.2 Deque Operations</h4><h4 id="7-4-3-Exception-Handling"><a href="#7-4-3-Exception-Handling" class="headerlink" title="7.4.3 Exception Handling"></a>7.4.3 Exception Handling</h4><h4 id="7-4-4-Examples-of-Using-Deques"><a href="#7-4-4-Examples-of-Using-Deques" class="headerlink" title="7.4.4 Examples of Using Deques"></a>7.4.4 Examples of Using Deques</h4><h3 id="7-5-Lists"><a href="#7-5-Lists" class="headerlink" title="7.5 Lists"></a>7.5 Lists</h3><p>C++ standard library does not specify the kind of the implementation, but it follows from the list’s name, constraints, and specifications.</p>
+<h4 id="7-5-1-Abilities-of-Lists"><a href="#7-5-1-Abilities-of-Lists" class="headerlink" title="7.5.1 Abilities of Lists"></a>7.5.1 Abilities of Lists</h4><h4 id="7-5-2-List-Operations"><a href="#7-5-2-List-Operations" class="headerlink" title="7.5.2 List Operations"></a>7.5.2 List Operations</h4><p>两个相同  list 之间直接操作内部指针，合并什么的非常快。</p>
+<h4 id="7-5-3-Exception-Handling"><a href="#7-5-3-Exception-Handling" class="headerlink" title="7.5.3 Exception Handling"></a>7.5.3 Exception Handling</h4><h4 id="7-5-4-Examples-of-Using-Lists"><a href="#7-5-4-Examples-of-Using-Lists" class="headerlink" title="7.5.4 Examples of Using Lists"></a>7.5.4 Examples of Using Lists</h4><h3 id="7-6-Forward-Lists"><a href="#7-6-Forward-Lists" class="headerlink" title="7.6 Forward Lists"></a>7.6 Forward Lists</h3><h4 id="7-6-1-Abilities-of-Forward-Lists"><a href="#7-6-1-Abilities-of-Forward-Lists" class="headerlink" title="7.6.1 Abilities of Forward Lists"></a>7.6.1 Abilities of Forward Lists</h4><p>_after, 后入。</p>
+<h4 id="7-6-2-Forward-List-Operations"><a href="#7-6-2-Forward-List-Operations" class="headerlink" title="7.6.2 Forward List Operations"></a>7.6.2 Forward List Operations</h4><h4 id="7-6-3-Exception-Handling"><a href="#7-6-3-Exception-Handling" class="headerlink" title="7.6.3 Exception Handling"></a>7.6.3 Exception Handling</h4><h4 id="7-6-4-Examples-of-Using-Forward-Lists"><a href="#7-6-4-Examples-of-Using-Forward-Lists" class="headerlink" title="7.6.4 Examples of Using Forward Lists"></a>7.6.4 Examples of Using Forward Lists</h4><h3 id="7-7-Sets-and-Multisets"><a href="#7-7-Sets-and-Multisets" class="headerlink" title="7.7 Sets and Multisets"></a>7.7 Sets and Multisets</h3><p>各种数学准则用于排序。</p>
+<h4 id="7-7-1-Abilities-of-Sets-and-Multisets"><a href="#7-7-1-Abilities-of-Sets-and-Multisets" class="headerlink" title="7.7.1 Abilities of Sets and Multisets"></a>7.7.1 Abilities of Sets and Multisets</h4><p>不可以修改value，因为value就是key有顺序，需要remove然后insert。</p>
+<h4 id="7-7-2-Set-and-Multiset-Operations"><a href="#7-7-2-Set-and-Multiset-Operations" class="headerlink" title="7.7.2 Set and Multiset Operations"></a>7.7.2 Set and Multiset Operations</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">c.<span class="built_in">lower_bound</span>(val) <span class="comment">// 返回第一个 &gt;= val 值的位置，val 插入的第一个位置</span></span><br><span class="line">c.<span class="built_in">upper_bound</span>(val) <span class="comment">// 返回第一个 &gt; val 值的位置，val 插入的最后一个位置 [pos_val, end) 开区间</span></span><br><span class="line">c.<span class="built_in">equal_range</span>(val) <span class="comment">// [begin_val, end_val)</span></span><br><span class="line"></span><br><span class="line">c.<span class="built_in">emplace</span>(args...) <span class="comment">// args 用来初始化 set 里面成员</span></span><br><span class="line"></span><br><span class="line">std::multiset&lt;Elem&gt; coll;</span><br><span class="line">...</span><br><span class="line">/ remove first element with passed value</span><br><span class="line">std::multiset&lt;Elem&gt;::iterator pos;</span><br><span class="line">pos = coll.<span class="built_in">find</span>(value);</span><br><span class="line"><span class="keyword">if</span> (pos != coll.<span class="built_in">end</span>()) &#123;</span><br><span class="line">	coll.<span class="built_in">erase</span>(pos);              <span class="comment">// set直接使用 coll.erase(value) multiset 使用单值的效率低。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="7-7-3-Exception-Handling"><a href="#7-7-3-Exception-Handling" class="headerlink" title="7.7.3 Exception Handling"></a>7.7.3 Exception Handling</h4><h4 id="7-7-4-Examples-of-Using-Sets-and-Multisets"><a href="#7-7-4-Examples-of-Using-Sets-and-Multisets" class="headerlink" title="7.7.4 Examples of Using Sets and Multisets"></a>7.7.4 Examples of Using Sets and Multisets</h4><h4 id="7-7-5-Example-of-Specifying-the-Sorting-Criterion-at-Runtime"><a href="#7-7-5-Example-of-Specifying-the-Sorting-Criterion-at-Runtime" class="headerlink" title="7.7.5 Example of Specifying the Sorting Criterion at Runtime"></a>7.7.5 Example of Specifying the Sorting Criterion at Runtime</h4><h3 id="7-8-Maps-and-Multimaps"><a href="#7-8-Maps-and-Multimaps" class="headerlink" title="7.8 Maps and Multimaps"></a>7.8 Maps and Multimaps</h3><h4 id="7-8-1-Abilities-of-Maps-and-Multimaps"><a href="#7-8-1-Abilities-of-Maps-and-Multimaps" class="headerlink" title="7.8.1 Abilities of Maps and Multimaps"></a>7.8.1 Abilities of Maps and Multimaps</h4><p>不可以直接修改key但是可以修改value。</p>
+<h4 id="7-8-2-Map-and-Multimap-Operations"><a href="#7-8-2-Map-and-Multimap-Operations" class="headerlink" title="7.8.2 Map and Multimap Operations"></a>7.8.2 Map and Multimap Operations</h4><p>You can define the sorting criterion in two ways, 模板参数(sorting criterion is part of the type)编译期期确定和构造函数参数运行期确定。</p>
+<pre><code>std::multimap&lt;std::string,float&gt; coll;
+...
+// do something with all elements having a certain value
+std::multimap&lt;std::string,float&gt;::iterator pos;
+for (pos = coll.begin(); pos != coll.end(); ++pos) &#123;
+    if (pos-&gt;second == value) &#123;
+        do_something(); // 如果是查询key请使用成员函数效率更高。
+    &#125;
+&#125;
+</code></pre>
+<p>c1.swap(c2) 元素被交换的时候排序标准是否不交换。</p>
+<pre><code>std::map&lt;std::string,float&gt; coll;
+...
+coll.insert(std::map&lt;std::string,float&gt;::value_type(&quot;otto&quot;, 22.3));
+or
+coll.insert(decltype(coll)::value_type(&quot;otto&quot;,22.3));
+
+
+std::map&lt;std::string,std::complex&lt;float&gt;&gt; m;
+m.emplace(std::piecewise_construct, // pass tuple elements as arguments
+std::make_tuple(&quot;hello&quot;), // elements for the key
+std::make_tuple(3.4,7.8)); // elements for the value
+
+// remove all elements having a certain value // before C++11
+for (pos = coll.begin(); pos != coll.end(); ) &#123;
+    if (pos-&gt;second == value) &#123;
+        coll.erase(pos++);
+    &#125;
+    else &#123;
+        ++pos;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="7-8-3-Using-Maps-as-Associative-Arrays"><a href="#7-8-3-Using-Maps-as-Associative-Arrays" class="headerlink" title="7.8.3 Using Maps as Associative Arrays"></a>7.8.3 Using Maps as Associative Arrays</h4><p>一定要清醒每次操作都做了哪些看不到的事情，包括调用值的构造函数。std::cout &lt;&lt; coll[“ottto”]; &#x2F;&#x2F; 同样会发生插入和赋初值对于不存在的key。</p>
+<h4 id="7-8-4-Exception-Handling"><a href="#7-8-4-Exception-Handling" class="headerlink" title="7.8.4 Exception Handling"></a>7.8.4 Exception Handling</h4><h4 id="7-8-5-Examples-of-Using-Maps-and-Multimaps"><a href="#7-8-5-Examples-of-Using-Maps-and-Multimaps" class="headerlink" title="7.8.5 Examples of Using Maps and Multimaps"></a>7.8.5 Examples of Using Maps and Multimaps</h4><p>查询key用成员函数，查询value用算法。使用value_type声明变量。</p>
+<h4 id="7-8-6-Example-with-Maps-Strings-and-Sorting-Criterion-at-Runtime"><a href="#7-8-6-Example-with-Maps-Strings-and-Sorting-Criterion-at-Runtime" class="headerlink" title="7.8.6 Example with Maps, Strings, and Sorting Criterion at Runtime"></a>7.8.6 Example with Maps, Strings, and Sorting Criterion at Runtime</h4><h3 id="7-9-Unordered-Containers"><a href="#7-9-Unordered-Containers" class="headerlink" title="7.9 Unordered Containers"></a>7.9 Unordered Containers</h3><h4 id="7-9-1-Abilities-of-Unordered-Containers"><a href="#7-9-1-Abilities-of-Unordered-Containers" class="headerlink" title="7.9.1 Abilities of Unordered Containers"></a>7.9.1 Abilities of Unordered Containers</h4><p>重hash是不是就是因为当前出现了元素冲突。</p>
+<h4 id="7-9-2-Creating-and-Controlling-Unordered-Containers"><a href="#7-9-2-Creating-and-Controlling-Unordered-Containers" class="headerlink" title="7.9.2 Creating and Controlling Unordered Containers"></a>7.9.2 Creating and Controlling Unordered Containers</h4><pre><code>std::size_t customer_hash_func (const Customer&amp; c)
+&#123;
+    return ...
+&#125;;
+std::unordered_set&lt;Customer,std::size_t(*)(const Customer&amp;)&gt;
+custset(20,customer_hash_func);
+</code></pre>
+<h4 id="7-9-3-Other-Operations-for-Unordered-Containers"><a href="#7-9-3-Other-Operations-for-Unordered-Containers" class="headerlink" title="7.9.3 Other Operations for Unordered Containers"></a>7.9.3 Other Operations for Unordered Containers</h4><p>当发生重新hash的时候迭代器无效但是对元素的引用还是有效的，可能是因为迭代器和buckets有关系。</p>
+<h4 id="7-9-4-The-Bucket-Interface"><a href="#7-9-4-The-Bucket-Interface" class="headerlink" title="7.9.4 The Bucket Interface"></a>7.9.4 The Bucket Interface</h4><p>了解内部结构，看啥函数都很清晰。</p>
+<h4 id="7-9-5-Using-Unordered-Maps-as-Associative-Arrays"><a href="#7-9-5-Using-Unordered-Maps-as-Associative-Arrays" class="headerlink" title="7.9.5 Using Unordered Maps as Associative Arrays"></a>7.9.5 Using Unordered Maps as Associative Arrays</h4><h4 id="7-9-6-Exception-Handling"><a href="#7-9-6-Exception-Handling" class="headerlink" title="7.9.6 Exception Handling"></a>7.9.6 Exception Handling</h4><p>所有不抛出异常的行为，都依赖于所使用的函数不抛出异常。</p>
+<h4 id="7-9-7-Examples-of-Using-Unordered-Containers"><a href="#7-9-7-Examples-of-Using-Unordered-Containers" class="headerlink" title="7.9.7 Examples of Using Unordered Containers"></a>7.9.7 Examples of Using Unordered Containers</h4><p>重新hash保证等价元素相对位置，但是插入顺序不一定是等于相对位置。</p>
+<h3 id="7-10-Other-STL-Containers"><a href="#7-10-Other-STL-Containers" class="headerlink" title="7.10 Other STL Containers"></a>7.10 Other STL Containers</h3><p>侵入性提供自己的容器包含可访问内部元素。非侵入性提供访问迭代器访问容器。通过包装现有容器实现新容器。</p>
+<h4 id="7-10-1-Strings-as-STL-Containers"><a href="#7-10-1-Strings-as-STL-Containers" class="headerlink" title="7.10.1 Strings as STL Containers"></a>7.10.1 Strings as STL Containers</h4><p>可以整个string处理，也可以单个处理里面的字符</p>
+<h4 id="7-10-2-Ordinary-C-Style-Arrays-as-STL-Containers"><a href="#7-10-2-Ordinary-C-Style-Arrays-as-STL-Containers" class="headerlink" title="7.10.2 Ordinary C-Style Arrays as STL Containers"></a>7.10.2 Ordinary C-Style Arrays as STL Containers</h4><p>只能使用非侵入式和包装器方式。Using a global begin() and end() for ordinary C-style arrays.在C++11前使用raw pointers。</p>
+<h3 id="7-11-Implementing-Reference-Semantics"><a href="#7-11-Implementing-Reference-Semantics" class="headerlink" title="7.11 Implementing Reference Semantics"></a>7.11 Implementing Reference Semantics</h3><p>智能指针和引用包装器。</p>
+<h3 id="7-12-When-to-Use-Which-Container"><a href="#7-12-When-to-Use-Which-Container" class="headerlink" title="7.12 When to Use Which Container"></a>7.12 When to Use Which Container</h3><p>多种选择多多尝试，有时候不同系统效率不同。</p>
+<h2 id="Chapter-8-STL-Container-Members-in-Detail"><a href="#Chapter-8-STL-Container-Members-in-Detail" class="headerlink" title="Chapter 8 STL Container Members in Detail"></a>Chapter 8 STL Container Members in Detail</h2><h3 id="8-1-Type-Definitions"><a href="#8-1-Type-Definitions" class="headerlink" title="8.1 Type Definitions"></a>8.1 Type Definitions</h3><p>container::difference_type 突然忘记这个是干嘛的来着。</p>
+<h3 id="8-2-Create-Copy-and-Destroy-Operations"><a href="#8-2-Create-Copy-and-Destroy-Operations" class="headerlink" title="8.2 Create, Copy, and Destroy Operations"></a>8.2 Create, Copy, and Destroy Operations</h3><p>析构函数• Removes all elements and frees the memory. • Calls the destructor for every element.</p>
+<h3 id="8-3-Nonmodifying-Operations"><a href="#8-3-Nonmodifying-Operations" class="headerlink" title="8.3 Nonmodifying Operations"></a>8.3 Nonmodifying Operations</h3><h4 id="8-3-1-Size-Operations"><a href="#8-3-1-Size-Operations" class="headerlink" title="8.3.1 Size Operations"></a>8.3.1 Size Operations</h4><h4 id="8-3-2-Comparison-Operations"><a href="#8-3-2-Comparison-Operations" class="headerlink" title="8.3.2 Comparison Operations"></a>8.3.2 Comparison Operations</h4><h4 id="8-3-3-Nonmodifying-Operations-for-Associative-and-Unordered-Containers"><a href="#8-3-3-Nonmodifying-Operations-for-Associative-and-Unordered-Containers" class="headerlink" title="8.3.3 Nonmodifying Operations for Associative and Unordered Containers"></a>8.3.3 Nonmodifying Operations for Associative and Unordered Containers</h4><h3 id="8-4-Assignments"><a href="#8-4-Assignments" class="headerlink" title="8.4 Assignments"></a>8.4 Assignments</h3><pre><code>// 可能会调用元素的赋值操作符用于覆盖现有元素，调用构造函数对于新加入元素，调用析构函数对于移除的元素
+container&amp; container::operator = (const container&amp; c)
+container&amp; container::operator = (container&amp;&amp; c) // 全部覆盖。
+
+container&amp; container::operator = (initializer-list) // 同样调用很多函数
+void container::assign (initializer-list)  // 也是全部覆盖
+
+void container::swap (container&amp; c)
+void swap (container&amp; c1, container&amp; c2)
+• Swap the contents with c or between c1 and c2, respectively.
+• Both swap:
+– The container’s elements
+– Their sorting criterion, equivalence predicate, and hash function object, if any.
+The references, pointers, and iterators referring to elements swap their containers, because they
+still refer to the same swapped elements afterward.
+Iterators and references refer to the same container but different elements afterward.
+</code></pre>
+<h3 id="8-5-Direct-Element-Access"><a href="#8-5-Direct-Element-Access" class="headerlink" title="8.5 Direct Element Access"></a>8.5 Direct Element Access</h3><p>T* container::data ()  &#x2F;&#x2F; 返回 C 数组 Provided by array, vector, string.<br>const T* container::data () const</p>
+<h3 id="8-6-Operations-to-Generate-Iterators"><a href="#8-6-Operations-to-Generate-Iterators" class="headerlink" title="8.6 Operations to Generate Iterators"></a>8.6 Operations to Generate Iterators</h3><h3 id="8-7-Inserting-and-Removing-Elements"><a href="#8-7-Inserting-and-Removing-Elements" class="headerlink" title="8.7 Inserting and Removing Elements"></a>8.7 Inserting and Removing Elements</h3><h4 id="8-7-1-Inserting-Single-Elements"><a href="#8-7-1-Inserting-Single-Elements" class="headerlink" title="8.7.1 Inserting Single Elements"></a>8.7.1 Inserting Single Elements</h4><pre><code>void container::emplace_front (args) // 这个插入在前面还是替换第一个
+// 如果是从前面插入，和push_front有啥不同。
+</code></pre>
+<h4 id="8-7-2-Inserting-Multiple-Elements"><a href="#8-7-2-Inserting-Multiple-Elements" class="headerlink" title="8.7.2 Inserting Multiple Elements"></a>8.7.2 Inserting Multiple Elements</h4><h4 id="8-7-3-Removing-Elements"><a href="#8-7-3-Removing-Elements" class="headerlink" title="8.7.3 Removing Elements"></a>8.7.3 Removing Elements</h4><h4 id="8-7-4-Resizing"><a href="#8-7-4-Resizing" class="headerlink" title="8.7.4 Resizing"></a>8.7.4 Resizing</h4><h3 id="8-8-Special-Member-Functions-for-Lists-and-Forward-Lists"><a href="#8-8-Special-Member-Functions-for-Lists-and-Forward-Lists" class="headerlink" title="8.8 Special Member Functions for Lists and Forward Lists"></a>8.8 Special Member Functions for Lists and Forward Lists</h3><h4 id="8-8-1-Special-Member-Functions-for-Lists-and-Forward-Lists"><a href="#8-8-1-Special-Member-Functions-for-Lists-and-Forward-Lists" class="headerlink" title="8.8.1 Special Member Functions for Lists (and Forward Lists)"></a>8.8.1 Special Member Functions for Lists (and Forward Lists)</h4><h4 id="8-8-2-Special-Member-Functions-for-Forward-Lists-Only"><a href="#8-8-2-Special-Member-Functions-for-Forward-Lists-Only" class="headerlink" title="8.8.2 Special Member Functions for Forward Lists Only"></a>8.8.2 Special Member Functions for Forward Lists Only</h4><h3 id="8-9-Container-Policy-Interfaces"><a href="#8-9-Container-Policy-Interfaces" class="headerlink" title="8.9 Container Policy Interfaces"></a>8.9 Container Policy Interfaces</h3><h4 id="8-9-1-Nonmodifying-Policy-Functions"><a href="#8-9-1-Nonmodifying-Policy-Functions" class="headerlink" title="8.9.1 Nonmodifying Policy Functions"></a>8.9.1 Nonmodifying Policy Functions</h4><h4 id="8-9-2-Modifying-Policy-Functions"><a href="#8-9-2-Modifying-Policy-Functions" class="headerlink" title="8.9.2 Modifying Policy Functions"></a>8.9.2 Modifying Policy Functions</h4><h4 id="8-9-3-Bucket-Interface-for-Unordered-Containers"><a href="#8-9-3-Bucket-Interface-for-Unordered-Containers" class="headerlink" title="8.9.3 Bucket Interface for Unordered Containers"></a>8.9.3 Bucket Interface for Unordered Containers</h4><p>是否提供了 operator[]</p>
+<h3 id="8-10-Allocator-Support"><a href="#8-10-Allocator-Support" class="headerlink" title="8.10 Allocator Support"></a>8.10 Allocator Support</h3><h4 id="8-10-1-Fundamental-Allocator-Members"><a href="#8-10-1-Fundamental-Allocator-Members" class="headerlink" title="8.10.1 Fundamental Allocator Members"></a>8.10.1 Fundamental Allocator Members</h4><h4 id="8-10-2-Constructors-with-Optional-Allocator-Parameters"><a href="#8-10-2-Constructors-with-Optional-Allocator-Parameters" class="headerlink" title="8.10.2 Constructors with Optional Allocator Parameters"></a>8.10.2 Constructors with Optional Allocator Parameters</h4><h2 id="Chapter-9-STL-Iterators"><a href="#Chapter-9-STL-Iterators" class="headerlink" title="Chapter 9 STL Iterators"></a>Chapter 9 STL Iterators</h2><h3 id="9-1-Header-Files-for-Iterators"><a href="#9-1-Header-Files-for-Iterators" class="headerlink" title="9.1 Header Files for Iterators"></a>9.1 Header Files for Iterators</h3><h3 id="9-2-Iterator-Categories"><a href="#9-2-Iterator-Categories" class="headerlink" title="9.2 Iterator Categories"></a>9.2 Iterator Categories</h3><h4 id="9-2-2-Input-Iterators"><a href="#9-2-2-Input-Iterators" class="headerlink" title="9.2.2 Input Iterators"></a>9.2.2 Input Iterators</h4><p>后 pos++ 需要保存临时变量，没有前 ++pos 效率高。</p>
+<h4 id="9-2-3-Forward-Iterators"><a href="#9-2-3-Forward-Iterators" class="headerlink" title="9.2.3 Forward Iterators"></a>9.2.3 Forward Iterators</h4><h4 id="9-2-4-Bidirectional-Iterators"><a href="#9-2-4-Bidirectional-Iterators" class="headerlink" title="9.2.4 Bidirectional Iterators"></a>9.2.4 Bidirectional Iterators</h4><h4 id="9-2-5-Random-Access-Iterators"><a href="#9-2-5-Random-Access-Iterators" class="headerlink" title="9.2.5 Random-Access Iterators"></a>9.2.5 Random-Access Iterators</h4><h4 id="9-2-6-The-Increment-and-Decrement-Problem-of-Vector-Iterators"><a href="#9-2-6-The-Increment-and-Decrement-Problem-of-Vector-Iterators" class="headerlink" title="9.2.6 The Increment and Decrement Problem of Vector Iterators"></a>9.2.6 The Increment and Decrement Problem of Vector Iterators</h4><p>当Iterator作为类实现的时候可以使用临时变量，当作为原始指针的时候不可以。</p>
+<h3 id="9-3-Auxiliary-Iterator-Functions"><a href="#9-3-Auxiliary-Iterator-Functions" class="headerlink" title="9.3 Auxiliary Iterator Functions"></a>9.3 Auxiliary Iterator Functions</h3><h4 id="9-3-1-advance"><a href="#9-3-1-advance" class="headerlink" title="9.3.1 advance()"></a>9.3.1 advance()</h4><p>按步移动，可以用来跳过某些输入流里面的项。	</p>
+<h4 id="9-3-2-next-and-prev"><a href="#9-3-2-next-and-prev" class="headerlink" title="9.3.2 next() and prev()"></a>9.3.2 next() and prev()</h4><h4 id="9-3-3-distance"><a href="#9-3-3-distance" class="headerlink" title="9.3.3 distance()"></a>9.3.3 distance()</h4><h4 id="9-3-4-iter-swap"><a href="#9-3-4-iter-swap" class="headerlink" title="9.3.4 iter_swap()"></a>9.3.4 iter_swap()</h4><h4 id="9-4-Iterator-Adapters"><a href="#9-4-Iterator-Adapters" class="headerlink" title="9.4 Iterator Adapters"></a>9.4 Iterator Adapters</h4><h4 id="9-4-1-Reverse-Iterators"><a href="#9-4-1-Reverse-Iterators" class="headerlink" title="9.4.1 Reverse Iterators"></a>9.4.1 Reverse Iterators</h4><p>物理位置和逻辑位置要分清楚，(开闭区间反向取值也是开闭区间)</p>
+<h4 id="9-4-2-Insert-Iterators"><a href="#9-4-2-Insert-Iterators" class="headerlink" title="9.4.2 Insert Iterators"></a>9.4.2 Insert Iterators</h4><h4 id="9-4-3-Stream-Iterators"><a href="#9-4-3-Stream-Iterators" class="headerlink" title="9.4.3 Stream Iterators"></a>9.4.3 Stream Iterators</h4><p>STL定义了输出输出流，又定义了流迭代器，这样算法就可以直接输入出了。</p>
+<h4 id="9-4-4-Move-Iterators"><a href="#9-4-4-Move-Iterators" class="headerlink" title="9.4.4 Move Iterators"></a>9.4.4 Move Iterators</h4><h3 id="9-5-Iterator-Traits"><a href="#9-5-Iterator-Traits" class="headerlink" title="9.5 Iterator Traits"></a>9.5 Iterator Traits</h3><pre><code>namespace std &#123;			// 具体怎么用也没看到例子
+    template &lt;typename T&gt;
+    struct iterator_traits &#123;
+        typedef typename T::iterator_category iterator_category;
+        typedef typename T::value_type value_type;
+        typedef typename T::difference_type difference_type;
+        typedef typename T::pointer pointer;
+        typedef typename T::reference reference;
+    &#125;;
+&#125;	
+</code></pre>
+<h4 id="9-5-1-Writing-Generic-Functions-for-Iterators"><a href="#9-5-1-Writing-Generic-Functions-for-Iterators" class="headerlink" title="9.5.1 Writing Generic Functions for Iterators"></a>9.5.1 Writing Generic Functions for Iterators</h4><p>可以随意写这种代码的时候，STL就理解的差不多了。</p>
+<h4 id="9-6-Writing-User-Defined-Iterators"><a href="#9-6-Writing-User-Defined-Iterators" class="headerlink" title="9.6 Writing User-Defined Iterators"></a>9.6 Writing User-Defined Iterators</h4><p>At creation time the iterator stores its container in its container member。</p>
+<h2 id="Chapter-10-STL-Function-Objects-and-Using-Lambdas"><a href="#Chapter-10-STL-Function-Objects-and-Using-Lambdas" class="headerlink" title="Chapter 10 STL Function Objects and Using Lambdas"></a>Chapter 10 STL Function Objects and Using Lambdas</h2><h3 id="10-1-The-Concept-of-Function-Objects"><a href="#10-1-The-Concept-of-Function-Objects" class="headerlink" title="10.1 The Concept of Function Objects"></a>10.1 The Concept of Function Objects</h3><h4 id="10-1-1-Function-Objects-as-Sorting-Criteria"><a href="#10-1-1-Function-Objects-as-Sorting-Criteria" class="headerlink" title="10.1.1 Function Objects as Sorting Criteria"></a>10.1.1 Function Objects as Sorting Criteria</h4><h4 id="10-1-2-Function-Objects-with-Internal-State"><a href="#10-1-2-Function-Objects-with-Internal-State" class="headerlink" title="10.1.2 Function Objects with Internal State"></a>10.1.2 Function Objects with Internal State</h4><p>可以同模板构造函数参数来传递引用的函数对象，保持函数对象状态统一。</p>
+<h4 id="10-1-3-The-Return-Value-of-for-each"><a href="#10-1-3-The-Return-Value-of-for-each" class="headerlink" title="10.1.3 The Return Value of for_each()"></a>10.1.3 The Return Value of for_each()</h4><h4 id="10-1-4-Predicates-versus-Function-Objects"><a href="#10-1-4-Predicates-versus-Function-Objects" class="headerlink" title="10.1.4 Predicates versus Function Objects"></a>10.1.4 Predicates versus Function Objects</h4><p>A predicate should always be stateless，并且 operator() 返回值可以转换为bool。</p>
+<h3 id="10-2-Predefined-Function-Objects-and-Binders"><a href="#10-2-Predefined-Function-Objects-and-Binders" class="headerlink" title="10.2 Predefined Function Objects and Binders"></a>10.2 Predefined Function Objects and Binders</h3><h4 id="10-2-1-Predefined-Function-Objects"><a href="#10-2-1-Predefined-Function-Objects" class="headerlink" title="10.2.1 Predefined Function Objects"></a>10.2.1 Predefined Function Objects</h4><h4 id="10-2-2-Function-Adapters-and-Binders"><a href="#10-2-2-Function-Adapters-and-Binders" class="headerlink" title="10.2.2 Function Adapters and Binders"></a>10.2.2 Function Adapters and Binders</h4><p>std::placeholders::_1 是编译器确定还是运行期间确定，表达式可以用变量表示吗？<br>    map&lt;string,int&gt; coll; &#x2F;&#x2F; map of int values associated to strings<br>    …<br>    &#x2F;&#x2F; accumulate all values (member second of the elements)<br>    int sum &#x3D; accumulate (coll.begin(), coll.end(), 0,<br>                            bind(plus<int>(),<br>                            _1,<br>                            bind(&amp;map&lt;string,int&gt;::value_type::second,<br>                            _2)));</p>
+<h4 id="10-2-3-User-Defined-Function-Objects-for-Function-Adapters"><a href="#10-2-3-User-Defined-Function-Objects-for-Function-Adapters" class="headerlink" title="10.2.3 User-Defined Function Objects for Function Adapters"></a>10.2.3 User-Defined Function Objects for Function Adapters</h4><h4 id="10-2-4-Deprecated-Function-Adapters"><a href="#10-2-4-Deprecated-Function-Adapters" class="headerlink" title="10.2.4 Deprecated Function Adapters"></a>10.2.4 Deprecated Function Adapters</h4><h3 id="10-3-Using-Lambdas"><a href="#10-3-Using-Lambdas" class="headerlink" title="10.3 Using Lambdas"></a>10.3 Using Lambdas</h3><p>Lambdas are a language feature.</p>
+<h4 id="10-3-1-Lambdas-versus-Binders"><a href="#10-3-1-Lambdas-versus-Binders" class="headerlink" title="10.3.1 Lambdas versus Binders"></a>10.3.1 Lambdas versus Binders</h4><p>需要理解好什么时候用那种。Lambdas一般在算法中看起来更直观, Binder 再callback时候用的比较多。</p>
+<h4 id="10-3-2-Lambdas-versus-Stateful-Function-Objects"><a href="#10-3-2-Lambdas-versus-Stateful-Function-Objects" class="headerlink" title="10.3.2 Lambdas versus Stateful Function Objects"></a>10.3.2 Lambdas versus Stateful Function Objects</h4><p>非引用捕获为啥是两个状态的lambdas函数，引用捕获的时候就是一个？涉及到状态的时候Lambda可能就比函数对象差点。</p>
+<pre><code>remove_if(coll.begin(),coll.end(), // range
+[count] (int) mutable &#123; // remove criterion
+    return ++count == 3;
+&#125;);
+</code></pre>
+<pre><code>
+#### 10.3.3 Lambdas Calling Global and Member Functions
+注意区分捕获的变量，和参数传递的变量。
+
+
+
+#### 10.3.4 Lambdas as Hash Function, Sorting, or Equivalence Criterion
+Note again that you have to use decltype to pass the type of the lambda to the unordered_set because it creates its own instance of them.
+所以模板构造和构造函数构造对象都提供的模板类，什么时候用，怎么选择.。
+
+
+## Chapter 11 STL Algorithms
+
+
+### 11.1 Algorithm Header Files
+#include &lt;algorithm&gt;一般算法，#include &lt;numeric&gt;数学算法，#include &lt;functional&gt;函数对象。
+
+
+### 11.2 Algorithm Overview
+
+
+
+#### 11.2.1 A Brief Introduction
+
+
+
+
+#### 11.2.2 Classification of Algorithms
+Nevertheless, to be safe, you should call merge() only for sorted ranges.
+
+
+### 11.3 Auxiliary Functions
+
+
+### 11.4 The for_each() Algorithm
+
+
+### 11.5 Nonmodifying Algorithms
+访问元素 without modifying their values or changing their order.
+
+
+#### 11.5.1 Counting Elements
+
+
+#### 11.5.2 Minimum and Maximum
+
+
+#### 11.5.3 Searching Elements
+
+
+#### 11.5.4 Comparing Ranges
+
+
+#### 11.5.5 Predicates for Ranges
+
+
+### 11.6 Modifying Algorithms
+
+
+#### 11.6.1 Copying Elements
+
+
+#### 11.6.2 Moving Elements
+
+
+#### 11.6.3 Transforming and Combining Elements
+
+
+#### 11.6.4 Swapping Elements
+
+
+#### 11.6.5 Assigning New Values
+
+
+#### 11.6.6 Replacing Elements
+
+
+### 11.7 Removing Algorithms
+
+
+#### 11.7.1 Removing Certain Values
+
+
+#### 11.7.2 Removing Duplicates
+
+
+### 11.8 Mutating Algorithms
+
+
+#### 11.8.1 Reversing the Order of Elements
+
+
+#### 11.8.2 Rotating Elements
+
+
+#### 11.8.3 Permuting Elements
+
+
+#### 11.8.4 Shuffling Elements
+
+
+#### 11.8.5 Moving Elements to the Front
+
+
+#### 11.8.6 Partition into Two Subranges
+
+
+### 11.9 Sorting Algorithms
+
+
+#### 11.9.1 Sorting All Elements
+
+
+#### 11.9.2 Partial Sorting
+
+
+#### 11.9.3 Sorting According to the nth Element
+
+
+#### 11.9.4 Heap Algorithms
+
+
+### 11.10 Sorted-Range Algorithms
+
+
+#### 11.10.1 Searching Elements
+
+
+#### 11.10.2 Merging Elements
+
+
+### 11.11 Numeric Algorithms
+
+
+#### 11.11.1 Processing Results
+
+
+#### 11.11.2 Converting Relative and Absolute Values
+
+
+## Chapter 12 Special Containers
+container adapters, which adapt standard STL containers to fit special needs, 
+or a bitset, which is a containers for bits or Boolean values
+
+
+### 12.1 Stacks
+std::stack&lt;int,std::vector&lt;int&gt;&gt; st; // integer stack that uses a vector
+
+
+#### 12.1.1 The Core Interface
+
+
+#### 12.1.2 Example of Using Stacks
+Note that pop() removes the next element but does not return it, whereas top() returns the next element without removing it
+
+
+#### 12.1.3 A User-Defined Stack Class
+[Stack](https://github.com/israel-Liu/fragments-of-time/blob/master/boruto/codeforces/basic_data_structures.h)
+
+
+#### 12.1.4 Class stack&lt;&gt; in Detail
+
+
+### 12.2 Queues
+容器适配器是把底层实现用容器吗。这样容器就有特殊功能。
+
+
+#### 12.2.1 The Core Interface
+
+
+#### 12.2.3 A User-Defined Queue Class
+
+
+#### 12.2.4 Class queue&lt;&gt; in Detail
+
+
+### 12.3 Priority Queues
+std::priority_queue&lt;float,std::vector&lt;float&gt;, std::greater&lt;float&gt;&gt; pbuffer;
+
+
+####  12.3.1 The Core Interface
+
+
+#### 12.3.2 Example of Using Priority Queues
+
+
+#### 12.3.3 Class priority_queue&lt;&gt; in Detail
+
+
+#### 12.4 Container Adapters in Detail
+
+
+#### 12.4.1 Type Definitions
+
+
+#### 12.4.2 Constructors
+
+
+#### 12.4.3 Supplementary Constructors for Priority Queues
+
+
+#### 12.4.4 Operations
+
+
+### 12.5 Bitsets
+
+
+#### 12.5.1 Examples of Using Bitsets
+
+
+#### 12.5.2 Class bitset in Detail
+
+
+## Chapter 13 Strings
+C++11提供 ’\0‘ 作为结尾 s.data() returns the characters including a trailing end-of-string character。不在提供Reference-counted。
+
+
+### 13.1 Purpose of the String Classes
+
+
+#### 13.1.1 A First Example: Extracting a Temporary Filename
+
+
+#### 13.1.2 A Second Example: Extracting Words and Printing Them Backward
+
+
+### 13.2 Description of the String Classes
+
+
+#### 13.2.1 String Types
+
+
+#### 13.2.2 Operation Overview
+
+
+#### 13.2.3 Constructors and Destructor
+
+
+#### 13.2.4 Strings and C-Strings
+const char* 可以用来构造string对象，string对象成员 data(C++11) 和 c_str 返回 ‘\0’ 结尾的 C-Strings。
+
+    char buffer[100];
+    s.copy(buffer,100); // copy at most 100 characters of s into buffer
+    s.copy(buffer,100,2); // copy at most 100 characters of s into buffer
+    // starting with the third character of s
+    
+    
+#### 13.2.5 Size and Capacity
+
+
+#### 13.2.6 Element Access
+
+
+#### 13.2.7 Comparisons
+
+
+#### 13.2.8 Modifiers
+
+    s = &quot;&quot;; // assign the empty string
+    s.clear(); // clear contents //erase(begin(), end()). capacity 保持不变，
+    s.erase(); // erase all characters  // reserve 函数用来改变大小
+    
+#### 13.2.9 Substrings and String Concatenation
+
+
+#### 13.2.10 Input/Output Operators
+使用getline()可以自定义结束符号。
+
+
+#### 13.2.11 Searching and Finding
+
+
+#### 13.2.12 The Value npos
+尽量返回值直接比较，使用 size_type 不会出错。
+    const int NPOS = -1;
+    if (idx == NPOS) &#123; // works almost always
+        ...
+    &#125;
+    
+    
+    
+##### 13.2.13 Numeric Conversions
+
+
+#### 13.2.14 Iterator Support for Strings
+
+
+#### 13.2.15 Internationalization
+通过struct ignorecase_traits : public std::char_traits&lt;char&gt;自定义string。
+
+
+#### 13.2.16 Performance
+
+
+#### 13.2.17 Strings and Vectors
+String作为整体使用，Vector主要对里面的元素进行操作。
+
+
+### 13.3 String Class in Detail
+
+
+#### 13.3.1 Type Definitions and Static Values
+
+    string::reverse_iterator
+        • The type of reverse iterators.
+        • It is equivalent to reverse_iterator&lt;iterator&gt;.
+    string::const_reverse_iterator
+        • The type of constant reverse iterators.
+        • It is equivalent to reverse_iterator&lt;const_iterator&gt;.
+
+        
+#### 13.3.2 Create, Copy, and Destroy Operations
+
+string::string (InputIterator beg, InputIterator end) 写重复了。
+
+
+#### 13.3.3 Operations for Size and Capacity
+
+
+#### 13.3.4 Comparisons
+
+
+#### 13.3.5 Character Access
+Before C++11, length() or size() was an invalid index value for nonconstant strings. length() as value is invalid for at(); operator [ ], which is faster.
+
+
+#### 13.3.6 Generating C-Strings and Character Arrays
+Before C++11, the return value of data() without any trailing ’\0’ character. use c_str(); copy() 不包括结尾 \0;
+
+
+#### 13.3.7 Modifying Operations
+swap() 比 copy() 更快，下面函数第一个参数有歧义对于 0 .
+
+    string&amp; string::insert (size_type idx, size_type num, char c)
+    iterator string::insert (const_iterator pos, size_type num, char c)
+    
+
+#### 13.3.8 Searching and Finding
+反向找的函数起点参数用来定义区间的 [pos, end) 在这个区间内从后往前查找。]
+
+
+
+#### 13.3.9 Substrings and String Concatenation
+
+
+#### 13.3.10 Input/Output Functions
+
+
+#### 13.3.11 Numeric Conversions
+If idxRet!=nullptr, it returns the index of the first character not processed for the conversion.
+
+
+#### 13.3.12 Generating Iterators
+
+
+#### 13.3.13 Allocator Support
+
+
+## Chapter 14 Regular Expressions
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/">https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2019/03/24/Algorithm-Design-and-Applications/" title="Algorithm Design and Applications"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Algorithm Design and Applications</div></div></div></a><a class="pagination-related  no-desc" href="/2018/12/27/2018-year-end-summary/" title="2018-year-end-summary"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">2018-year-end-summary</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Preface-to-the-Second-Edition"><span class="toc-text">Preface to the Second Edition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Acknowledgments-for-the-Second-Edition"><span class="toc-text">Acknowledgments for the Second Edition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Preface-to-the-First-Edition"><span class="toc-text">Preface to the First Edition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Acknowledgments-for-the-First-Edition"><span class="toc-text">Acknowledgments for the First Edition</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-1-About-This-Book"><span class="toc-text">Chapter 1 : About This Book</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Why-This-Book"><span class="toc-text">1.1 Why This Book</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Before-Reading-This-Book"><span class="toc-text">1.2 Before Reading This Book</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Style-and-Structure-of-the-Book"><span class="toc-text">1.3 Style and Structure of the Book</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-How-to-Read-This-Book"><span class="toc-text">1.4 How to Read This Book</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-2-Introduction-to-C-and-the-Standard-Library"><span class="toc-text">Chapter 2 Introduction to C++ and the Standard Library</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-History-of-the-C-Standards"><span class="toc-text">2.1 History of the C++ Standards</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-Common-Questions-about-the-C-11-Standard"><span class="toc-text">2.1.1 Common Questions about the C++11 Standard</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2-Compatibility-between-C-98-and-C-11"><span class="toc-text">2.1.2 Compatibility between C++98 and C++11</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Complexity-and-Big-O-Notation"><span class="toc-text">2.2 Complexity and Big-O Notation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-3-New-Language-Features"><span class="toc-text">Chapter 3 : New Language Features</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-New-C-11-Language-Features"><span class="toc-text">3.1 New C++11 Language Features</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-Important-Minor-Syntax-Cleanups"><span class="toc-text">3.1.1 Important Minor Syntax Cleanups</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-Automatic-Type-Deduction-with-auto"><span class="toc-text">3.1.2 Automatic Type Deduction with auto</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3-Uniform-Initialization-and-Initializer-Lists"><span class="toc-text">3.1.3 Uniform Initialization and Initializer Lists</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-4-Range-Based-for-Loops"><span class="toc-text">3.1.4 Range-Based for Loops</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-5-Move-Semantics-and-Rvalue-References"><span class="toc-text">3.1.5 Move Semantics and Rvalue References</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-6-New-String-Literals"><span class="toc-text">3.1.6 New String Literals</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-7-Keyword-noexcept"><span class="toc-text">3.1.7 Keyword noexcept</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-8-Keyword-constexpr"><span class="toc-text">3.1.8 Keyword constexpr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-9-New-Template-Features"><span class="toc-text">3.1.9 New Template Features</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-10-Lambdas"><span class="toc-text">3.1.10 Lambdas</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-11-Keyword-decltype"><span class="toc-text">3.1.11 Keyword decltype</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-12-New-Function-Declaration-Syntax"><span class="toc-text">3.1.12 New Function Declaration Syntax</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-13-Scoped-Enumerations"><span class="toc-text">3.1.13 Scoped Enumerations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-14-New-Fundamental-Data-Types"><span class="toc-text">3.1.14 New Fundamental Data Types</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Old-%E2%80%9CNew%E2%80%9D-Language-Features"><span class="toc-text">3.2 Old “New” Language Features</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-Explicit-Initialization-for-Fundamental-Types"><span class="toc-text">3.2.1 Explicit Initialization for Fundamental Types</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-Definition-of-main"><span class="toc-text">3.2.2 Definition of main()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-4-General-Concepts"><span class="toc-text">Chapter 4 General Concepts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Namespace-std"><span class="toc-text">4.1 Namespace std</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Header-Files"><span class="toc-text">4.2 Header Files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Error-and-Exception-Handling"><span class="toc-text">4.3 Error and Exception Handling</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-1-Standard-Exception-Classes"><span class="toc-text">4.3.1 Standard Exception Classes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-2-Members-of-Exception-Classes"><span class="toc-text">4.3.2 Members of Exception Classes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-3-Passing-Exceptions-with-Class-exception-ptr"><span class="toc-text">4.3.3 Passing Exceptions with Class exception_ptr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-4-Throwing-Standard-Exceptions"><span class="toc-text">4.3.4 Throwing Standard Exceptions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-5-Deriving-from-Standard-Exception-Classes"><span class="toc-text">4.3.5 Deriving from Standard Exception Classes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-Callable-Objects"><span class="toc-text">4.4 Callable Objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5-Concurrency-and-Multithreading"><span class="toc-text">4.5 Concurrency and Multithreading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-6-Allocators"><span class="toc-text">4.6 Allocators</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-5-Utilities"><span class="toc-text">Chapter 5 Utilities</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Pairs-and-Tuples"><span class="toc-text">5.1 Pairs and Tuples</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-1-Pairs"><span class="toc-text">5.1.1 Pairs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-Tuples"><span class="toc-text">5.1.2 Tuples</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-3-I-O-for-Tuples"><span class="toc-text">5.1.3 I&#x2F;O for Tuples</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-4-Conversions-between-tuples-and-pairs"><span class="toc-text">5.1.4 Conversions between tuples and pairs</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Smart-Pointers"><span class="toc-text">5.2 Smart Pointers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-1-Class-shared-ptr"><span class="toc-text">5.2.1 Class shared_ptr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-2-Class-weak-ptr"><span class="toc-text">5.2.2 Class weak_ptr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-3-Misusing-Shared-Pointers"><span class="toc-text">5.2.3 Misusing Shared Pointers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-4-Shared-and-Weak-Pointers-in-Detail"><span class="toc-text">5.2.4 Shared and Weak Pointers in Detail</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-5-Class-unique-ptr"><span class="toc-text">5.2.5 Class unique_ptr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-6-Class-unique-ptr-in-Detail"><span class="toc-text">5.2.6 Class unique_ptr in Detail</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-7-Class-auto-ptr"><span class="toc-text">5.2.7 Class auto_ptr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-8-Final-Words-on-Smart-Pointers"><span class="toc-text">5.2.8 Final Words on Smart Pointers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-Numeric-Limits"><span class="toc-text">5.3 Numeric Limits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-Type-Traits-and-Type-Utilities"><span class="toc-text">5.4 Type Traits and Type Utilities</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-1-Purpose-of-Type-Traits"><span class="toc-text">5.4.1 Purpose of Type Traits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-2-Type-Traits-in-Detail"><span class="toc-text">5.4.2 Type Traits in Detail</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-3-Reference-Wrappers"><span class="toc-text">5.4.3 Reference Wrappers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-4-Function-Type-Wrappers"><span class="toc-text">5.4.4 Function Type Wrappers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-Auxiliary-Functions"><span class="toc-text">5.5 Auxiliary Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-1-Processing-the-Minimum-and-Maximum"><span class="toc-text">5.5.1 Processing the Minimum and Maximum</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-2-Swapping-Two-Values"><span class="toc-text">5.5.2 Swapping Two Values</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-3-Supplementary-Comparison-Operators"><span class="toc-text">5.5.3 Supplementary Comparison Operators</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-Compile-Time-Fractional-Arithmetic-with-Class-ratio"><span class="toc-text">5.6 Compile-Time Fractional Arithmetic with Class ratio&lt;&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-Clocks-and-Timers"><span class="toc-text">5.7 Clocks and Timers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-7-1-Overview-of-the-Chrono-Library"><span class="toc-text">5.7.1 Overview of the Chrono Library</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-7-3-Clocks-and-Timepoints"><span class="toc-text">5.7.3 Clocks and Timepoints</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-7-4-Date-and-Time-Functions-by-C-and-POSIX"><span class="toc-text">5.7.4 Date and Time Functions by C and POSIX</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-7-5-Blocking-with-Timers"><span class="toc-text">5.7.5 Blocking with Timers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-Header-Files-and"><span class="toc-text">5.8 Header Files , , and </span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-8-2-Definitions-in"><span class="toc-text">5.8.2 Definitions in </span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-6-The-Standard-Template-Library"><span class="toc-text">Chapter 6 The Standard Template Library</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-STL-Components"><span class="toc-text">6.1 STL Components</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Containers"><span class="toc-text">6.2 Containers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-1-Sequence-Containers"><span class="toc-text">6.2.1 Sequence Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-2-Associative-Containers"><span class="toc-text">6.2.2 Associative Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-4-Associative-Arrays"><span class="toc-text">6.2.4 Associative Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-5-Other-Containers"><span class="toc-text">6.2.5 Other Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-6-Container-Adapters"><span class="toc-text">6.2.6 Container Adapters</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Iterators"><span class="toc-text">6.3 Iterators</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-1-Further-Examples-of-Using-Associative-and-Unordered-Containers"><span class="toc-text">6.3.1 Further Examples of Using Associative and Unordered Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-2-Iterator-Categories"><span class="toc-text">6.3.2 Iterator Categories</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-Algorithms"><span class="toc-text">6.4 Algorithms</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-1-Ranges"><span class="toc-text">6.4.1 Ranges</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-2-Handling-Multiple-Ranges"><span class="toc-text">6.4.2 Handling Multiple Ranges</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-Iterator-Adapters"><span class="toc-text">6.5 Iterator Adapters</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-1-Insert-Iterators"><span class="toc-text">6.5.1 Insert Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-2-Stream-Iterators"><span class="toc-text">6.5.2 Stream Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-3-Reverse-Iterators"><span class="toc-text">6.5.3 Reverse Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-4-Move-Iterators"><span class="toc-text">6.5.4 Move Iterators</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-User-Defined-Generic-Functions"><span class="toc-text">6.6 User-Defined Generic Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-Manipulating-Algorithms"><span class="toc-text">6.7 Manipulating Algorithms</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-7-1-%E2%80%9CRemoving%E2%80%9D-Elements"><span class="toc-text">6.7.1 “Removing” Elements</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-7-2-Manipulating-Associative-and-Unordered-Containers"><span class="toc-text">6.7.2 Manipulating Associative and Unordered Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-7-3-Algorithms-versus-Member-Functions"><span class="toc-text">6.7.3 Algorithms versus Member Functions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-8-Functions-as-Algorithm-Arguments"><span class="toc-text">6.8 Functions as Algorithm Arguments</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-8-1-Using-Functions-as-Algorithm-Arguments"><span class="toc-text">6.8.1 Using Functions as Algorithm Arguments</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-8-2-Predicates"><span class="toc-text">6.8.2 Predicates</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-9-Using-Lambdas"><span class="toc-text">6.9 Using Lambdas</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-10-Function-Objects"><span class="toc-text">6.10 Function Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-10-1-Definition-of-Function-Objects"><span class="toc-text">6.10.1 Definition of Function Objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-10-2-Predefined-Function-Objects"><span class="toc-text">6.10.2 Predefined Function Objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-10-3-Binders"><span class="toc-text">6.10.3 Binders</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-11-Container-Elements"><span class="toc-text">6.11 Container Elements</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-11-1-Requirements-for-Container-Elements"><span class="toc-text">6.11.1 Requirements for Container Elements</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-11-2-Value-Semantics-or-Reference-Semantics"><span class="toc-text">6.11.2 Value Semantics or Reference Semantics</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-12-Errors-and-Exceptions-inside-the-STL"><span class="toc-text">6.12 Errors and Exceptions inside the STL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-12-1-Error-Handling"><span class="toc-text">6.12.1 Error Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-12-2-Exception-Handling"><span class="toc-text">6.12.2 Exception Handling</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-13-Extending-the-STL"><span class="toc-text">6.13 Extending the STL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-13-1-Integrating-Additional-Types"><span class="toc-text">6.13.1 Integrating Additional Types</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-13-2-Deriving-from-STL-Types"><span class="toc-text">6.13.2 Deriving from STL Types</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-7-STL-Containers"><span class="toc-text">Chapter 7 STL Containers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-Common-Container-Abilities-and-Operations"><span class="toc-text">7.1 Common Container Abilities and Operations</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-1-Container-Abilities"><span class="toc-text">7.1.1 Container Abilities</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-2-Container-Operations"><span class="toc-text">7.1.2 Container Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-3-Container-Types"><span class="toc-text">7.1.3 Container Types</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Arrays"><span class="toc-text">7.2 Arrays</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-1-Abilities-of-Arrays"><span class="toc-text">7.2.1 Abilities of Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-2-Array-Operations"><span class="toc-text">7.2.2 Array Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-3-Using-arrays-as-C-Style-Arrays"><span class="toc-text">7.2.3 Using arrays as C-Style Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-4-Exception-Handling"><span class="toc-text">7.2.4 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-5-Tuple-Interface"><span class="toc-text">7.2.5 Tuple Interface</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-6-Examples-of-Using-Arrays"><span class="toc-text">7.2.6 Examples of Using Arrays</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Vectors"><span class="toc-text">7.3 Vectors</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-1-Abilities-of-Vectors"><span class="toc-text">7.3.1 Abilities of Vectors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-2-Vector-Operations"><span class="toc-text">7.3.2 Vector Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-3-Using-Vectors-as-C-Style-Arrays"><span class="toc-text">7.3.3 Using Vectors as C-Style Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-4-Exception-Handling"><span class="toc-text">7.3.4 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-5-Examples-of-Using-Vectors"><span class="toc-text">7.3.5 Examples of Using Vectors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-6-Class-vector"><span class="toc-text">7.3.6 Class vector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-Deques"><span class="toc-text">7.4 Deques</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-1-Abilities-of-Deques"><span class="toc-text">7.4.1 Abilities of Deques</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-2-Deque-Operations"><span class="toc-text">7.4.2 Deque Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-3-Exception-Handling"><span class="toc-text">7.4.3 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-4-Examples-of-Using-Deques"><span class="toc-text">7.4.4 Examples of Using Deques</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-Lists"><span class="toc-text">7.5 Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-1-Abilities-of-Lists"><span class="toc-text">7.5.1 Abilities of Lists</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-2-List-Operations"><span class="toc-text">7.5.2 List Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-3-Exception-Handling"><span class="toc-text">7.5.3 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-4-Examples-of-Using-Lists"><span class="toc-text">7.5.4 Examples of Using Lists</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-Forward-Lists"><span class="toc-text">7.6 Forward Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-1-Abilities-of-Forward-Lists"><span class="toc-text">7.6.1 Abilities of Forward Lists</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-2-Forward-List-Operations"><span class="toc-text">7.6.2 Forward List Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-3-Exception-Handling"><span class="toc-text">7.6.3 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-4-Examples-of-Using-Forward-Lists"><span class="toc-text">7.6.4 Examples of Using Forward Lists</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-7-Sets-and-Multisets"><span class="toc-text">7.7 Sets and Multisets</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-1-Abilities-of-Sets-and-Multisets"><span class="toc-text">7.7.1 Abilities of Sets and Multisets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-2-Set-and-Multiset-Operations"><span class="toc-text">7.7.2 Set and Multiset Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-3-Exception-Handling"><span class="toc-text">7.7.3 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-4-Examples-of-Using-Sets-and-Multisets"><span class="toc-text">7.7.4 Examples of Using Sets and Multisets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-5-Example-of-Specifying-the-Sorting-Criterion-at-Runtime"><span class="toc-text">7.7.5 Example of Specifying the Sorting Criterion at Runtime</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-8-Maps-and-Multimaps"><span class="toc-text">7.8 Maps and Multimaps</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-1-Abilities-of-Maps-and-Multimaps"><span class="toc-text">7.8.1 Abilities of Maps and Multimaps</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-2-Map-and-Multimap-Operations"><span class="toc-text">7.8.2 Map and Multimap Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-3-Using-Maps-as-Associative-Arrays"><span class="toc-text">7.8.3 Using Maps as Associative Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-4-Exception-Handling"><span class="toc-text">7.8.4 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-5-Examples-of-Using-Maps-and-Multimaps"><span class="toc-text">7.8.5 Examples of Using Maps and Multimaps</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-8-6-Example-with-Maps-Strings-and-Sorting-Criterion-at-Runtime"><span class="toc-text">7.8.6 Example with Maps, Strings, and Sorting Criterion at Runtime</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-9-Unordered-Containers"><span class="toc-text">7.9 Unordered Containers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-1-Abilities-of-Unordered-Containers"><span class="toc-text">7.9.1 Abilities of Unordered Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-2-Creating-and-Controlling-Unordered-Containers"><span class="toc-text">7.9.2 Creating and Controlling Unordered Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-3-Other-Operations-for-Unordered-Containers"><span class="toc-text">7.9.3 Other Operations for Unordered Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-4-The-Bucket-Interface"><span class="toc-text">7.9.4 The Bucket Interface</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-5-Using-Unordered-Maps-as-Associative-Arrays"><span class="toc-text">7.9.5 Using Unordered Maps as Associative Arrays</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-6-Exception-Handling"><span class="toc-text">7.9.6 Exception Handling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-9-7-Examples-of-Using-Unordered-Containers"><span class="toc-text">7.9.7 Examples of Using Unordered Containers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-10-Other-STL-Containers"><span class="toc-text">7.10 Other STL Containers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-10-1-Strings-as-STL-Containers"><span class="toc-text">7.10.1 Strings as STL Containers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-10-2-Ordinary-C-Style-Arrays-as-STL-Containers"><span class="toc-text">7.10.2 Ordinary C-Style Arrays as STL Containers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-11-Implementing-Reference-Semantics"><span class="toc-text">7.11 Implementing Reference Semantics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-12-When-to-Use-Which-Container"><span class="toc-text">7.12 When to Use Which Container</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-8-STL-Container-Members-in-Detail"><span class="toc-text">Chapter 8 STL Container Members in Detail</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-Type-Definitions"><span class="toc-text">8.1 Type Definitions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-Create-Copy-and-Destroy-Operations"><span class="toc-text">8.2 Create, Copy, and Destroy Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-Nonmodifying-Operations"><span class="toc-text">8.3 Nonmodifying Operations</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-1-Size-Operations"><span class="toc-text">8.3.1 Size Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-2-Comparison-Operations"><span class="toc-text">8.3.2 Comparison Operations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-3-Nonmodifying-Operations-for-Associative-and-Unordered-Containers"><span class="toc-text">8.3.3 Nonmodifying Operations for Associative and Unordered Containers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-Assignments"><span class="toc-text">8.4 Assignments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-Direct-Element-Access"><span class="toc-text">8.5 Direct Element Access</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-6-Operations-to-Generate-Iterators"><span class="toc-text">8.6 Operations to Generate Iterators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-7-Inserting-and-Removing-Elements"><span class="toc-text">8.7 Inserting and Removing Elements</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-7-1-Inserting-Single-Elements"><span class="toc-text">8.7.1 Inserting Single Elements</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-7-2-Inserting-Multiple-Elements"><span class="toc-text">8.7.2 Inserting Multiple Elements</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-7-3-Removing-Elements"><span class="toc-text">8.7.3 Removing Elements</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-7-4-Resizing"><span class="toc-text">8.7.4 Resizing</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-8-Special-Member-Functions-for-Lists-and-Forward-Lists"><span class="toc-text">8.8 Special Member Functions for Lists and Forward Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-8-1-Special-Member-Functions-for-Lists-and-Forward-Lists"><span class="toc-text">8.8.1 Special Member Functions for Lists (and Forward Lists)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-8-2-Special-Member-Functions-for-Forward-Lists-Only"><span class="toc-text">8.8.2 Special Member Functions for Forward Lists Only</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-9-Container-Policy-Interfaces"><span class="toc-text">8.9 Container Policy Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-9-1-Nonmodifying-Policy-Functions"><span class="toc-text">8.9.1 Nonmodifying Policy Functions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-9-2-Modifying-Policy-Functions"><span class="toc-text">8.9.2 Modifying Policy Functions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-9-3-Bucket-Interface-for-Unordered-Containers"><span class="toc-text">8.9.3 Bucket Interface for Unordered Containers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-10-Allocator-Support"><span class="toc-text">8.10 Allocator Support</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-10-1-Fundamental-Allocator-Members"><span class="toc-text">8.10.1 Fundamental Allocator Members</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-10-2-Constructors-with-Optional-Allocator-Parameters"><span class="toc-text">8.10.2 Constructors with Optional Allocator Parameters</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-9-STL-Iterators"><span class="toc-text">Chapter 9 STL Iterators</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-Header-Files-for-Iterators"><span class="toc-text">9.1 Header Files for Iterators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-Iterator-Categories"><span class="toc-text">9.2 Iterator Categories</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-2-Input-Iterators"><span class="toc-text">9.2.2 Input Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-3-Forward-Iterators"><span class="toc-text">9.2.3 Forward Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-4-Bidirectional-Iterators"><span class="toc-text">9.2.4 Bidirectional Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-5-Random-Access-Iterators"><span class="toc-text">9.2.5 Random-Access Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-6-The-Increment-and-Decrement-Problem-of-Vector-Iterators"><span class="toc-text">9.2.6 The Increment and Decrement Problem of Vector Iterators</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-Auxiliary-Iterator-Functions"><span class="toc-text">9.3 Auxiliary Iterator Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-1-advance"><span class="toc-text">9.3.1 advance()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-2-next-and-prev"><span class="toc-text">9.3.2 next() and prev()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-3-distance"><span class="toc-text">9.3.3 distance()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-4-iter-swap"><span class="toc-text">9.3.4 iter_swap()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-Iterator-Adapters"><span class="toc-text">9.4 Iterator Adapters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-1-Reverse-Iterators"><span class="toc-text">9.4.1 Reverse Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-2-Insert-Iterators"><span class="toc-text">9.4.2 Insert Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-3-Stream-Iterators"><span class="toc-text">9.4.3 Stream Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-4-Move-Iterators"><span class="toc-text">9.4.4 Move Iterators</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-5-Iterator-Traits"><span class="toc-text">9.5 Iterator Traits</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-5-1-Writing-Generic-Functions-for-Iterators"><span class="toc-text">9.5.1 Writing Generic Functions for Iterators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-6-Writing-User-Defined-Iterators"><span class="toc-text">9.6 Writing User-Defined Iterators</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-10-STL-Function-Objects-and-Using-Lambdas"><span class="toc-text">Chapter 10 STL Function Objects and Using Lambdas</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-The-Concept-of-Function-Objects"><span class="toc-text">10.1 The Concept of Function Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-1-Function-Objects-as-Sorting-Criteria"><span class="toc-text">10.1.1 Function Objects as Sorting Criteria</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-2-Function-Objects-with-Internal-State"><span class="toc-text">10.1.2 Function Objects with Internal State</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-3-The-Return-Value-of-for-each"><span class="toc-text">10.1.3 The Return Value of for_each()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-4-Predicates-versus-Function-Objects"><span class="toc-text">10.1.4 Predicates versus Function Objects</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-Predefined-Function-Objects-and-Binders"><span class="toc-text">10.2 Predefined Function Objects and Binders</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-1-Predefined-Function-Objects"><span class="toc-text">10.2.1 Predefined Function Objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-2-Function-Adapters-and-Binders"><span class="toc-text">10.2.2 Function Adapters and Binders</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-3-User-Defined-Function-Objects-for-Function-Adapters"><span class="toc-text">10.2.3 User-Defined Function Objects for Function Adapters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-4-Deprecated-Function-Adapters"><span class="toc-text">10.2.4 Deprecated Function Adapters</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-3-Using-Lambdas"><span class="toc-text">10.3 Using Lambdas</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-3-1-Lambdas-versus-Binders"><span class="toc-text">10.3.1 Lambdas versus Binders</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-3-2-Lambdas-versus-Stateful-Function-Objects"><span class="toc-text">10.3.2 Lambdas versus Stateful Function Objects</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

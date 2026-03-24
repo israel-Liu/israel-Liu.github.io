@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++ Primer, Fifth Edition reading_note_one | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="总之先写点什么吧，对markdown的编辑格式还不是很熟悉排版就先这样好了，日后再修改，或许发个markdown编辑格式的博文也不错，分类什么的也比较乱，以后还是尽量写英文吧，从最短的地方补起来 下面正文开始Top-Level const&nbsp;&nbsp;&nbsp;&nbsp;We user the term Top-Level const to indicate that the poi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ Primer, Fifth Edition reading_note_one">
+<meta property="og:url" content="https://israel-liu.github.io/2016/12/01/reading-note-one/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="总之先写点什么吧，对markdown的编辑格式还不是很熟悉排版就先这样好了，日后再修改，或许发个markdown编辑格式的博文也不错，分类什么的也比较乱，以后还是尽量写英文吧，从最短的地方补起来 下面正文开始Top-Level const&nbsp;&nbsp;&nbsp;&nbsp;We user the term Top-Level const to indicate that the poi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg">
+<meta property="article:published_time" content="2016-12-01T02:38:24.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.793Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C++ Primer, Fifth Edition reading_note_one",
+  "url": "https://israel-liu.github.io/2016/12/01/reading-note-one/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg",
+  "datePublished": "2016-12-01T02:38:24.000Z",
+  "dateModified": "2026-03-24T05:43:37.793Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2016/12/01/reading-note-one/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++ Primer, Fifth Edition reading_note_one',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">C++ Primer, Fifth Edition reading_note_one</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C++ Primer, Fifth Edition reading_note_one</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2016-12-01T02:38:24.000Z" title="发表于 2016-12-01 10:38:24">2016-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.793Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>总之先写点什么吧，对markdown的编辑格式还不是很熟悉<br>排版就先这样好了，日后再修改，或许发个markdown编辑格式的博文也不错，<br>分类什么的也比较乱，以后还是尽量写英文吧，从最短的地方补起来</p>
+<h2 id="下面正文开始"><a href="#下面正文开始" class="headerlink" title="下面正文开始"></a>下面正文开始</h2><h3 id="Top-Level-const"><a href="#Top-Level-const" class="headerlink" title="Top-Level const"></a>Top-Level const</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;We user the term Top-Level const to indicate that the pointer itself<br>is a const. When a pointer can point to a const object, we refer to that<br>const as a low-level const.<br>&nbsp;&nbsp;&nbsp;&nbsp;The distinction between top-level and low-level matters when we copy<br>an object. When we copy an object, top-level consts are ignored.<br>&nbsp;&nbsp;&nbsp;&nbsp;简单的说指针和引用的基本类型部分（low-level const）当执行对象拷贝操作时，<br>常量可以拷贝给常量，非常量可以拷贝给常量（可以转换）反之不行。</p>
+<h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> p1 = &amp;i;       <span class="comment">// we can&#x27;t change the value of p1; const is top-level</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> ci = <span class="number">42</span>;        <span class="comment">// we can&#x27;t change ci; const is top-level</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* p2 = &amp;ci;      <span class="comment">// we can change p2; const is low-level</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> p3 = p2; <span class="comment">// right-most const is top-level, left-most is not</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; r = ci;        <span class="comment">// const in reference types is always low-level</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Standard-Container-Iterator-Operations"><a href="#Standard-Container-Iterator-Operations" class="headerlink" title="Standard Container Iterator Operations"></a>Standard Container Iterator Operations</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;因为操作符重载和语言基本的(-&gt;)箭头操作，搞定我晕晕的，提一下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iter-&gt;mem;  <span class="comment">// Dereferences iter and fetches the member named mem from</span></span><br><span class="line">            <span class="comment">// the underlying element. Equivalent to (*iter).mem</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="文章结束之前提一下-begin-end"><a href="#文章结束之前提一下-begin-end" class="headerlink" title="文章结束之前提一下 begin(),  end()."></a>文章结束之前提一下 begin(),  end().</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;begin returns a pointer to the first, and end returns a pointer one past the last<br>element in the given array: These functions are defined in the iterator header</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> ia[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;   <span class="comment">// ia is an array of ten ints</span></span><br><span class="line"><span class="type">int</span> *beg = <span class="built_in">begin</span>(ia);               <span class="comment">// pointer to the first element in ia</span></span><br><span class="line"><span class="type">int</span> *last = <span class="built_in">end</span>(ia);                <span class="comment">// pointer one past the last element in ia</span></span><br></pre></td></tr></table></figure>
+<h2 id="End-第一篇到这里了，Note-还有个vector无符号下标，内置数组有符号下标"><a href="#End-第一篇到这里了，Note-还有个vector无符号下标，内置数组有符号下标" class="headerlink" title="End 第一篇到这里了，Note 还有个vector无符号下标，内置数组有符号下标"></a>End 第一篇到这里了，Note 还有个vector无符号下标，内置数组有符号下标</h2><h2 id="Chapter-1-Getting-Started"><a href="#Chapter-1-Getting-Started" class="headerlink" title="Chapter 1. Getting Started"></a>Chapter 1. Getting Started</h2><p>当用 CMD 窗口执行程序后，那么这个窗口应该就是这个程序所有了？输入输出流的返回值还是输入输出流，这样可以连续使用 operator &lt;&lt;. 语言本身不支持输入输出。通过使用库 I&#x2F;O。<br>临时变量只要还在 stack 中就是有效的对吧？只用点操作符访问成员方法，所以加 () 操作符之前只是没有调用为啥是不合法的？reading cin flushes cout ？</p>
+<h2 id="Part-I-The-Basics"><a href="#Part-I-The-Basics" class="headerlink" title="Part I: The Basics"></a>Part I: The Basics</h2><p>区分语言和库还是很重要的，要知道语言本身提供了什么东西，我们可以用来做什么，比如利用provides mechanisms that let us define our own data types.写库。</p>
+<h2 id="Chapter-2-Variables-and-Basic-Types"><a href="#Chapter-2-Variables-and-Basic-Types" class="headerlink" title="Chapter 2. Variables and Basic Types"></a>Chapter 2. Variables and Basic Types</h2><p>The smallest chunk of addressable memory is referred to as a “byte.”  类型设计是要更好的接近硬件层。<br>类型char，可能是有符号的也可能是无符号的，不要再算数表达式里面使用，使用时候要明确有符号还是无符号。<br>赋值给无符号类型，当超过范围的时候取值为 the compiler assigns the remainder of that value modulo 256(unsigned char).<br>If we assign an out-of-range value to an object of signed type, the result is undefined. Don’t Mix Signed and Unsigned Types.</p>
+<h4 id="2-1-3-Literals-字面常量"><a href="#2-1-3-Literals-字面常量" class="headerlink" title="2.1.3. Literals (字面常量)"></a>2.1.3. Literals (字面常量)</h4><p>最基本的类型推断是不是就像这个东西一样。转义字符最多就转义3个数字。</p>
+<h3 id="2-2-Variables"><a href="#2-2-Variables" class="headerlink" title="2.2. Variables"></a>2.2. Variables</h3><p>初始化是在定义对象的时候给个初始值，赋值是删掉原有的值再给一个新值。所以要分清楚什么时候调用构造函数什么时候调用赋值操作符。<br>explicitly initialized 是要求构造对象的时候显示构造？<br>C++ is a statically typed language, which means that types are checked at compile time. 但是我可以通过模板(应该也是编译期确定的)或者继承等告诉运行时确定类型？</p>
+<h3 id="2-3-Compound-Types"><a href="#2-3-Compound-Types" class="headerlink" title="2.3. Compound Types"></a>2.3. Compound Types</h3><p>rvalue reference These references are primarily intended for use inside classes. void*可以接收任何类型的指针，但是我们不能通过他使用指向的对象。需要先确定类型。<br>Because references are not objects, we may not define a reference to a reference. 所以右值引用还要理解这句话。<br>scope 内的指针不初始化那么值是未定义的，那全局指针被初始化什么 ？是 0 吗 ，因为全局区域全部被填充了 0 ？指针是类型但是引用不是。</p>
+<h4 id="2-3-3-Understanding-Compound-Type-Declarations"><a href="#2-3-3-Understanding-Compound-Type-Declarations" class="headerlink" title="2.3.3. Understanding Compound Type Declarations"></a>2.3.3. Understanding Compound Type Declarations</h4><p>从右往左读取声明，第一个遇见的修饰符是变量类型，再往走的修饰符都是变量形容的类型，最前面是基类型。int *&amp;r &#x3D; p; 引用类型，引用了指针类型，基类型是int。</p>
+<h3 id="2-4-const-Qualifier"><a href="#2-4-const-Qualifier" class="headerlink" title="2.4. const Qualifier"></a>2.4. const Qualifier</h3><p>const int i &#x3D; get_size(); &#x2F;&#x2F; ok: initialized at run time。const Objects Are Local to a File。如果是compile-time constant那编译期会在使用的地方直接替换为值。<br>所以可以在不同文件中定义相同的 const 常量然后给不同的值？因为它只在当前文件可以访问？如果像多个文件公用一个运行期确定的常量，在声明和定义的地方都加上 extern。static is local ？<br>References to const 引用绑定的对象永远不可更改，所以都是const，“reference to const” 和 “const reference.” 都是说绑定的对象不可修改。const int &amp;r &#x3D; ir; const 修饰 int。right to left;</p>
+<pre><code>double dval = 3.14;
+const int &amp;ri = dval;
+// 当我们这样赋值的时候编译器做如下事情。我们不能通过临时对象更改原始对象。
+const int temp = dval; // create a temporary const int from the double
+const int &amp;ri = temp; // bind ri to that temporary
+// 可以把非const 赋值给 const 引用，但是我们不能通过这个引用更改绑定的值，即便是绑定的值可以更改。
+</code></pre>
+<p>We use the term top-level const to indicate that the pointer itself is a const. When a pointer can point to a const object, we refer to that const as a low-level const.<br>When we copy an object, top-level consts are ignored。<br>A const object that is initialized from a constant expression is also a constant expression. const 对象用常量表达式初始化也是常量表达式，非const对象怎么都不是。<br>Generally, it is a good idea to use constexpr for variables that you intend to use as constant expressions。constexpr 显示表示必须用常量表达式赋值，包括常量函数。<br>constexpr 表示常量表达式，编译期必须可以推断。 const 表示赋值后不可修改，可以运行期赋值。</p>
+<h3 id="2-5-Dealing-with-Types"><a href="#2-5-Dealing-with-Types" class="headerlink" title="2.5. Dealing with Types"></a>2.5. Dealing with Types</h3><p>类型别名不能简单的替换来解释。typedef char *pstring; const char *cstr &#x3D; 0; &#x2F;&#x2F; wrong interpretation of const pstring cstr ，const 用来修饰整体，常量指针。<br>By implication, a variable that uses auto as its type specifier must have an initializer，如果像auto保持 top-level const 属性必须显示声明。<br>没有底层属性的时候，称为顶层属性吗？</p>
+<pre><code>When we ask for a reference to an auto-deduced type, top-level consts in the initializer are not ignored. // 显示 auto&amp; 被绑定的变量 const 属性保留
+As usual, consts are not top-level when we bind a reference to an initializer. // 很难理解啊  const auto &amp; 用来形容被绑定的类型是 const 的。
+</code></pre>
+<p>decltype 当只想使用类型，不想用表达式初始化的时候使用，不需要执行表达式求结果。可以用来获取函数类型。decltype handles top-level const。<br>decltype returns a reference type for expressions that yield objects that can stand on the left-hand side of the assignment。并不是表达式的别名。<br>dereference operator 取消(解)引用返回的是引用类型。decltype(*p) is int&amp;, not plain int。</p>
+<pre><code>// decltype of a parenthesized variable is always a reference
+decltype((i)) d; // error: d is int&amp; and must be initialized // 每次去掉括号都执行一次  decltype ？像这样 decltype(decltype(i)) ？
+decltype(i) e; // ok: e is an (uninitialized) int // double parentheses) is always a reference type，一层括号不是。
+</code></pre>
+<h3 id="2-6-Defining-Our-Own-Data-Structures"><a href="#2-6-Defining-Our-Own-Data-Structures" class="headerlink" title="2.6. Defining Our Own Data Structures"></a>2.6. Defining Our Own Data Structures</h3><p>The semicolon is needed because we can define variables after the class body，结构体或者类结尾括号后面一定要有分号。<br>in-class initializer 是编译期确定的还是运行期？还是由对象是不是常量决定？应该和普通的一样依据存储区域吧。<br>类定义不写到函数里面因为可见范围太小，当然是可以的。不写到CPP中因为写到头文件中，可以在多个头文件中引用。而不需要每个源文件都写相同的定义。当然一份定义多个声明也是可以的。<br>类定义到头文件后，我们还要避免多次包含头文件而有多个定义，使用预处理Preprocessor variable names do not respect C++ scoping rules.。当头文件更改的时候，需要重新编译源文件获取最新定义。<br>declarator(声明符) The part of a declaration that includes the name being defined and an optional type modifier.<br>temporary Unnamed object created by the compiler while evaluating an expression.<br>A temporary exists until the end of the largest expression that encloses the expression for which it was created.<br>void* Pointer type that can point to any nonconst type. Such pointers may not be dereferenced.<br>word The natural unit of integer computation on a given machine. Usually a word is large enough to hold an address. On a 32-bit machine a word is typically 4 bytes.</p>
+<h2 id="Chapter-3-Strings-Vectors-and-Arrays"><a href="#Chapter-3-Strings-Vectors-and-Arrays" class="headerlink" title="Chapter 3. Strings, Vectors, and Arrays"></a>Chapter 3. Strings, Vectors, and Arrays</h2><p>使用等号的拷贝初始化编译器执行 string temp(10, ‘c’); &#x2F;&#x2F; temp is cccccccccc 和 string s8 &#x3D; temp; &#x2F;&#x2F; copy temp into s8 两步，直接初始化不需要生成临时变量。？<br>当使用 + 操作符连接字符串的时候，必须每个 + 至少有一个是 string 类型。<br>Because references are not objects (§ 2.3.1, p. 50), we cannot have a vector of references。</p>
+<h3 id="3-5-Arrays"><a href="#3-5-Arrays" class="headerlink" title="3.5. Arrays"></a>3.5. Arrays</h3><p>size_t is a machine-specific unsigned type that is guaranteed to be large enough to hold the size of any object in memory。</p>
+<pre><code>int *ptrs[10]; // ptrs is an array of ten pointers to int
+int &amp;refs[10] = /* ? */; // error: no arrays of references
+int (*Parray)[10] = &amp;arr; // Parray points to an array of ten ints
+int (&amp;arrRef)[10] = arr; // arrRef refers to an array of ten ints
+
+auto ia2(ia); // ia2 is an int* that points to the first element in ia。
+The type returned by decltype(ia) is array of ten ints
+</code></pre>
+<p>Like size_t, the ptrdiff_t type is a machine-specific type。</p>
+<p>当前指向的位置，然后往后计算。有趣</p>
+<pre><code>int *p = &amp;ia[2]; // p points to the element indexed by 2
+int j = p[1]; // p[1] is equivalent to *(p + 1),
+// p[1] is the same element as ia[3]
+int k = p[-2]; // p[-2] is the same element as ia[0]
+</code></pre>
+<h3 id="3-6-Multidimensional-Arrays"><a href="#3-6-Multidimensional-Arrays" class="headerlink" title="3.6. Multidimensional Arrays"></a>3.6. Multidimensional Arrays</h3><p>多维数组实际布局也是连续的，所以可以接着选取？外层 for 范围循环总是用引用，避免被转换为指针。二维数组第一维是啥类型？不适用auto的时候for (int (*p)[4] &#x3D; ai;;;) 这样定义？</p>
+<pre><code>// assigns the first element of arr to the last element in the last row of ia
+ia[2][3] = arr[0][0][0];
+int (&amp;row)[4] = ia[1]; // binds row to the second four-element array in ia
+
+size_t cnt = 0;
+for (auto &amp;row : ia) // for every element in the outer array
+    for (auto &amp;col : row) &#123; // for every element in the inner array
+        col = cnt; // give this element the next value
+        ++cnt; // increment cnt
+    &#125;
+</code></pre>
+<p>Type Aliases Simplify Pointers to Multidimensional Arrays. using int_array &#x3D; int[4]; for (int_array *p &#x3D; ia; p !&#x3D; ia + 3; ++p)<br>value initialization 当不提供值的时候，或者没有默认构造函数的时候，使用拷贝编译器生成的变量初始化。提供了值才是值初始化。使用括号初始化的时候，什么时候是赋值初始化，什么时候是拷贝初始化。</p>
+<h2 id="Chapter-4-Expressions"><a href="#Chapter-4-Expressions" class="headerlink" title="Chapter 4. Expressions"></a>Chapter 4. Expressions</h2><p>when we use an object as an rvalue, we use the object’s value (its contents). When we use an object as an lvalue, we use the object’s identity (its location in memory).<br>we apply decltype to an expression (other than a variable), the result is a reference type if the expression yields an lvalue.decltype(<em>p) is int&amp;. decltype(&amp;p) is int</em>*,<br>没有定义操作符操作数的执行顺序，方便编译器进行优化。If you change the value of an operand, don’t use that operand elsewhere in the same expresion.<br>Compound Assignment Operators 只计算一次，a op&#x3D; b &#x3D;&#x3D; a &#x3D; a op b; 除了性能上有一点点差异，两种完全相同。非组合的计算两次，一次在右边op一次在左边 &#x3D; 。<br>后加加优先级更高，所以 *pbeg++ is equivalent to *(pbeg++).</p>
+<h3 id="4-6-The-Member-Access-Operators"><a href="#4-6-The-Member-Access-Operators" class="headerlink" title="4.6. The Member Access Operators"></a>4.6. The Member Access Operators</h3><h3 id="4-8-The-Bitwise-Operators"><a href="#4-8-The-Bitwise-Operators" class="headerlink" title="4.8. The Bitwise Operators"></a>4.8. The Bitwise Operators</h3><p>Moreover, doing a left shift that changes the value of the sign bit is undefined.</p>
+<h3 id="4-9-The-sizeof-Operator"><a href="#4-9-The-sizeof-Operator" class="headerlink" title="4.9. The sizeof Operator"></a>4.9. The sizeof Operator</h3><p>The sizeof operator is unusual in that it does not evaluate its operand。sizeof returns a constant expression。返回常量表达式，可以用来确定数组大小。<br>sizeof (type) 类型大小，这个可以传递变量在括号里面吗？应该是不行的吧， sizeof expr 表达式类型的大小，returns the size of the type returned by the given expression.。<br>we can use the scope operator to ask for the size of a member of a class type。Note that sizeof does not convert the array to a pointer.</p>
+<pre><code>// sizeof(ia)/sizeof(*ia) returns the number of elements in ia
+constexpr size_t sz = sizeof(ia)/sizeof(*ia);
+int arr2[sz]; // ok sizeof returns a constant expression
+</code></pre>
+<p>sizeof a string or a vector returns only the size of the fixed part of these types; it does not return the size used by the object’s elements. ？？？</p>
+<h4 id="4-11-1-The-Arithmetic-Conversions"><a href="#4-11-1-The-Arithmetic-Conversions" class="headerlink" title="4.11.1. The Arithmetic Conversions"></a>4.11.1. The Arithmetic Conversions</h4><p>When the signedness differs and the type of the unsigned operand is the same as or larger than that of the signed operand, the signed operand is converted to unsigned.<br>A const_cast changes only a low-level (§ 2.4.3, p. 63) const in its operand。所以类型本来的那个const是底层的，复合类型带的那个是顶层的。</p>
+<h2 id="Chapter-5-Statements"><a href="#Chapter-5-Statements" class="headerlink" title="Chapter 5. Statements"></a>Chapter 5. Statements</h2><p>dangling else 匹配最近不匹配的 if。switch 执行第一个 case 开始，如果没有遇见 break，会一直执行后续case 即便是不匹配。不允许跳过case定义的变量。<br>we can do so by defining the variable inside a block, thereby ensuring that the variable is out of scope at the point of any subsequent label.<br>for (auto &amp;r : v)  &#x3D;&#x3D;   for (auto beg &#x3D; v.begin(), end &#x3D; v.end(); beg !&#x3D; end; ++beg) {auto &amp;r &#x3D; *beg;} 缓存end？不能用来向容器中添加元素？<br>A do while ends with a semicolon after the parenthesized condition. Variables used in condition must be defined outside the body of the do while statement.<br>goto 使用的 Label 独立于变量系统，可以和任何变量重复，但是必须和 goto 在同一个函数内。goto同样不允许跳过变量定义。可以往会跳跃，并且销毁再重新构造变量。不建议使用。<br>Caution: Writing Exception Safe Code is Hard。书写异常安全的程序是很难的，异常这块还是要好好接触一下的。</p>
+<h2 id="Chapter-6-Functions"><a href="#Chapter-6-Functions" class="headerlink" title="Chapter 6. Functions"></a>Chapter 6. Functions</h2><p>Execution of a function begins with the (implicit) definition and initialization of its parameters.(右值是否需要定义只需声明？int&amp;&amp; val &#x3D; 5;)<br>we have no guarantees about the order in which arguments are evaluated(函数参数的计算顺序没用保证，和if语句不同)。<br>For compatibility with C, we also can use the keyword void to indicate that there are no parameters(C++里面还是不要这样写了，尤其是构造析构函数)。<br>Moreover, local variables at the outermost scope of the function may not use the same name as any parameter。(函数最外层作用域？进入函数作用域但是没进入子作用域{})。<br>形式参数名可以省略，当不使用的时候可以不命名参数，但是必须传递实际参数的值的个数不可省略。所有这种做法是处于什么原因，是声明可以省略，而定义加上嘛。<br>However, the return type may not be an array type (§ 3.5, p. 113) or a function type. However, a function may return a pointer to an array or a function.</p>
+<h4 id="6-1-1-Local-Objects"><a href="#6-1-1-Local-Objects" class="headerlink" title="6.1.1. Local Objects"></a>6.1.1. Local Objects</h4><p>In C++, names have scope (§ 2.2.4, p. 48), and objects have lifetimes. It is important to understand both of these concepts.<br>    • The scope of a name is the part of the program’s text in which that name is visible.<br>    • The lifetime of an object is the time during the program’s execution that the object exists.</p>
+<p>Parameters and variables defined inside a function body are referred to as local variables.(形式参数是函数作用域内的本地变量)。<br>Automatic Objects，形式参数和函数内的本地变量都是在执行到的时候定义并初始化(形参通过实参初始化，本地变量提供初始化或者执行默认初始化，内置类型默认值为未定义的)，当函数结束的时候自动释放。<br>Local static Objects 第一次执行到的时候定义并初始化，不提供初始化执行默认初始(it is value initialized)程序结束才释放，可以用来统计函数执行次数。</p>
+<h4 id="6-1-2-Function-Declarations"><a href="#6-1-2-Function-Declarations" class="headerlink" title="6.1.2. Function Declarations"></a>6.1.2. Function Declarations</h4><h4 id="6-1-3-Separate-Compilation"><a href="#6-1-3-Separate-Compilation" class="headerlink" title="6.1.3. Separate Compilation"></a>6.1.3. Separate Compilation</h4><h3 id="6-2-Argument-Passing"><a href="#6-2-Argument-Passing" class="headerlink" title="6.2. Argument Passing"></a>6.2. Argument Passing</h3><p>As with any other variable, the type of a parameter determines the interaction between the parameter and its argument.(如果形参是引用那么它就会绑定到实参上)。<br>std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const T&amp;) (实参传入返回值传出，为的是可以连续使用嘛。不然实参不是已经传出了)。返回调用对象！！！！ return *this; 连续使用同一个对象 b.f().m();<br>top-level consts are ignored on a parameter(所有形参可以是 const 或者 非 const 但是形参都是不可更改的，需要避免重定义，形参是 const 和 非 const 是同一个定义)。<br>We can initialize an object with a low-level const from a nonconst object but not vice versa, and a plain reference must be initialized from an object of the same type.(？？？)<br>当需要把常量引用实参传递给非常量引用形参的时候，可以通过定义实参副本为普通引用，进行传递。当然最好是把形参定义为常量引用，这样可以接收的类型更广泛。除非你想函数内修改实参。</p>
+<h4 id="6-2-4-Array-Parameters"><a href="#6-2-4-Array-Parameters" class="headerlink" title="6.2.4. Array Parameters"></a>6.2.4. Array Parameters</h4><p>数组不可拷贝，使用时候通常转换为指针，不能拷贝所有不能用值传递参数，当传递数组的时候通常转换为指向首元素的指针。但是我们可以把形参声明为数组的样子。因为转换为指针所有不知道个数。</p>
+<pre><code>f(int &amp;arr[10]) // error: declares arr as an array of references
+f(int (&amp;arr)[10]) // ok: arr is a reference to an array of ten ints
+
+int *matrix[10]; // array of ten pointers
+int (*matrix)[10]; // pointer to an array of ten ints
+// equivalent definition // In fact, the parameter is a pointer to an array of ten ints.
+void print(int matrix[][10], int rowSize) &#123; /* . . . */ &#125;
+</code></pre>
+<p>The size of the second (and any subsequent) dimension is part of the element type and must be specified。(多维数组的第二维度大小类型的一部分必须给出，不然不知道指针指向的类型。?).</p>
+<h4 id="6-2-5-main-Handling-Command-Line-Options"><a href="#6-2-5-main-Handling-Command-Line-Options" class="headerlink" title="6.2.5. main: Handling Command-Line Options"></a>6.2.5. main: Handling Command-Line Options</h4><h4 id="6-2-6-Functions-with-Varying-Parameters"><a href="#6-2-6-Functions-with-Varying-Parameters" class="headerlink" title="6.2.6. Functions with Varying Parameters"></a>6.2.6. Functions with Varying Parameters</h4><p>Ellipsis parameters 主要为了和C混用. In particular, objects of most class types are not copied properly when passed to an ellipsis parameter.</p>
+<pre><code>void foo(parm_list, ...);   // 逗号是可选的。
+void foo(...);
+</code></pre>
+<h3 id="6-3-Return-Types-and-the-return-Statement"><a href="#6-3-Return-Types-and-the-return-Statement" class="headerlink" title="6.3. Return Types and the return Statement"></a>6.3. Return Types and the return Statement</h3><p>Never Return a Reference or Pointer to a Local Object。返回左值的函数可以放到等号左边，和其它左值一样。<br>int (<em>func(int i))[10]; 返回数组的函数声明。auto func(int i) -&gt; int(</em>)[10]; (Using a Trailing Return Type).<br>decltype(odd) *arrPtr(int i);(Using decltype). &#x2F;&#x2F;The typereturned by decltype is an array type, to which we must add a * to indicate that arrPtr returns a pointer.</p>
+<h3 id="6-4-Overloaded-Functions"><a href="#6-4-Overloaded-Functions" class="headerlink" title="6.4. Overloaded Functions"></a>6.4. Overloaded Functions</h3><p>top-level const 不能用来区别重载， low-level 可以。Names do not overload across scopes。(覆盖外层的)。</p>
+<pre><code>string &amp;shorterString(string &amp;s1, string &amp;s2)
+&#123;
+    auto &amp;r = shorterString(const_cast&lt;const string&amp;&gt;(s1),
+                const_cast&lt;const string&amp;&gt;(s2));
+                return const_cast&lt;string&amp;&gt;(r);
+&#125;
+</code></pre>
+<h3 id="6-5-Features-for-Specialized-Uses"><a href="#6-5-Features-for-Specialized-Uses" class="headerlink" title="6.5. Features for Specialized Uses"></a>6.5. Features for Specialized Uses</h3><p>inline 函数在编译期展开，省去运行时调用函数的开销。但是编译期可能忽略这个展开请求。<br>constexpr 返回类型和形参类型也必须是字面值类型，而且函数只能有一个 return。编译期会进行验证确定常量值。隐含 inline。<br>A constexpr function body may contain other statements so long as those statements generate no actions at run time.<br>A constexpr function is not required to return a constant expression.(根据值确定，所以返回类型是字面值类型是个什么意思。)<br>As a result, inline and constexpr functions normally are defined in headers. (方便展开的地方都统一)</p>
+<h4 id="6-5-3-Aids-for-Debugging"><a href="#6-5-3-Aids-for-Debugging" class="headerlink" title="6.5.3. Aids for Debugging"></a>6.5.3. Aids for Debugging</h4><p>assert(expr); 在调试模式下使用，当 expr 为真的时候什么都不做，当表达式为假的时候，输出错误信息，并且结束程序。<br>是否启动  assert 根据 NDEBUG 预处理宏定义，默认不定义，assert 执行运行时检查。当定义的时候，什么都不做。(No debug ?).<br>可以通过 #ifndef NDEBUG … #endif 来添加自己的调试信息。</p>
+<pre><code>_ _func_ _ in every function. It is a local static array of const char that holds the name of the function。
+_ _FILE_ _ string literal containing the name of the file
+_ _LINE_ _ integer literal containing the current line number
+_ _TIME_ _ string literal containing the time the file was compiled
+_ _DATE_ _ string literal containing the date the file was compiled
+</code></pre>
+<h3 id="6-6-Function-Matching"><a href="#6-6-Function-Matching" class="headerlink" title="6.6. Function Matching"></a>6.6. Function Matching</h3><p>Casts should not be needed to call an overloaded function. The need for a cast suggests that the parameter sets are designed poorly. </p>
+<h3 id="6-7-Pointers-to-Functions"><a href="#6-7-Pointers-to-Functions" class="headerlink" title="6.7. Pointers to Functions"></a>6.7. Pointers to Functions</h3><p>函数指针只需要用指针替换函数名就可以了，加上括号。不加括号就变成了返回类型是什么指针的函数了。pf &#x3D; f 等价 pf &#x3D; &amp;f。<br>赋值的时候取值符可选。函数名被解为指针。(和数组名称类似?) 调用时可以直接调用，无需解引用，当然存在等效的。(*pf)() &#x3D;&#x3D; pf();<br>函数指针间不存在转换，指向重载函数的时候必须指明重载的是那个函数，通过参数列表标明。可以当形参，实参函数名，实际是当指针使用。</p>
+<pre><code>// third parameter is a function type and is automatically treated as a pointer to function
+void useBigger(const string &amp;s1, const string &amp;s2, bool pf(const string &amp;, const string &amp;));
+// equivalent declaration: explicitly define the parameter as a pointer to function
+void useBigger(const string &amp;s1, const string &amp;s2, bool (*pf)(const string &amp;, const string &amp;));
+</code></pre>
+<p>预定义类型别名，typedef 和 using 还有 decltype 还有后缀 返回类型声明，都可以方便函数指针的阅读。</p>
+<h2 id="Chapter-7-Classes"><a href="#Chapter-7-Classes" class="headerlink" title="Chapter 7 Classes"></a>Chapter 7 Classes</h2><p>When we call a member function, this is initialized with the address of the object on which the function was invoked。<br>紧跟参数列表后面的 const 表示 this 是一个指向常量的指针(对象内容不可变)。这样使用 const 的成员函数是常量成员函数。常量对象只能调用这种函数。<br>By default, the type of this is a const pointer to the nonconst version of the class type.(指向不可改变，实际的对象内容可变)。</p>
+<h4 id="7-1-4-Constructors"><a href="#7-1-4-Constructors" class="headerlink" title="7.1.4. Constructors"></a>7.1.4. Constructors</h4><p>Unlike other member functions, constructors may not be declared as const (§7.1.2, p. 258). (构造函数不可以是 const，构造结束才取得对象 const 属性)<br>When we create a const object of a class type, the object does not assume its “constness” until after the constructor completes the object’s initialization.<br>Thus, constructors can write to const objects during their construction. (构造期间可以写入 const 对象)</p>
+<p>The compiler generates a default constructor automatically only if a class declares no constructors.<br>If we define any constructors, the class will not have a default constructor unless we define that constructor ourselves.<br>(已经声明了构造函数的情况下，可以通过 &#x3D; default 声明默认构造函数，这样就不用都特殊初始化)<br>synthesized default constructor 对于 built-in or compound type 默认初始化是未定义的，可以通过 &#x3D; 类内初始化(C++11)。或者提供构造函数。<br>If a class has a member that has a class type, and that class doesn’t have a default constructor(提供了特殊构造函数), then the compiler can’t initialize that member.</p>
+<p>When a member is omitted from the constructor initializer list, it is implicitly initialized using the same process as is used by the synthesized default constructor.<br>In this case, those members are initialized by the in-class initializers.(当初始化列表没有提供成员初始化的时候，使用和合成构造一样的方式，类内初始化或者默认初始化)<br>成员初始化在构造函数体执行之前，即便是提供的空初始化列表或者不专业的说没有初始化列表。(如果存在基类什么的，这之前要执行的事情应该还要更多，成员变量之间应该是没顺序的)。</p>
+<h4 id="7-1-5-Copy-Assignment-and-Destruction"><a href="#7-1-5-Copy-Assignment-and-Destruction" class="headerlink" title="7.1.5. Copy, Assignment, and Destruction"></a>7.1.5. Copy, Assignment, and Destruction</h4><p>编译器可以帮助生成 合成的拷贝构造函数，赋值操作符，析构函数，但是当对象需要分配对象外的资源时候，比如成员是动态分配内存的时候，他们没法正确执行，所以需要手动提供。</p>
+<h4 id="7-2-1-Friends"><a href="#7-2-1-Friends" class="headerlink" title="7.2.1. Friends"></a>7.2.1. Friends</h4><p>通常是为了给和类关联的函数使用的。allow another class or function to access its nonpublic members by making that class or function a friend.(friend + 声明)。<br>Friends are not members of the class and are not affected by the access control of the section in which they are declared.(任何位置都可以定义)</p>
+<h3 id="7-3-Additional-Class-Features"><a href="#7-3-Additional-Class-Features" class="headerlink" title="7.3. Additional Class Features"></a>7.3. Additional Class Features</h3><p>A class can define its own local names for types. Type names defined by a class are subject to the same access controls as any other member(typedef &#x2F; using &#x3D; )<br>通过将类型成员声明为public的暴露在外面，要先定义后使用。这样可以隐藏实际使用的类型。using pos &#x3D; std::string::size_type;  外面不知道使用了 string 类型。<br>可以在成员函数声明或者定义处使用 inline 声明成内联函数，两处都写也是合法的，一般只写在类外的定义处，并且把定义放到和类同一个头文件中。<br>将成员声明为 mutable 那么这个成员永远不会是 const ，可以在 const 成员函数中修改。<br>When we provide an in-class initializer, we must do so following an &#x3D; sign or inside braces.<br>A const member function that returns *this as a reference should have a return type that is a reference to const. (??? 是否可以连续使用 . . 访问成员函数？只可以访问 const 函数)</p>
+<h4 id="7-3-3-Class-Types"><a href="#7-3-3-Class-Types" class="headerlink" title="7.3.3. Class Types"></a>7.3.3. Class Types</h4><p>在前向声明之后只是说明了有这么一种类类型，定义之前，类是一个不完全类型，不知道具体有那些成员，在我们创建对象之前，必须要有类的定义。<br>We can define pointers or references to such types, and we can declare (but not define) functions that use an incomplete type as a parameter or return type<br>类完全定义后才知道大小，所有类不能包含自己类型的成员，但是可以包含自己类型的指针或者引用，因为类名字出现过就是声明了。<br>Making a member function a friend requires careful structuring of our programs to accommodate interdependencies among the declarations and definitions(***)</p>
+<h3 id="7-4-Class-Scope"><a href="#7-4-Class-Scope" class="headerlink" title="7.4. Class Scope"></a>7.4. Class Scope</h3><p>We access type members from the class using the scope operator(::访问类型成员)。类外部定义的返回类型在类作用域外使用::访问类成员。<br>Member function definitions are processed after the compiler processes all of the declarations in the class.(不需要特意排版成员函数)先查找范围内，再查找范围外。<br>(针对成员函数内名字查找，不同于普通函数的名字查找，先范围内声明，再范围外声明，其它类范围外的还是要先声明名字才可以使用，包括返回值，参数列表，初始化列表)。<br>如果类外定义的类型，在类中已经使用，那么不可以在类中再定义相同类型并且使用，虽然有些编译器不报错。所有通常在已进入类就定义类型，在使用前可以覆盖类外相同定义。</p>
+<h3 id="7-5-Constructors-Revisited"><a href="#7-5-Constructors-Revisited" class="headerlink" title="7.5. Constructors Revisited"></a>7.5. Constructors Revisited</h3><p>We must use the constructor initializer list to provide values for members that are const, reference, or of a class type that does not have a default constructor.<br>构造函数初始化列表负责初始化，先于构造函数体执行。所有写在函数体内的赋值，实际上是经历过先初始化的，然后才赋值，效率要低一些。还有上面提到的必须初始化的。<br>Delegating Constructors 委托构造函数可以把，具体的任务委托给其它构造函数，在初始化列表中调用，执行完受委托函数体后，返回自己的函数体。<br>A constructor that can be called with a single argument defines an implicit conversion from the constructor’s parameter type to the class type. (explicit)<br>一步类类型隐式转换，也就是说如果有提供一个参数的构造函数，那么这种类型的参数，可以当作这个类类型使用。当参数的时候生成临时对象。<br>explicit 用来抑制隐式转换，但是可以显示使用转换。只对一个参数构造函数生效，只能用于直接初始化。不能用于拷贝初始化 &#x3D; 。</p>
+<h4 id="7-5-5-Aggregate-Classes"><a href="#7-5-5-Aggregate-Classes" class="headerlink" title="7.5.5. Aggregate Classes"></a>7.5.5. Aggregate Classes</h4><p>成员都是 public，无构造函数，无类内初始值，无基类，无 virtual 函数，使用 {} 初始值列表按序初始化。<br>除了算数类型，引用和指针外，数据成员都是字面值类型的聚合类，是字面值常量类。非聚合类满足成员都是字面值类型，至少含有一个 constexpr 构造函数()，等。。<br>constexpr 构造函数同时满足构造函数和 constexpr 函数要求，用于构造 constexpr 对象，用于参数和返回值。</p>
+<h3 id="7-6-static-Class-Members"><a href="#7-6-static-Class-Members" class="headerlink" title="7.6. static Class Members"></a>7.6. static Class Members</h3><p>static members can be public or private. The type of a static data member can be const, reference, array, class type, and so forth.<br>static member functions may not be declared as const(属于类不绑定对象), and we may not refer to this in the body of a static member。</p>
+<pre><code>
+## Chapter 8. The IO Library
+
+
+## Part II: The C++ Library
+[The_Cpp_Standard_Library_A_Tutorial_and_Reference_2n](https://israel-liu.github.io/2019/01/23/The-Cpp-Standard-Library-A-Tutorial-and-Reference-2nd-Edition/)
+
+
+## Part III: Tools for Class Authors
+[reading-note-two](https://israel-liu.github.io/2016/12/02/reading-note-two/)
+
+
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2016/12/01/reading-note-one/">https://israel-liu.github.io/2016/12/01/reading-note-one/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2016/12/02/reading-note-two/" title="C++ Primer, Fifth Edition reading-note-two"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">C++ Primer, Fifth Edition reading-note-two</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E9%9D%A2%E6%AD%A3%E6%96%87%E5%BC%80%E5%A7%8B"><span class="toc-text">下面正文开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Top-Level-const"><span class="toc-text">Top-Level const</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#example"><span class="toc-text">example</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Standard-Container-Iterator-Operations"><span class="toc-text">Standard Container Iterator Operations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E7%BB%93%E6%9D%9F%E4%B9%8B%E5%89%8D%E6%8F%90%E4%B8%80%E4%B8%8B-begin-end"><span class="toc-text">文章结束之前提一下 begin(),  end().</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#End-%E7%AC%AC%E4%B8%80%E7%AF%87%E5%88%B0%E8%BF%99%E9%87%8C%E4%BA%86%EF%BC%8CNote-%E8%BF%98%E6%9C%89%E4%B8%AAvector%E6%97%A0%E7%AC%A6%E5%8F%B7%E4%B8%8B%E6%A0%87%EF%BC%8C%E5%86%85%E7%BD%AE%E6%95%B0%E7%BB%84%E6%9C%89%E7%AC%A6%E5%8F%B7%E4%B8%8B%E6%A0%87"><span class="toc-text">End 第一篇到这里了，Note 还有个vector无符号下标，内置数组有符号下标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-1-Getting-Started"><span class="toc-text">Chapter 1. Getting Started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-I-The-Basics"><span class="toc-text">Part I: The Basics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-2-Variables-and-Basic-Types"><span class="toc-text">Chapter 2. Variables and Basic Types</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-3-Literals-%E5%AD%97%E9%9D%A2%E5%B8%B8%E9%87%8F"><span class="toc-text">2.1.3. Literals (字面常量)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Variables"><span class="toc-text">2.2. Variables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Compound-Types"><span class="toc-text">2.3. Compound Types</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-3-Understanding-Compound-Type-Declarations"><span class="toc-text">2.3.3. Understanding Compound Type Declarations</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-const-Qualifier"><span class="toc-text">2.4. const Qualifier</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-Dealing-with-Types"><span class="toc-text">2.5. Dealing with Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-Defining-Our-Own-Data-Structures"><span class="toc-text">2.6. Defining Our Own Data Structures</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-3-Strings-Vectors-and-Arrays"><span class="toc-text">Chapter 3. Strings, Vectors, and Arrays</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-Arrays"><span class="toc-text">3.5. Arrays</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-Multidimensional-Arrays"><span class="toc-text">3.6. Multidimensional Arrays</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-4-Expressions"><span class="toc-text">Chapter 4. Expressions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-The-Member-Access-Operators"><span class="toc-text">4.6. The Member Access Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-8-The-Bitwise-Operators"><span class="toc-text">4.8. The Bitwise Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-9-The-sizeof-Operator"><span class="toc-text">4.9. The sizeof Operator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-11-1-The-Arithmetic-Conversions"><span class="toc-text">4.11.1. The Arithmetic Conversions</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-5-Statements"><span class="toc-text">Chapter 5. Statements</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-6-Functions"><span class="toc-text">Chapter 6. Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-1-Local-Objects"><span class="toc-text">6.1.1. Local Objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-2-Function-Declarations"><span class="toc-text">6.1.2. Function Declarations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-3-Separate-Compilation"><span class="toc-text">6.1.3. Separate Compilation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Argument-Passing"><span class="toc-text">6.2. Argument Passing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-4-Array-Parameters"><span class="toc-text">6.2.4. Array Parameters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-5-main-Handling-Command-Line-Options"><span class="toc-text">6.2.5. main: Handling Command-Line Options</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-6-Functions-with-Varying-Parameters"><span class="toc-text">6.2.6. Functions with Varying Parameters</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Return-Types-and-the-return-Statement"><span class="toc-text">6.3. Return Types and the return Statement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-Overloaded-Functions"><span class="toc-text">6.4. Overloaded Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-Features-for-Specialized-Uses"><span class="toc-text">6.5. Features for Specialized Uses</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-3-Aids-for-Debugging"><span class="toc-text">6.5.3. Aids for Debugging</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-Function-Matching"><span class="toc-text">6.6. Function Matching</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-Pointers-to-Functions"><span class="toc-text">6.7. Pointers to Functions</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chapter-7-Classes"><span class="toc-text">Chapter 7 Classes</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-4-Constructors"><span class="toc-text">7.1.4. Constructors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-5-Copy-Assignment-and-Destruction"><span class="toc-text">7.1.5. Copy, Assignment, and Destruction</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-1-Friends"><span class="toc-text">7.2.1. Friends</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Additional-Class-Features"><span class="toc-text">7.3. Additional Class Features</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-3-Class-Types"><span class="toc-text">7.3.3. Class Types</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-Class-Scope"><span class="toc-text">7.4. Class Scope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-Constructors-Revisited"><span class="toc-text">7.5. Constructors Revisited</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-5-Aggregate-Classes"><span class="toc-text">7.5.5. Aggregate Classes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-static-Class-Members"><span class="toc-text">7.6. static Class Members</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

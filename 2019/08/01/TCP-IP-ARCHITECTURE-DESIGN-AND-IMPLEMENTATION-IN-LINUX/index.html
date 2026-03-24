@@ -1,0 +1,575 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>TCP/IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1 INTRODUCTION 1client – server, server 监听端口，等待 client 请求。source 1.1 Overview of TCP&#x2F;IP Stack 2skbuff.h 1.1.1 Moving Down the Stack 3在用户层发起，沿着协议栈向下组装数据，然后发送。 1.1.2 Moving Up the Stack 5接收端收到数据，沿着">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP&#x2F;IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX">
+<meta property="og:url" content="https://israel-liu.github.io/2019/08/01/TCP-IP-ARCHITECTURE-DESIGN-AND-IMPLEMENTATION-IN-LINUX/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="1 INTRODUCTION 1client – server, server 监听端口，等待 client 请求。source 1.1 Overview of TCP&#x2F;IP Stack 2skbuff.h 1.1.1 Moving Down the Stack 3在用户层发起，沿着协议栈向下组装数据，然后发送。 1.1.2 Moving Up the Stack 5接收端收到数据，沿着">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg">
+<meta property="article:published_time" content="2019-08-01T01:51:05.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.732Z">
+<meta property="article:author" content="Licca Chen">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="TCP-IP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TCP/IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX",
+  "url": "https://israel-liu.github.io/2019/08/01/TCP-IP-ARCHITECTURE-DESIGN-AND-IMPLEMENTATION-IN-LINUX/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg",
+  "datePublished": "2019-08-01T01:51:05.000Z",
+  "dateModified": "2026-03-24T05:43:37.732Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2019/08/01/TCP-IP-ARCHITECTURE-DESIGN-AND-IMPLEMENTATION-IN-LINUX/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'TCP/IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">TCP/IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">TCP/IP ARCHITECTURE DESIGN AND IMPLEMENTATION IN LINUX</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-08-01T01:51:05.000Z" title="发表于 2019-08-01 09:51:05">2019-08-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.732Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/network/">network</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/network/TCP-IP/">TCP-IP</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="1-INTRODUCTION-1"><a href="#1-INTRODUCTION-1" class="headerlink" title="1 INTRODUCTION 1"></a>1 INTRODUCTION 1</h1><p>client – server, server 监听端口，等待 client 请求。<br><a target="_blank" rel="noopener" href="https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/master">source</a></p>
+<h2 id="1-1-Overview-of-TCP-IP-Stack-2"><a href="#1-1-Overview-of-TCP-IP-Stack-2" class="headerlink" title="1.1 Overview of TCP&#x2F;IP Stack 2"></a>1.1 Overview of TCP&#x2F;IP Stack 2</h2><p><a target="_blank" rel="noopener" href="https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/master/include/linux/skbuff.h">skbuff.h</a></p>
+<h3 id="1-1-1-Moving-Down-the-Stack-3"><a href="#1-1-1-Moving-Down-the-Stack-3" class="headerlink" title="1.1.1 Moving Down the Stack 3"></a>1.1.1 Moving Down the Stack 3</h3><p>在用户层发起，沿着协议栈向下组装数据，然后发送。</p>
+<h3 id="1-1-2-Moving-Up-the-Stack-5"><a href="#1-1-2-Moving-Up-the-Stack-5" class="headerlink" title="1.1.2 Moving Up the Stack 5"></a>1.1.2 Moving Up the Stack 5</h3><p>接收端收到数据，沿着协议栈向上解包数据，最后到应用层。(iocp是在用户层使用的？本机通信是否用到协议栈)</p>
+<h2 id="1-2-Source-Code-Organization-for-Linux-2-4-20-5"><a href="#1-2-Source-Code-Organization-for-Linux-2-4-20-5" class="headerlink" title="1.2 Source Code Organization for Linux 2.4.20 5"></a>1.2 Source Code Organization for Linux 2.4.20 5</h2><h3 id="1-2-1-Source-Code-Organization-for-Networking-Code-7"><a href="#1-2-1-Source-Code-Organization-for-Networking-Code-7" class="headerlink" title="1.2.1 Source Code Organization for Networking Code 7"></a>1.2.1 Source Code Organization for Networking Code 7</h3><h2 id="1-3-TCP-IP-Stack-and-Kernel-Control-Paths-7"><a href="#1-3-TCP-IP-Stack-and-Kernel-Control-Paths-7" class="headerlink" title="1.3 TCP&#x2F;IP Stack and Kernel Control Paths 7"></a>1.3 TCP&#x2F;IP Stack and Kernel Control Paths 7</h2><p>发送数据可以从应用层到达任何一层栈，然后会有对应的路径继续处理，接收栈归为整体分3步处理。</p>
+<h2 id="1-4-Linux-Kernel-Until-Version-2-4-Is-Non-preemptible-11"><a href="#1-4-Linux-Kernel-Until-Version-2-4-Is-Non-preemptible-11" class="headerlink" title="1.4 Linux Kernel Until Version 2.4 Is Non-preemptible 11"></a>1.4 Linux Kernel Until Version 2.4 Is Non-preemptible 11</h2><p>系统内核发生中断，用户层发起中断。那些CPU寄存器还是要复习一下。<br><a href="https://israel-liu.github.io/2017/05/09/X86-Assembly/">X86_Assembly</a></p>
+<h3 id="1-4-1-System-Call-on-Linux-14"><a href="#1-4-1-System-Call-on-Linux-14" class="headerlink" title="1.4.1 System Call on Linux 14"></a>1.4.1 System Call on Linux 14</h3><h3 id="1-4-2-Adding-New-System-Call-16"><a href="#1-4-2-Adding-New-System-Call-16" class="headerlink" title="1.4.2 Adding New System Call 16"></a>1.4.2 Adding New System Call 16</h3><p>编写系统需要了解。</p>
+<h2 id="1-5-Linux-Process-and-Thread-17"><a href="#1-5-Linux-Process-and-Thread-17" class="headerlink" title="1.5 Linux Process and Thread 17"></a>1.5 Linux Process and Thread 17</h2><p>用户模式和核心模式用户栈不同 context 不同，task_struct结构体内容不同。<br>每个进程关连一个系统级别线程(无用户模式下？)，也是task_struct类型的对象。</p>
+<h3 id="1-5-1-fork-17"><a href="#1-5-1-fork-17" class="headerlink" title="1.5.1 fork() 17"></a>1.5.1 fork() 17</h3><p>Processes created。user stacks for child and parent are shared(增长后有自己的副本)</p>
+<h3 id="1-5-2-Thread-18"><a href="#1-5-2-Thread-18" class="headerlink" title="1.5.2 Thread 18"></a>1.5.2 Thread 18</h3><p>分用户类型和内核类型，用户级别的就用户调度，对应用户进程的内核线程还是唯一的。<br>内核级别的线程更像轻量级进程，是调度单位。对同一个线程的调度不影响同一进程的其它线程。</p>
+<h3 id="1-5-3-Kernel-Threads-19"><a href="#1-5-3-Kernel-Threads-19" class="headerlink" title="1.5.3 Kernel Threads 19"></a>1.5.3 Kernel Threads 19</h3><p>Kernel threads are created by making a call to kernel_thread() .(关联进程？)</p>
+<h2 id="1-6-Kernel-Synchronization-Mechanism-22"><a href="#1-6-Kernel-Synchronization-Mechanism-22" class="headerlink" title="1.6 Kernel Synchronization Mechanism 22"></a>1.6 Kernel Synchronization Mechanism 22</h2><p>synchronize access to kernel global data structures across different kernel<br>control paths and also across CPUs。</p>
+<h3 id="1-6-1-Semaphore-22"><a href="#1-6-1-Semaphore-22" class="headerlink" title="1.6.1 Semaphore 22"></a>1.6.1 Semaphore 22</h3><h3 id="1-6-2-Atomic-Operations-23"><a href="#1-6-2-Atomic-Operations-23" class="headerlink" title="1.6.2 Atomic Operations 23"></a>1.6.2 Atomic Operations 23</h3><h3 id="1-6-3-Spin-Lock-23"><a href="#1-6-3-Spin-Lock-23" class="headerlink" title="1.6.3 Spin Lock 23"></a>1.6.3 Spin Lock 23</h3><h2 id="1-7-Application-Interfaces-for-TCP-IP-Programming-24"><a href="#1-7-Application-Interfaces-for-TCP-IP-Programming-24" class="headerlink" title="1.7 Application Interfaces for TCP&#x2F;IP Programming 24"></a>1.7 Application Interfaces for TCP&#x2F;IP Programming 24</h2><p>The client sends out a request to the server for the service,<br>which in turn offers its services once they are connected to each other.</p>
+<h3 id="1-7-1-Server-Application-25"><a href="#1-7-1-Server-Application-25" class="headerlink" title="1.7.1 Server Application 25"></a>1.7.1 Server Application 25</h3><p>services 和服务端口号关联。Http Server(其实就是service) 关联端口号 80。<br>Port is a unique number that identifi es a connection or specific services on a given host。<br>我们向系统注册服务的时候，系统服务应用程序会提供一个唯一端口号和我们的service关联。<br>The socket is a framework to communicate with the network protocol within the kernel.</p>
+<h3 id="1-7-2-Client-Application-27"><a href="#1-7-2-Client-Application-27" class="headerlink" title="1.7.2 Client Application 27"></a>1.7.2 Client Application 27</h3><p>通过ip地址找到主机，通过端口找到服务。</p>
+<h3 id="1-7-3-Socket-Options-29"><a href="#1-7-3-Socket-Options-29" class="headerlink" title="1.7.3 Socket Options 29"></a>1.7.3 Socket Options 29</h3><p>setsockopt () . getsockopt () .</p>
+<h3 id="1-7-4-Option-Values-29"><a href="#1-7-4-Option-Values-29" class="headerlink" title="1.7.4 Option Values 29"></a>1.7.4 Option Values 29</h3><p>SO_DEBUG, SO_BROADCAST, SO_REUSEADDR, SO_KEEPALIVE, SO_LINGER, SO_OOBINLINE, SO_RCVBUF,<br>SO_DONTROUTE, SO_RCVTIMEO, SO_SNDTIMEO, </p>
+<h2 id="1-8-Shutdown-35"><a href="#1-8-Shutdown-35" class="headerlink" title="1.8 Shutdown 35"></a>1.8 Shutdown 35</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">shutdown</span><span class="params">(<span class="type">int</span> socket, <span class="type">int</span> how)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-8-1-Kernel-Shutdown-Implementation-36"><a href="#1-8-1-Kernel-Shutdown-Implementation-36" class="headerlink" title="1.8.1 Kernel Shutdown Implementation 36"></a>1.8.1 Kernel Shutdown Implementation 36</h3><p>SEND_SHUTDOWN, RCV_SHUTDOWN</p>
+<h3 id="1-8-2-Send-Shutdown-36"><a href="#1-8-2-Send-Shutdown-36" class="headerlink" title="1.8.2 Send Shutdown 36"></a>1.8.2 Send Shutdown 36</h3><h3 id="1-8-3-Receive-Shutdown-36"><a href="#1-8-3-Receive-Shutdown-36" class="headerlink" title="1.8.3 Receive Shutdown 36"></a>1.8.3 Receive Shutdown 36</h3><h2 id="1-9-I-O-38"><a href="#1-9-I-O-38" class="headerlink" title="1.9 I&#x2F;O 38"></a>1.9 I&#x2F;O 38</h2><h3 id="1-9-1-read-38"><a href="#1-9-1-read-38" class="headerlink" title="1.9.1 read() 38"></a>1.9.1 read() 38</h3><h3 id="1-9-2-write-38"><a href="#1-9-2-write-38" class="headerlink" title="1.9.2 write() 38"></a>1.9.2 write() 38</h3><h3 id="1-9-3-recv-38"><a href="#1-9-3-recv-38" class="headerlink" title="1.9.3 recv() 38"></a>1.9.3 recv() 38</h3><h3 id="1-9-4-send-39"><a href="#1-9-4-send-39" class="headerlink" title="1.9.4 send() 39"></a>1.9.4 send() 39</h3><h3 id="1-9-5-select-39"><a href="#1-9-5-select-39" class="headerlink" title="1.9.5 select() 39"></a>1.9.5 select() 39</h3><p>The added feature is to do I&#x2F;O multiplexing demultiplexing.</p>
+<h2 id="1-10-TCP-State-39"><a href="#1-10-TCP-State-39" class="headerlink" title="1.10 TCP State 39"></a>1.10 TCP State 39</h2><p>TCP three - way handshake. 成功后进入连接状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Connection initiation (active and passive)</span><br><span class="line">2. Established connection</span><br><span class="line">3. Connection closure (active and passive)</span><br></pre></td></tr></table></figure>
+<p>Four - way connection closure process. 完成后进入关闭状态。<br>TIME_WAIT2 state is skipped as ACK is piggybacked with FIN segment.</p>
+<h3 id="1-10-1-Partial-Close-45"><a href="#1-10-1-Partial-Close-45" class="headerlink" title="1.10.1 Partial Close 45"></a>1.10.1 Partial Close 45</h3><p>Time - line diagram for client that issues shutdown on write.</p>
+<h3 id="1-10-2-tcpdump-Output-for-Partial-Close-47"><a href="#1-10-2-tcpdump-Output-for-Partial-Close-47" class="headerlink" title="1.10.2 tcpdump Output for Partial Close 47"></a>1.10.2 tcpdump Output for Partial Close 47</h3><h2 id="1-11-Summary-48"><a href="#1-11-Summary-48" class="headerlink" title="1.11 Summary 48"></a>1.11 Summary 48</h2><p>TCP data may be queued at different levels such as socket ’ s send queue,<br>device queue (TOS), and CPU output queue.</p>
+<h1 id="2-PROTOCOL-FUNDAMENTALS-49"><a href="#2-PROTOCOL-FUNDAMENTALS-49" class="headerlink" title="2 PROTOCOL FUNDAMENTALS 49"></a>2 PROTOCOL FUNDAMENTALS 49</h1><p>TCP manages connection and data integrity, whereas IP is responsible for delivery of data to the correct destination.</p>
+<h2 id="2-1-TCP-50"><a href="#2-1-TCP-50" class="headerlink" title="2.1 TCP 50"></a>2.1 TCP 50</h2><h3 id="2-1-1-TCP-Header-50"><a href="#2-1-1-TCP-Header-50" class="headerlink" title="2.1.1 TCP Header 50"></a>2.1.1 TCP Header 50</h3><p>Port Numbers, Sequence Number, Acknowledgment Number, Header Length,<br>Unused Field, TCP Flags, Window Size, Checksum, Urgent Pointer</p>
+<h2 id="2-2-TCP-Options-RFC-1323-54"><a href="#2-2-TCP-Options-RFC-1323-54" class="headerlink" title="2.2 TCP Options (RFC 1323) 54"></a>2.2 TCP Options (RFC 1323) 54</h2><h4 id="2-2-1-mss-Option-55"><a href="#2-2-1-mss-Option-55" class="headerlink" title="2.2.1 mss Option 55"></a>2.2.1 mss Option 55</h4><h4 id="2-2-2-Window-Scaling-Option-55"><a href="#2-2-2-Window-Scaling-Option-55" class="headerlink" title="2.2.2 Window-Scaling Option 55"></a>2.2.2 Window-Scaling Option 55</h4><h4 id="2-2-3-Timestamp-Option-56"><a href="#2-2-3-Timestamp-Option-56" class="headerlink" title="2.2.3 Timestamp Option 56"></a>2.2.3 Timestamp Option 56</h4><h4 id="2-2-4-Selective-Acknowledgment-Option-57"><a href="#2-2-4-Selective-Acknowledgment-Option-57" class="headerlink" title="2.2.4 Selective Acknowledgment Option 57"></a>2.2.4 Selective Acknowledgment Option 57</h4><h2 id="2-3-TCP-Data-Flow-58"><a href="#2-3-TCP-Data-Flow-58" class="headerlink" title="2.3 TCP Data Flow 58"></a>2.3 TCP Data Flow 58</h2><p>2.3.1 ACKing of Data Segments 58</p>
+<p>2.4 Delayed Acknowledgment 67</p>
+<p>2.5 Nagle’s Algorithm (RFC 896) 69</p>
+<p>2.6 TCP Sliding Window Protocol 72</p>
+<p>2.7 Maximizing TCP Throughput 79</p>
+<p>2.8 TCP Timers 82</p>
+<p>2.8.1 Retransmission Timer 82</p>
+<p>2.8.2 Persistent Timer 83</p>
+<p>2.8.3 Keepalive Timer 84</p>
+<p>2.8.4 TIME_WAIT Timer 85</p>
+<p>2.9 TCP Congestion Control 85</p>
+<p>2.10 TCP Performance and Reliability 86</p>
+<p>2.10.1 RTTD 86</p>
+<p>2.10.2 SACK&#x2F;DSACK 86</p>
+<p>2.10.3 Window Scaling 87</p>
+<p>2.11 IP (Internet Protocol) 87</p>
+<p>2.11.1 IP Header 88</p>
+<p>2.12 Routing 90</p>
+<p>2.13 netstat 90</p>
+<p>2.14 traceroute 92</p>
+<p>2.14.1 traceroute Mechanism 93</p>
+<p>2.15 ICMP 93</p>
+<p>2.16 ping 95</p>
+<p>2.17 ARP&#x2F;RARP 97</p>
+<p>2.18 Summary 99</p>
+<h1 id="3-KERNEL-IMPLEMENTATION-OF-SOCKETS-101"><a href="#3-KERNEL-IMPLEMENTATION-OF-SOCKETS-101" class="headerlink" title="3 KERNEL IMPLEMENTATION OF SOCKETS 101"></a>3 KERNEL IMPLEMENTATION OF SOCKETS 101</h1><p>3.1 Socket Layer 102</p>
+<p>3.2 VFS and Socket 103</p>
+<p>3.3 Protocol Socket Registration 105</p>
+<p>3.4 struct inet_protosw 107</p>
+<p>3.5 Socket Organization in the Kernel 107</p>
+<p>3.6 Socket 108</p>
+<p>3.7 inet_create 110</p>
+<p>3.7.1 Sock 112</p>
+<p>3.8 Flow Diagram for Socket Call 118</p>
+<p>3.9 Summary 118</p>
+<h1 id="4-KERNEL-IMPLEMENTATION-OF-TCP-CONNECTION-SETUP-121"><a href="#4-KERNEL-IMPLEMENTATION-OF-TCP-CONNECTION-SETUP-121" class="headerlink" title="4 KERNEL IMPLEMENTATION OF TCP CONNECTION SETUP 121"></a>4 KERNEL IMPLEMENTATION OF TCP CONNECTION SETUP 121</h1><p>4.1 Connection Setup 122</p>
+<p>4.1.1 Server Side Setup 122</p>
+<p>4.1.2 Server Side Operations 124</p>
+<p>4.2 Bind 124</p>
+<p>4.2.1 Data Structures Related to Socket BIND 125</p>
+<p>4.2.2 Hash Buckets for tcp Bind 125</p>
+<p>4.2.3 tcp_ehash 125</p>
+<p>4.2.4 tcp_listening_hash 125</p>
+<p>4.2.5 tcp_bhash 125</p>
+<p>4.2.6 tcp_hashinfo 126</p>
+<p>4.2.7 tcp_bind_hashbucket 129</p>
+<p>4.2.8 tcp_bind_bucket 129</p>
+<p>4.2.9 bind() 130</p>
+<p>4.2.10 sys_bind() 130</p>
+<p>4.2.11 sockfd_lookup() 130</p>
+<p>4.2.12 fget() 131</p>
+<p>4.2.13 inet_bind() 131</p>
+<p>4.2.14 tcp_v4_get_port() 133</p>
+<p>4.2.15 tcp_bind_confl ict() 135</p>
+<p>4.3 Listen 137</p>
+<p>4.3.1 sys_listen() 138</p>
+<p>4.3.2 inet_listen() 139</p>
+<p>4.3.3 tcp_listen_start() 139</p>
+<p>4.3.4 Listen Flow 142</p>
+<p>4.3.5 struct open_request 142</p>
+<p>4.3.6 Accept Queue Is Full 147</p>
+<p>4.3.7 Established Sockets Linked in tcp_ehash Hash Table 150</p>
+<p>4.3.8 State of the Connection Request when the Three-Way Handshake Is Still Pending 150</p>
+<p>4.3.9 State of the Connection Request when the Three-Way Handshake Is Completed 151</p>
+<p>4.4 Connection Request Handling by Kernel 151</p>
+<p>4.4.1 SYN Queue Processing 155</p>
+<p>4.4.2 Accept Queue Processing 155</p>
+<p>4.4.3 Flow Control for Handling a New Connection Request 156</p>
+<p>4.5 Accept 156</p>
+<p>4.5.1 inet_accept() 159</p>
+<p>4.5.2 Linking of Inode and Socket Data Structures when the Three-Way Handshake Has Completed and Is Accepted by Application 161</p>
+<p>4.5.3 Linking of VFS and Socket Data Structures in the Kernel when a New Connection Is Established 162</p>
+<p>4.5.4 File Table Entry of a New Accepted Connected Socket 162</p>
+<p>4.5.5 Flow Control for Accepting New Established Connections 162</p>
+<p>4.6 Client Side Setup 163</p>
+<p>4.6.1 Client Side Operations 164</p>
+<p>4.6.2 Connect 164</p>
+<p>4.6.3 tcp_v4_connect() 167</p>
+<p>4.6.4 ip_route_connect() 167</p>
+<p>4.6.5 Flow Control for Generating a Connection Request 167</p>
+<p>4.6.6 tcp_v4_hash_connect() 170</p>
+<p>4.6.7 __tcp_v4_check_established() 171</p>
+<p>4.6.8 tcp_connect() 174</p>
+<p>4.6.9 tcp_transmit_skb() 176</p>
+<p>4.7 Summary 178</p>
+<h1 id="5-sk-buff-AND-PROTOCOL-HEADERS-181"><a href="#5-sk-buff-AND-PROTOCOL-HEADERS-181" class="headerlink" title="5 sk_buff AND PROTOCOL HEADERS 181"></a>5 sk_buff AND PROTOCOL HEADERS 181</h1><p>5.1 struct sk_buff 182</p>
+<p>5.2 struct skb_shared_info 186</p>
+<p>5.3 sk_buff and DMA—SKB_FRAG_STRUCT 187</p>
+<p>5.3.1 DMA and Fragmented sk_buff Containing Paged Data 188</p>
+<p>5.3.2 sk_buff and IP Fragmentation 188</p>
+<p>5.3.3 sk_buff and Fragmentation 190</p>
+<p>5.4 Routines Operating on sk_buff 190</p>
+<p>5.4.1 alloc_skb() 190</p>
+<p>5.4.2 skb_reserve() 191</p>
+<p>5.4.3 skb_put() 192</p>
+<p>5.4.4 skb_push() 194</p>
+<p>5.4.5 skb_pull() 195</p>
+<p>5.5 sk_buff Builds Protocol Headers as It Traverses Down the Protocol Layers 196</p>
+<p>5.5.1 Tcp Header Is Added to sk_buff 196</p>
+<p>5.5.2 Ip Header Is Added to sk_buff 197</p>
+<p>5.5.3 Link Layer Header Is Added to sk_buff 198</p>
+<p>5.6 sk_buff Extracts Protocol Headers as It Traverses Up the Protocol Layers When a Packet Arrives 199</p>
+<p>5.6.1 sk_buff Is Made to Point to a Datalink Layer Header Which Will Be Processed by a Dalalink Driver 199</p>
+<p>5.6.2 sk_buff Is Made to Point to an ip Layer Header Which Will Be Processed by an IP Layer 200</p>
+<p>5.6.3 sk_buff Is Made to Point to a tcp Layer Header Which Will Be Processed by a tcp Layer 200</p>
+<p>5.7 Summary 202</p>
+<h1 id="6-MOVEMENT-OF-sk-buff-ACROSS-PROTOCOL-LAYERS-205"><a href="#6-MOVEMENT-OF-sk-buff-ACROSS-PROTOCOL-LAYERS-205" class="headerlink" title="6 MOVEMENT OF sk_buff ACROSS PROTOCOL LAYERS 205"></a>6 MOVEMENT OF sk_buff ACROSS PROTOCOL LAYERS 205</h1><p>6.1 Packet Traversing Down the TCP&#x2F;IP Stack 206</p>
+<p>6.1.1 Path of Packet Traversal from Socket Layer to Device for Transmission 207</p>
+<p>6.1.2 Kernel Path for TCP Packet Traversing Down the Stack 208</p>
+<p>6.2 Routed Packet Ready for Transmission 214</p>
+<p>6.3 Kernel Flow for a Packet Moving Down the Stack 214</p>
+<p>6.4 Packet Traversing Up the TCP&#x2F;IP Stack 214</p>
+<p>6.4.1 Path of Packet Traversal from Device (Reception) to Socket Layer 219</p>
+<p>6.4.2 Kernel Path for TCP Packet Traversing Up the Stack 219</p>
+<p>6.5 Kernel Flow for a Packet Moving Up the Stack 225</p>
+<p>6.6 Summary 225</p>
+<h1 id="7-TCP-SEND-231"><a href="#7-TCP-SEND-231" class="headerlink" title="7 TCP SEND 231"></a>7 TCP SEND 231</h1><p>7.1 TCP Segmentation Unit for Sending Data 232</p>
+<p>7.1.1 Functioning of Segmentation Unit without Scatter–Gather Support 232<br>7.1.2 Segmentation without Scatter–Gather Support 234<br>7.1.3 1 mss of Data Written over the Socket 235</p>
+<p>7.2 Segmentation with Scatter–Gather Technique 235</p>
+<p>7.2.1 Segmentation with Scatter–Gather Support 239<br>7.2.2 Application Writes Y Bytes over the Socket 239<br>7.2.3 can_coalesce() 239<br>7.2.4 tcp_copy_to_page() 240<br>7.2.5 tcp_mark_push() 241<br>7.2.6 forced_push() 241<br>7.2.7 tcp_push() 242<br>7.2.8 __tcp_push_pending_frames() 243<br>7.2.9 tcp_snd_test() 243<br>7.2.10 tcp_nagle_check() 244<br>7.2.11 tcp_minshall_ckeck() 245<br>7.2.12 tcp_write_xmit() 245<br>7.2.13 update_send_head() 247<br>7.2.14 tcp_push_one() 247<br>7.2.15 skb_entail() 248</p>
+<p>7.3 Sending OOB Data 249</p>
+<p>7.4 Flow for TCP Segmentation Unit and Send Process 250</p>
+<p>7.5 Functional Level Flow for Segmentation and Send Mechanism 250</p>
+<p>7.6 Summary 251</p>
+<h1 id="8-TCP-RECEIVE-255"><a href="#8-TCP-RECEIVE-255" class="headerlink" title="8 TCP RECEIVE 255"></a>8 TCP RECEIVE 255</h1><p>8.1 Queuing Mechanism 256</p>
+<p>8.1.1 Processing in tcp_rcv_established() 256<br>8.1.2 tcp_prequeue() 258<br>8.1.3 Processing of Queues 259<br>8.1.4 tcp_data_wait() 263<br>8.1.5 tcp_prequeue_process() 264<br>8.1.6 lock_sock() 265<br>8.1.7 __lock_sock() 265<br>8.1.8 release_sock() 266<br>8.1.9 __release_sock() 266</p>
+<p>8.2 Processing of TCP Data from the Receive Queue 267</p>
+<p>8.2.1 cleanup_rbuf() 268<br>8.2.2 skb_copy_datagram_iovec() 271<br>8.2.3 Reading Data from Receive Buffer without Paged Data Area 273<br>8.2.4 X Bytes Requested from the Application 273<br>8.2.5 1 mss &#x3D; n Bytes Requested from the Application 275<br>8.2.6 n − X Bytes Requested from the Application 275<br>8.2.7 Consumption of Data from a Paged Buffer 275<br>8.2.8 n Bytes Requested by the Application 276<br>8.2.9 One Page of Data Requested by the Application 276</p>
+<p>8.3 TCP Urgent Byte Processing 276</p>
+<p>8.3.1 Urgent Byte Read as OOB Data 277<br>8.3.2 tcp_recv_urg() 278<br>8.3.3 Urgent Mode Processing and Reading an Urgent Byte as Inline Data 280</p>
+<p>8.4 DATA Flow Diagram for Receiving Data over the TCP Socket 284</p>
+<p>8.5 Summary 290</p>
+<h1 id="9-TCP-MEMORY-MANAGEMENT-291"><a href="#9-TCP-MEMORY-MANAGEMENT-291" class="headerlink" title="9 TCP MEMORY MANAGEMENT 291"></a>9 TCP MEMORY MANAGEMENT 291</h1><p>9.1 Transmit Side TCP Memory Management 291</p>
+<p>9.1.1 select_size() 294<br>9.1.2 tcp_alloc_pskb() 295<br>9.1.3 alloc_skb() 296<br>9.1.4 tcp_alloc_page() 297<br>9.1.5 skb_charge() 298<br>9.1.6 tcp_mem_schedule() 298<br>9.1.7 tcp_free_skb() 300<br>9.1.8 sock_wfree() 300<br>9.1.9 tcp_write_space() 301<br>9.1.10 tcp_mem_reclaim() 302<br>9.1.11 __tcp_mem_reclaim() 302<br>9.1.12 wait_for_tcp_memory() 303</p>
+<p>9.2 Receive Side TCP Memory Management 305</p>
+<p>9.2.1 tcp_prune_queue() 308<br>9.2.2 tcp_clamp_window() 309<br>9.2.3 tcp_collapse_ofo_queue() 311<br>9.2.4 tcp_collapse() 312<br>9.2.5 __skb_queue_purge() 317</p>
+<p>9.3 Freeing of Memory Allocated to a Receive Buffer 319</p>
+<p>9.4 System-Wide Control Parameters Are Worth Noticing When It Comes to TCP Memory Management 319</p>
+<p>9.5 Summary 321</p>
+<h1 id="10-TCP-TIMERS-323"><a href="#10-TCP-TIMERS-323" class="headerlink" title="10 TCP TIMERS 323"></a>10 TCP TIMERS 323</h1><p>10.1 Timers in Linux 324</p>
+<p>10.1.1 mod_timer() 324<br>10.1.2 detach_timer() 325<br>10.1.3 del_timer() 325<br>10.1.4 When Are Timer Routines Executed? 326</p>
+<p>10.2 TCP Retransmit Timer 326</p>
+<p>10.2.1 When Do We Set Retransmit Timer? 327<br>10.2.2 When Do We Reset or Cancel Retransmit Timers? 327<br>10.2.3 tcp_enter_loss() 330<br>10.2.4 tcp_retransmit_skb() 333<br>10.2.5 tcp_retrans_try_collapse() 334<br>10.2.6 skb_cloned() 336</p>
+<p>10.3 Zero Window Probe Timer 336</p>
+<p>10.3.1 When Is the First Time Probe Timer Installed? 337<br>10.3.2 When Is the Probe Timer Canceled for the Connection? 337<br>10.3.3 tcp_ack_probe() 338<br>10.3.4 How Does the Window Probe Timer Work? 338<br>10.3.5 tcp_probe_timer() 339<br>10.3.6 tcp_send_probe0() 339<br>10.3.7 tcp_write_wakeup() 339</p>
+<p>10.4 Delay ACK Timer 342</p>
+<p>10.4.1 When Is the ACK Scheduled? 344<br>10.4.2 How and When Is the ACK Segment Sent? 344<br>10.4.3 Quick ACK Mode 345<br>10.4.4 __tcp_ack_snd_check() 345<br>10.4.5 tcp_ack_snd_check() 346<br>10.4.6 tcp_send_delayed_ack() 347<br>10.4.7 tcp_delack_timer() 348<br>10.4.8 tcp_reset_xmit_timer() 349<br>10.4.9 tcp_write_timer() 351<br>10.4.10 tcp_clear_xmit_timer() 352</p>
+<p>10.5 Keepalive Timer 353</p>
+<p>10.5.1 When Is the Keepalive Timer Activated? 353<br>10.5.2 How Is the Timer Reset? 354<br>10.5.3 tcp_keepalive_timer() 354</p>
+<p>10.6 SYN-ACK Timer 356</p>
+<p>10.6.1 When Is the SYN-ACK Timer Activated? 356<br>10.6.2 When Is the SYN-ACK Timer Stopped? 357<br>10.6.3 tcp_synack_timer() 357</p>
+<p>10.7 TIME_WAIT Timer 361</p>
+<p>10.7.1 When Do We Trigger TIME_WAIT Timer? 361<br>10.7.2 tcp_time_wait() 362<br>10.7.3 tcp_tw_schedule() 362<br>10.7.4 Non-recycle Mode 363<br>10.7.5 Recycle Mode 365<br>10.7.6 tcp_twkill() 367<br>10.7.7 tcp_twcal_tick() 370<br>10.7.8 __tcp_tw_hashdance() 374</p>
+<p>10.8 Summary 375</p>
+<h1 id="11-TCP-CORE-PROCESSING-377"><a href="#11-TCP-CORE-PROCESSING-377" class="headerlink" title="11 TCP CORE PROCESSING 377"></a>11 TCP CORE PROCESSING 377</h1><p>11.1 TCP Incoming Segment Processing 378</p>
+<p>11.1.1 Prediction Flags 378<br>11.1.2 Building Prediction Flags 379<br>11.1.3 Condition to Enable the Fast Path 380<br>11.1.4 When to Enable the Slow Path 382<br>11.1.5 When to Enable the Fast Path 382<br>11.1.6 Points to Remember about Prediction Flags 383</p>
+<p>11.2 Fast Path Processing 384</p>
+<p>11.3 Slow Path Processing 386</p>
+<p>11.3.1 tcp_sequence() 387<br>11.3.2 tcp_replace_ts_recent() 387<br>11.3.3 tcp_event_data_recv() 390<br>11.3.4 tcp_incr_quickack() 391<br>11.3.5 tcp_grow_window() 392<br>11.3.6 __tcp_grow_window() 393<br>11.3.7 How Do We Calculate Window to Be Advertised? 394<br>11.3.8 tcp_receive_window() 395<br>11.3.9 __tcp_select_window() 395<br>11.3.10 tcp_space() 397<br>11.3.11 tcp_data_snd_check() 397<br>11.3.12 __tcp_data_snd_check() 398<br>11.3.13 tcp_paws_discard() 398</p>
+<p>11.4 Processing of Incoming ACK 400</p>
+<p>11.4.1 tcp-packets_in_fl ight() 403<br>11.4.2 tcp_ack_is_dubious() 404<br>11.4.3 tcp_cong_avoid() 405<br>11.4.4 tcp_ack_update_window() 406<br>11.4.5 tcp_may_update_window() 407<br>11.4.6 tcp_clean_rtx_queue() 408</p>
+<p>11.5 Processing of SACK blocks 410</p>
+<p>11.5.1 tcp_sacktag_write_queue() 410</p>
+<p>11.6 Reordering Length 417</p>
+<p>11.7 Processing TCP Urgent Pointer 421</p>
+<p>11.7.1 tcp_check_urg() 422</p>
+<p>11.8 Processing Data Segments in Slow Path 424</p>
+<p>11.8.1 tcp_sack_new_ofo_skb() 433<br>11.8.2 tcp_sack_maybe_coalesce() 434<br>11.8.3 tcp_sack_extend() 435<br>11.8.4 tcp_ofo_queue() 436<br>11.8.5 tcp_sack_remove() 441</p>
+<p>11.9 Overview of Core TCP Processing 442</p>
+<p>11.10 Summary 442</p>
+<h1 id="12-TCP-STATE-PROCESSING-445"><a href="#12-TCP-STATE-PROCESSING-445" class="headerlink" title="12 TCP STATE PROCESSING 445"></a>12 TCP STATE PROCESSING 445</h1><p>12.1 Overview of State Processing 446</p>
+<p>12.2 TCP States 448</p>
+<p>12.2.1 TCP_CA_CWR 449<br>12.2.2 Undoing from TCP_CA_CWR 449</p>
+<p>12.3 Processing of Duplicate&#x2F;Partial ACKs in Recovery State 449</p>
+<p>12.3.1 tcp_remove_reno_sacks() 450<br>12.3.2 tcp_try_undo_partial() 451</p>
+<p>12.4 Processing of Duplicate&#x2F;Partial ACKs in Loss State 452</p>
+<p>12.4.1 tcp_try_undo_loss() 453<br>12.4.2 tcp_check_sack_reneging() 455</p>
+<p>12.5 Default Processing of TCP States 456</p>
+<p>12.5.1 tcp_time_to_recover() 459<br>12.5.2 tcp_head_timedout() 460<br>12.5.3 tcp_try_to_open() 461<br>12.5.4 tcp_update_scoreboard() 462<br>12.5.5 tcp_xmit_retransmit_queue() 464<br>12.5.6 tcp_packet_delayed() 466</p>
+<p>12.6 Processing of TCP Non-open States when ACKed Beyond tp → high_seq 467</p>
+<p>12.6.1 TCP_CA_Loss 467<br>12.6.2 TCP_CA_CWR 468<br>12.6.3 TCP_CA_Disorder 470<br>12.6.4 tcp_try_undo_dsack() 471<br>12.6.5 TCP_CA_Recovery 471<br>12.6.6 tcp_add_reno_sack() 472<br>12.6.7 tcp_check_reno_reordering() 473<br>12.6.8 tcp_may_undo() 473<br>12.6.9 tcp_packet_delayed() 474<br>12.6.10 tcp_undo_cwr() 475<br>12.6.11 tcp_mark_head_lost() 475<br>12.6.12 tcp_sync_left_out() 477</p>
+<p>12.7 Summary 477</p>
+<h1 id="13-NETLINK-SOCKETS-479"><a href="#13-NETLINK-SOCKETS-479" class="headerlink" title="13 NETLINK SOCKETS 479"></a>13 NETLINK SOCKETS 479</h1><p>13.1 Introduction to Netlink Sockets 479</p>
+<p>13.2 Netlink Socket Registration and Initialization at Boot Time 480</p>
+<p>13.3 How Is the Kernel Netlink Socket Created? 481</p>
+<p>13.4 How Is the User Netlink Socket Created? 482</p>
+<p>13.5 Netlink Data Structures 485</p>
+<p>13.5.1 nl_table 485<br>13.5.2 rtnetlink_link 486</p>
+<p>13.6 Other Important Data Strutures 488</p>
+<p>13.6.1 struct nlmsghdr 488<br>13.6.2 struct msghdr 489</p>
+<p>13.7 Netlink Packet Format 490</p>
+<p>13.8 Netlink Socket Example—tc Command for Adding a qdisc 490</p>
+<p>13.8.1 tc Command Flow in User Space for Adding a qdisc 490<br>13.8.2 tc Command in Kernel Space 491<br>13.8.2.1 sys_sendmsg() 491<br>13.8.2.2 sock_sendmsg() 492<br>13.8.2.3 netlink_sendmsg() 492<br>13.8.2.4 netlink_unicast() 493<br>13.8.2.5 netlink_data_ready() 494<br>13.8.2.6 rtnetlink_rcv() 494<br>13.8.2.7 rtnetlink_rcv_skb() 494<br>13.8.2.8 rtnetlink_rcv_msg() 495</p>
+<p>13.9 Flow Diagram for tc Command in Kernel Space 496</p>
+<p>13.10 Summary 496</p>
+<h1 id="14-IP-ROUTING-499"><a href="#14-IP-ROUTING-499" class="headerlink" title="14 IP ROUTING 499"></a>14 IP ROUTING 499</h1><p>14.1 Routing 501</p>
+<p>14.2 Policy-Based Routing 503</p>
+<p>14.3 Multipathing 505</p>
+<p>14.4 Record Route Options (RFC 791) and Processing by Linux Stack 509</p>
+<p>14.4.1 Record Routing 510</p>
+<p>14.5 Source Routing 510</p>
+<p>14.5.1 Strict Record Routing 510<br>14.5.2 Loose Record Routing 511<br>14.5.3 SRR Processing Implementation 511</p>
+<p>14.6 Linux Kernel Implementation of Routing Table and Caches 517</p>
+<p>14.7 Routing Cache Implementation Overview 517</p>
+<p>14.7.1 Routing Cache Data Structures 519</p>
+<p>14.8 Managing Routing Cache 523</p>
+<p>14.8.1 Routing Cache for Local Connections 525<br>14.8.2 __sk_dst_check() 526<br>14.8.3 Link Failure and Reporting to Routing Subsystem 527<br>14.8.4 dst_link_failure() 527<br>14.8.5 ipv4_link_failure() 527<br>14.8.6 dst_set_expires() 528<br>14.8.7 Routing Cache for the Incoming Packets 529<br>14.8.8 Routing Cache Timer 530<br>14.8.9 rt_periodic_timer 530<br>14.8.10 rt_may_expire() 533<br>14.8.11 dst_free() 534<br>14.8.12 __dst_free() 535<br>14.8.13 dst_destroy() 535<br>14.8.14 dst_run_gc() 536<br>14.8.15 Interface down and rt_fl ush_timer 537<br>14.8.16 rt_cache_fl ush() 538</p>
+<p>14.9 Implementation Overview of Forwarding Information Base (FIB) 540</p>
+<p>14.9.1 struct fi b_table 540<br>14.9.2 struct fn_hash 543<br>14.9.3 struct fn_zone 543<br>14.9.4 struct fi b_node 544<br>14.9.5 struct fi b_info 546<br>14.9.6 struct fi b_nh 547<br>14.9.7 struct fi b_rule 548</p>
+<p>14.10 Adding New Entry in Routing Table Using ip Command (RT Netlink Interface) 549</p>
+<p>14.10.1 What Happens When the ip Command Is Run with a Route Option for Adding an Entry in Routing Table? 550<br>14.10.2 inet_rtm_newroute() 550<br>14.10.3 struct rtmsg 551<br>14.10.4 struct kern_rta 552<br>14.10.5 fn_hash_insert() 553<br>14.10.6 fn_new_zone() 554<br>14.10.7 fi b_create_info() 557<br>14.10.8 fn_hash_insert() 558</p>
+<p>14.11 What Happens When the ip Command Is Run with a Rule Option for Adding an Entry in the Routing Table? 558</p>
+<p>14.11.1 inet_rtm_newrule() 559<br>14.11.2 FIB Initialization 561</p>
+<p>14.12 FIB Traversal Flow Diagram 563</p>
+<p>14.12.1 ip_route_output() 563<br>14.12.2 ip_route_output_key() 564<br>14.12.3 ip_route_output_slow() 566<br>14.12.4 ip_dev_fi nd() 576<br>14.12.5 __in_dev_get() 577<br>14.12.6 inet_select_addr() 578<br>14.12.7 ROUTE__SCOPES 580<br>14.12.8 fi b_lookup() 581</p>
+<p>14.13 Summary 589</p>
+<h1 id="15-IP-QUALITY-OF-SERVICE-IN-LINUX-IP-QoS-591"><a href="#15-IP-QUALITY-OF-SERVICE-IN-LINUX-IP-QoS-591" class="headerlink" title="15 IP QUALITY OF SERVICE IN LINUX (IP QoS) 591"></a>15 IP QUALITY OF SERVICE IN LINUX (IP QoS) 591</h1><p>15.1 Introduction 591</p>
+<p>15.2 Basic Components of Linux Traffi c Control 592</p>
+<p>15.3 Linux Implementation of pfi fo_fast qdisc 593</p>
+<p>15.4 Queueing Discipline Data Structure 596</p>
+<p>15.4.1 struct Qdisc 596<br>15.4.2 struct Qdisc_ops 597<br>15.4.3 struct Qdisc_class_ops 598<br>15.4.4 struct cbq_class 599</p>
+<p>15.5 tc User Program and Kernel Implementation Details 601</p>
+<p>15.5.1 tc_modify_qdisc() 601<br>15.5.2 qdisc_create() 602<br>15.5.3 cbq_init() 604<br>15.5.4 qdisc_graft() 604<br>15.5.5 dev_graft_qdisc() 605</p>
+<p>15.6 The tc Commands for Creating Class Hierarchy for CBQ 605</p>
+<p>15.6.1 tc_ctl_tclass() 607<br>15.6.2 cbq_change_class() 607</p>
+<p>15.7 Filters 610</p>
+<p>15.7.1 tc_ctl_tfi lter() 611</p>
+<p>15.8 u32 Filter Implementation 614</p>
+<p>15.8.1 u32_change() 615</p>
+<p>15.9 Route Filter Implementation 616</p>
+<p>15.9.1 route4_change() 618</p>
+<p>15.10 Enqueue 619</p>
+<p>15.10.1 cbq_enqueue() 620<br>15.10.2 cbq_classify() 621<br>15.10.3 Overview of cbq_enqueue() 621</p>
+<p>15.11 Overview of Linux Implementation of CBQ 622</p>
+<p>15.12 cbq_dequeue() 622</p>
+<p>15.12.1 From net&#x2F;dev&#x2F;core.c 626<br>15.12.2 qdisc_run() 626<br>15.12.3 qdisc_restart() 626<br>15.12.4 cbq_dequeue() 627<br>15.12.5 cbq_dequeue_1() 629<br>15.12.6 cbq_dequeue_prio() 630</p>
+<p>15.13 Summary 633</p>
+<h1 id="16-IP-FILTER-AND-FIREWALL-635"><a href="#16-IP-FILTER-AND-FIREWALL-635" class="headerlink" title="16 IP FILTER AND FIREWALL 635"></a>16 IP FILTER AND FIREWALL 635</h1><p>16.1 Netfi lter Hook Framework 636</p>
+<p>16.2 Netfi lter Hooks on IP Stack 638</p>
+<p>16.2.1 Hooks for Outgoing Packets 638<br>16.2.2 Hooks for Incoming Packets 639</p>
+<p>16.3 Overview of Netfi lter Hooks on Linux TCP-IP Stack 640</p>
+<p>16.4 Registration of Netfi lter Hooks 640</p>
+<p>16.5 Processing of Netfi lter Hooks 642</p>
+<p>16.5.1 nf_hook_slow() 642<br>16.5.2 nf_iterate() 643<br>16.5.3 struct nf_hook_ops 644</p>
+<p>16.6 Compatibility Framework 644</p>
+<p>16.6.1 fw_in() 645</p>
+<p>16.7 Ip Chains 647</p>
+<p>16.7.1 Filtering with Ipchains 648<br>16.7.2 Ipchain Chain of Rules 649<br>16.7.3 struct ip_chain 649<br>16.7.4 struct ip_fwkernel 650<br>16.7.5 struct ip_reent 651<br>16.7.6 struct ip_fw 651<br>16.7.7 Organization of Tables in Ipchains 652</p>
+<p>16.8 How Is the Packet Filtered with Ipchains 653</p>
+<p>16.8.1 ip_fw_check() 653<br>16.8.2 ip_rule_match() 655</p>
+<p>16.9 Iptables 655</p>
+<p>16.9.1 Registration of Iptables Hooks 657</p>
+<p>16.10 Iptables Filter Rules and Target Organization 657</p>
+<p>16.10.1 struct ipt_table 658<br>16.10.2 struct ipt_table_info 658<br>16.10.3 struct ipt_entry 661<br>16.10.4 struct ipt_entry_match 662<br>16.10.5 struct ipt_tcp 663<br>16.10.6 struct ipt_entry_target 664<br>16.10.7 struct ipt_standard_target 664</p>
+<p>16.11 Organization of Filter Rules and Target for Iptables 664</p>
+<p>16.12 Filtering Packets with Iptables 664</p>
+<p>16.12.1 ipt_do_table() 664<br>16.12.2 IPT_MATCH_ITERATE 668</p>
+<p>16.13 Summary 668</p>
+<h1 id="17-NET-SOFTIRQ-671"><a href="#17-NET-SOFTIRQ-671" class="headerlink" title="17 NET SOFTIRQ 671"></a>17 NET SOFTIRQ 671</h1><p>17.1 Why Net SoftIRQs, and How Do We Raise Them? 672</p>
+<p>17.1.1 Transmission 672<br>17.1.2 Reception 672</p>
+<p>17.2 How Are SoftIRQs Are Processed, and When? 675</p>
+<p>17.3 Registration of SoftIRQs 678</p>
+<p>17.4 Packet Reception and Delayed Processing by Rx SoftIRQ 679</p>
+<p>17.5 Processing of Net Rx SoftIRQ 682</p>
+<p>17.6 Packet Transmission and SoftIRQ 686</p>
+<p>17.7 Summary 696</p>
+<h1 id="18-TRANSMISSION-AND-RECEPTION-OF-PACKETS-697"><a href="#18-TRANSMISSION-AND-RECEPTION-OF-PACKETS-697" class="headerlink" title="18 TRANSMISSION AND RECEPTION OF PACKETS 697"></a>18 TRANSMISSION AND RECEPTION OF PACKETS 697</h1><p>18.1 DMA Ring Buffers for Transmission and Reception of Packets 698</p>
+<p>18.2 Packet Reception Process 698</p>
+<p>18.2.1 Flow of Packet Reception with DMA 698<br>18.2.2 Reception Ring Buffer 698</p>
+<p>18.3 Packet Transmission Process 700</p>
+<p>18.3.1 Flow of Packet Transmission with DMA 702<br>18.3.2 Transmission Ring Buffer 702<br>18.3.3 Transmission Ring Buffer 703</p>
+<p>18.4 Implementation of Reception and Transmission of Packets 704</p>
+<p>18.4.1 struct etrax_eth_descr 705<br>18.4.2 struct etrax_dma_descr 706<br>18.4.3 Initialization of Device 707<br>18.4.5 Initialization of DMA Transmit Ring Buffers 707<br>18.4.6 Initialization of DMA Receive Ring Buffers 709</p>
+<p>18.5 Rx Interrupt for Reception of Packets 709</p>
+<p>18.5.1 Rx DMA Buffer Initialized 711<br>18.5.2 e100_rx() 711<br>18.5.3 Rx Descriptors After Reception of Three Packets in DMA Buffer Before Rx Interrupt Being Raised 713<br>18.5.4 Rx Descriptors After First Packet Is Pulled Out of DMA Buffer and Given to OS in Rx Interrupt Handler 713</p>
+<p>18.6 Transmission of Packets 713</p>
+<p>18.6.1 e100_send_packet() 713<br>18.6.2 Tx DMA Ring Buffer Descriptor After Initialization 717<br>18.6.3 e100_hardware_send_packet() 717<br>18.6.4 There Are Two Packets in Device’s DMA Tx Ring Buffer to Be Transmitted 717<br>18.6.5 e100tx_interrupt() 720<br>18.6.6 First Packet from the DMA Queue Is Transmitted and Second One Is yet to Be Transmitted; After Interrupt Is Generated, Transmitted Buffer Is Freed 721</p>
+<p>18.7 Summary 721</p>
+<h1 id="19-lkcd-AND-DEBUGGING-TCP-IP-STACK-723"><a href="#19-lkcd-AND-DEBUGGING-TCP-IP-STACK-723" class="headerlink" title="19 lkcd AND DEBUGGING TCP&#x2F;IP STACK 723"></a>19 lkcd AND DEBUGGING TCP&#x2F;IP STACK 723</h1><p>19.1 lkcd Source and Patches 724</p>
+<p>19.2 Touching the Socket 724</p>
+<p>19.3 Looking into the Receive Socket Buffer 726</p>
+<p>19.3.1 Route Information in sk_buff 727</p>
+<p>19.4 Peep into Send Socket Buffer 727</p>
+<p>19.5 TCP Segmentation Unit 729</p>
+<p>19.6 Send Congestion Window and ssthresh 730</p>
+<p>19.7 Retransmissions and Route 733</p>
+<p>19.8 Peeping into Connection Queues and SYN Queues 733</p>
+<p>19.9 Routing and IP Qos lcrash Steps 735</p>
+<p>19.9.1 lcrash Steps for Default Queueing Discipline in Linux (pfi fo_fast) 735</p>
+<p>19.10 CBQ (Class-Based) Queueing Discipline lcrash Steps 739</p>
+<p>19.11 U32 Filters 739</p>
+<p>19.12 Route Filters 743</p>
+<p>19.13 FIB Table lcrash Output for Setting Up the Realm Using ip Command 745</p>
+<p>19.14 lcrash Output for Setting Up Route Filter Using tc Command 749</p>
+<p>19.15 Netlink Data Structure 755</p>
+<p>19.15.1 nl_table 755</p>
+<p>19.15.2 rtnetlink_link 755</p>
+<p>19.16 Summary 757</p>
+<h1 id="20-NEXT-EDITION-759"><a href="#20-NEXT-EDITION-759" class="headerlink" title="20 NEXT EDITION 759"></a>20 NEXT EDITION 759</h1><p>Bibliography 763</p>
+<p>Index 765</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2019/08/01/TCP-IP-ARCHITECTURE-DESIGN-AND-IMPLEMENTATION-IN-LINUX/">https://israel-liu.github.io/2019/08/01/TCP-IP-ARCHITECTURE-DESIGN-AND-IMPLEMENTATION-IN-LINUX/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/network/">network</a><a class="post-meta__tags" href="/tags/TCP-IP/">TCP-IP</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2019/08/01/Linux-Kernel-Development-3rd-Edition/" title="Linux Kernel Development 3rd Edition"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Linux Kernel Development 3rd Edition</div></div></div></a><a class="pagination-related  no-desc" href="/2019/07/24/Design-Patterns/" title="Design Patterns"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Design Patterns</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-INTRODUCTION-1"><span class="toc-text">1 INTRODUCTION 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Overview-of-TCP-IP-Stack-2"><span class="toc-text">1.1 Overview of TCP&#x2F;IP Stack 2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-Moving-Down-the-Stack-3"><span class="toc-text">1.1.1 Moving Down the Stack 3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-Moving-Up-the-Stack-5"><span class="toc-text">1.1.2 Moving Up the Stack 5</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Source-Code-Organization-for-Linux-2-4-20-5"><span class="toc-text">1.2 Source Code Organization for Linux 2.4.20 5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-Source-Code-Organization-for-Networking-Code-7"><span class="toc-text">1.2.1 Source Code Organization for Networking Code 7</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-TCP-IP-Stack-and-Kernel-Control-Paths-7"><span class="toc-text">1.3 TCP&#x2F;IP Stack and Kernel Control Paths 7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-Linux-Kernel-Until-Version-2-4-Is-Non-preemptible-11"><span class="toc-text">1.4 Linux Kernel Until Version 2.4 Is Non-preemptible 11</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-1-System-Call-on-Linux-14"><span class="toc-text">1.4.1 System Call on Linux 14</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-2-Adding-New-System-Call-16"><span class="toc-text">1.4.2 Adding New System Call 16</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-Linux-Process-and-Thread-17"><span class="toc-text">1.5 Linux Process and Thread 17</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-1-fork-17"><span class="toc-text">1.5.1 fork() 17</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-2-Thread-18"><span class="toc-text">1.5.2 Thread 18</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-3-Kernel-Threads-19"><span class="toc-text">1.5.3 Kernel Threads 19</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-6-Kernel-Synchronization-Mechanism-22"><span class="toc-text">1.6 Kernel Synchronization Mechanism 22</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-1-Semaphore-22"><span class="toc-text">1.6.1 Semaphore 22</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-2-Atomic-Operations-23"><span class="toc-text">1.6.2 Atomic Operations 23</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-3-Spin-Lock-23"><span class="toc-text">1.6.3 Spin Lock 23</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-7-Application-Interfaces-for-TCP-IP-Programming-24"><span class="toc-text">1.7 Application Interfaces for TCP&#x2F;IP Programming 24</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-1-Server-Application-25"><span class="toc-text">1.7.1 Server Application 25</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-2-Client-Application-27"><span class="toc-text">1.7.2 Client Application 27</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-3-Socket-Options-29"><span class="toc-text">1.7.3 Socket Options 29</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-4-Option-Values-29"><span class="toc-text">1.7.4 Option Values 29</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-8-Shutdown-35"><span class="toc-text">1.8 Shutdown 35</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-8-1-Kernel-Shutdown-Implementation-36"><span class="toc-text">1.8.1 Kernel Shutdown Implementation 36</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-8-2-Send-Shutdown-36"><span class="toc-text">1.8.2 Send Shutdown 36</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-8-3-Receive-Shutdown-36"><span class="toc-text">1.8.3 Receive Shutdown 36</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-9-I-O-38"><span class="toc-text">1.9 I&#x2F;O 38</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-9-1-read-38"><span class="toc-text">1.9.1 read() 38</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-9-2-write-38"><span class="toc-text">1.9.2 write() 38</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-9-3-recv-38"><span class="toc-text">1.9.3 recv() 38</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-9-4-send-39"><span class="toc-text">1.9.4 send() 39</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-9-5-select-39"><span class="toc-text">1.9.5 select() 39</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-10-TCP-State-39"><span class="toc-text">1.10 TCP State 39</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-10-1-Partial-Close-45"><span class="toc-text">1.10.1 Partial Close 45</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-10-2-tcpdump-Output-for-Partial-Close-47"><span class="toc-text">1.10.2 tcpdump Output for Partial Close 47</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-11-Summary-48"><span class="toc-text">1.11 Summary 48</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PROTOCOL-FUNDAMENTALS-49"><span class="toc-text">2 PROTOCOL FUNDAMENTALS 49</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-TCP-50"><span class="toc-text">2.1 TCP 50</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-TCP-Header-50"><span class="toc-text">2.1.1 TCP Header 50</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-TCP-Options-RFC-1323-54"><span class="toc-text">2.2 TCP Options (RFC 1323) 54</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-mss-Option-55"><span class="toc-text">2.2.1 mss Option 55</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-2-Window-Scaling-Option-55"><span class="toc-text">2.2.2 Window-Scaling Option 55</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-3-Timestamp-Option-56"><span class="toc-text">2.2.3 Timestamp Option 56</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-4-Selective-Acknowledgment-Option-57"><span class="toc-text">2.2.4 Selective Acknowledgment Option 57</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-TCP-Data-Flow-58"><span class="toc-text">2.3 TCP Data Flow 58</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-KERNEL-IMPLEMENTATION-OF-SOCKETS-101"><span class="toc-text">3 KERNEL IMPLEMENTATION OF SOCKETS 101</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-KERNEL-IMPLEMENTATION-OF-TCP-CONNECTION-SETUP-121"><span class="toc-text">4 KERNEL IMPLEMENTATION OF TCP CONNECTION SETUP 121</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-sk-buff-AND-PROTOCOL-HEADERS-181"><span class="toc-text">5 sk_buff AND PROTOCOL HEADERS 181</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-MOVEMENT-OF-sk-buff-ACROSS-PROTOCOL-LAYERS-205"><span class="toc-text">6 MOVEMENT OF sk_buff ACROSS PROTOCOL LAYERS 205</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-TCP-SEND-231"><span class="toc-text">7 TCP SEND 231</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-TCP-RECEIVE-255"><span class="toc-text">8 TCP RECEIVE 255</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-TCP-MEMORY-MANAGEMENT-291"><span class="toc-text">9 TCP MEMORY MANAGEMENT 291</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-TCP-TIMERS-323"><span class="toc-text">10 TCP TIMERS 323</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-TCP-CORE-PROCESSING-377"><span class="toc-text">11 TCP CORE PROCESSING 377</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12-TCP-STATE-PROCESSING-445"><span class="toc-text">12 TCP STATE PROCESSING 445</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#13-NETLINK-SOCKETS-479"><span class="toc-text">13 NETLINK SOCKETS 479</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#14-IP-ROUTING-499"><span class="toc-text">14 IP ROUTING 499</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15-IP-QUALITY-OF-SERVICE-IN-LINUX-IP-QoS-591"><span class="toc-text">15 IP QUALITY OF SERVICE IN LINUX (IP QoS) 591</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#16-IP-FILTER-AND-FIREWALL-635"><span class="toc-text">16 IP FILTER AND FIREWALL 635</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17-NET-SOFTIRQ-671"><span class="toc-text">17 NET SOFTIRQ 671</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#18-TRANSMISSION-AND-RECEPTION-OF-PACKETS-697"><span class="toc-text">18 TRANSMISSION AND RECEPTION OF PACKETS 697</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#19-lkcd-AND-DEBUGGING-TCP-IP-STACK-723"><span class="toc-text">19 lkcd AND DEBUGGING TCP&#x2F;IP STACK 723</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#20-NEXT-EDITION-759"><span class="toc-text">20 NEXT EDITION 759</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

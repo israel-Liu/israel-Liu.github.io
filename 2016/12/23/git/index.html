@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>git help | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="虽说git操作应该是理解后使用的，但是有时候脑袋就是不好使，还是写个笔记记录一下 Your identity12$ git config --global user.name &quot;John Doe&quot;$ git config --global user.email johndoe@example.com Your editor1$ git config --global core.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git help">
+<meta property="og:url" content="https://israel-liu.github.io/2016/12/23/git/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="虽说git操作应该是理解后使用的，但是有时候脑袋就是不好使，还是写个笔记记录一下 Your identity12$ git config --global user.name &quot;John Doe&quot;$ git config --global user.email johndoe@example.com Your editor1$ git config --global core.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg">
+<meta property="article:published_time" content="2016-12-23T09:38:37.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.770Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "git help",
+  "url": "https://israel-liu.github.io/2016/12/23/git/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg",
+  "datePublished": "2016-12-23T09:38:37.000Z",
+  "dateModified": "2026-03-24T05:43:37.770Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2016/12/23/git/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'git help',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">git help</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">git help</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2016-12-23T09:38:37.000Z" title="发表于 2016-12-23 17:38:37">2016-12-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.770Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>虽说git操作应该是理解后使用的，但是有时候脑袋就是不好使，还是写个笔记记录一下</p>
+<h4 id="Your-identity"><a href="#Your-identity" class="headerlink" title="Your identity"></a>Your identity</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;John Doe&quot;</span></span><br><span class="line">$ git config --global user.email johndoe@example.com</span><br></pre></td></tr></table></figure>
+<h4 id="Your-editor"><a href="#Your-editor" class="headerlink" title="Your editor"></a>Your editor</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
+<h4 id="Checking-your-settings"><a href="#Checking-your-settings" class="headerlink" title="Checking your settings"></a>Checking your settings</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --list</span><br></pre></td></tr></table></figure>
+<h4 id="Getting-a-git-repository"><a href="#Getting-a-git-repository" class="headerlink" title="Getting a git repository"></a>Getting a git repository</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Initializing a Repository in an Existing Directory</span></span><br><span class="line">$ git init</span><br><span class="line"><span class="comment">// Cloning an Existing Repository</span></span><br><span class="line">$ git clone https:<span class="comment">//github.com/user_name/repository.git</span></span><br><span class="line">$ git clone https:<span class="comment">//github.com/user_name/repository.git local_folder_name</span></span><br></pre></td></tr></table></figure>
+<h4 id="The-Three-States"><a href="#The-Three-States" class="headerlink" title="The Three States"></a>The Three States</h4><p>![](<a target="_blank" rel="noopener" href="https://github.com/israel-Liu/theForger/raw/master/images/git_three">https://github.com/israel-Liu/theForger/raw/master/images/git_three</a> _states.png)</p>
+<h4 id="Recording-Changes-to-the-Repository"><a href="#Recording-Changes-to-the-Repository" class="headerlink" title="Recording Changes to the Repository"></a>Recording Changes to the Repository</h4><p>![](<a target="_blank" rel="noopener" href="https://github.com/israel-Liu/theForger/raw/master/images/record_change">https://github.com/israel-Liu/theForger/raw/master/images/record_change</a> _repository.png)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Checking the Status of Your Files</span></span><br><span class="line">$ git status</span><br><span class="line"><span class="comment">// Tracking New Files // 每次修改都重新add添加更改</span></span><br><span class="line">$ git add README</span><br><span class="line"><span class="comment">// Ignoring Files</span></span><br><span class="line">$ cat .gitignore</span><br><span class="line"><span class="comment">// Viewing Your Staged and Unstaged Changes</span></span><br><span class="line">$ git diff</span><br><span class="line">$ git diff --staged</span><br><span class="line">$ git diff --cached</span><br><span class="line"><span class="comment">// Committing Your Changes</span></span><br><span class="line">$ git commit</span><br><span class="line">$ git commit -m <span class="string">&quot;Story 182: Fix benchmarks for speed&quot;</span></span><br><span class="line"><span class="comment">// Skipping the Staging Area</span></span><br><span class="line">$ git commit -a -m <span class="string">&#x27;added new benchmarks&#x27;</span></span><br><span class="line"><span class="comment">// Removing Files</span></span><br><span class="line">$ rm PROJECTS.md</span><br><span class="line">$ git rm PROJECTS.md</span><br><span class="line">$ git rm --cached README</span><br><span class="line"><span class="comment">// Moving Files</span></span><br><span class="line">$ git mv file_from file_to</span><br></pre></td></tr></table></figure>
+<h4 id="Viewing-the-Commit-History"><a href="#Viewing-the-Commit-History" class="headerlink" title="Viewing the Commit History"></a>Viewing the Commit History</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 很多操作，这里先写一个</span></span><br><span class="line">$ git log</span><br></pre></td></tr></table></figure>
+<h4 id="Undoing-Things"><a href="#Undoing-Things" class="headerlink" title="Undoing Things"></a>Undoing Things</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ git commit --amend</span><br><span class="line"><span class="comment">// Unstaging a Staged File</span></span><br><span class="line">$ git reset HEAD CONTRIBUTING.md</span><br><span class="line"><span class="comment">// Unmodifying a Modified File</span></span><br><span class="line">$ git checkout -- CONTRIBUTING.md</span><br><span class="line"><span class="comment">// Revert merged</span></span><br><span class="line">$ git merge --abort</span><br><span class="line"><span class="comment">// Revert any operation</span></span><br><span class="line">$ git reflog</span><br><span class="line"><span class="comment">// 3 is HEAD number</span></span><br><span class="line">$ git reset --hard HEAD~<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h4 id="Working-with-Remotes"><a href="#Working-with-Remotes" class="headerlink" title="Working with Remotes"></a>Working with Remotes</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Showing Your Remotes</span></span><br><span class="line">$ git remote -v</span><br><span class="line"><span class="comment">// Fetching and Pulling from Your Remotes</span></span><br><span class="line">$ git fetch [remote-name]</span><br><span class="line"><span class="comment">// Pushing to Your Remotes</span></span><br><span class="line">$ git push origin master</span><br><span class="line"><span class="comment">// Inspecting a Remote</span></span><br><span class="line">$ git remote show origin</span><br><span class="line"><span class="comment">// Removing and Renaming Remotes</span></span><br><span class="line">$ git remote rm paul</span><br><span class="line">$ git remote rename pb paul</span><br></pre></td></tr></table></figure>
+<h4 id="Tagging"><a href="#Tagging" class="headerlink" title="Tagging"></a>Tagging</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Listing Your Tags</span></span><br><span class="line">$ git tag</span><br><span class="line"><span class="comment">// 还有一大推，这里先忽略</span></span><br></pre></td></tr></table></figure>
+<h4 id="A-branch-and-its-commit-history"><a href="#A-branch-and-its-commit-history" class="headerlink" title="A branch and its commit history"></a>A branch and its commit history</h4><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/git_branching.png"></p>
+<h4 id="Branches-in-a-Nutshell"><a href="#Branches-in-a-Nutshell" class="headerlink" title="Branches in a Nutshell"></a>Branches in a Nutshell</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Creating a New Branch</span></span><br><span class="line">$ git branch testing    <span class="comment">// 创建一个新指针，指向当前提交点（HEAD指针记录当前branch）</span></span><br><span class="line"><span class="comment">// 查看当前HEAD</span></span><br><span class="line">$ git log --oneline --decorate</span><br><span class="line"><span class="comment">// Switching Branches  // 切换分支会改变工作目录文件</span></span><br><span class="line">$ git checkout testing <span class="comment">// 移动HEAD指针指向testing分支</span></span><br><span class="line"><span class="comment">// 获取全部log，可以看到指针指向</span></span><br><span class="line">$ git log --oneline --decorate --graph --all</span><br></pre></td></tr></table></figure>
+<h4 id="Basic-Branching-and-Merging"><a href="#Basic-Branching-and-Merging" class="headerlink" title="Basic Branching and Merging"></a>Basic Branching and Merging</h4><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/merge_branch.png" alt="Hotfix branch based on master"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Basic Branching</span></span><br><span class="line"><span class="comment">// 合并新分支的提交（上图hotfix）在原分支（上图master）上执行merge</span></span><br><span class="line">$ git checkout master     <span class="comment">// 切换分支（HEAD指向master工作目录改变）</span></span><br><span class="line">$ git merge hotfix        <span class="comment">// 合并新提交</span></span><br><span class="line">$ git branch -d hotfix    <span class="comment">// Deleted branch hotfix (3a0874c).</span></span><br></pre></td></tr></table></figure>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/merge_two.png" alt="Work continues on iss53"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Basic Merging</span></span><br><span class="line"><span class="comment">// 合并两个没有前后关系的分支(上图master和iss53都是在一个点继续提交的)</span></span><br><span class="line">$ git checkout master    <span class="comment">// Switched to branch &#x27;master&#x27;</span></span><br><span class="line">$ git merge iss53        <span class="comment">// Merge made by the &#x27;recursive&#x27; strategy.</span></span><br><span class="line"><span class="comment">// 这种情况会产生一个新的提交(master会指向这个提交，提交由前面C3，4，5合并生产)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Basic Merge Conflicts // 上面情况可能会产生冲突，下面介绍解决冲突</span></span><br><span class="line"><span class="comment">// 解决冲突前，git没法产生新的提交点</span></span><br><span class="line">$ git mergetool          <span class="comment">// 这里不继续介绍了，建议用图形工具</span></span><br><span class="line"><span class="comment">// use &quot;git commit&quot; to conclude merge</span></span><br></pre></td></tr></table></figure>
+<h4 id="Branch-Management"><a href="#Branch-Management" class="headerlink" title="Branch Management"></a>Branch Management</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git branch             <span class="comment">// 查看当前所有分支(主要自己本地(remote)建的)</span></span><br><span class="line">$ git branch -v          <span class="comment">// -v带最后一次提交信息</span></span><br><span class="line"><span class="comment">// To see which branches are already merged into the branch you’re on</span></span><br><span class="line">$ git branch --merged    <span class="comment">//(--no-merged)</span></span><br></pre></td></tr></table></figure>
+<h4 id="Branching-Workflows"><a href="#Branching-Workflows" class="headerlink" title="Branching Workflows"></a>Branching Workflows</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Long-Running Branches</span></span><br><span class="line"><span class="comment">// Topic Branches</span></span><br></pre></td></tr></table></figure>
+<h4 id="Remote-Branches"><a href="#Remote-Branches" class="headerlink" title="Remote Branches"></a>Remote Branches</h4><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/remote_branch.png" alt="Server and local repositories after cloning"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同步origin所在服务器，我还没有的数据</span></span><br><span class="line">$ git fetch                 <span class="comment">// git fetch origin</span></span><br><span class="line"><span class="comment">// 创建远端服务器新分支，和别人共享使用</span></span><br><span class="line">$ git push origin serverfix <span class="comment">// git push &lt;remote&gt; &lt;branch&gt;</span></span><br><span class="line"><span class="comment">// 合并远端别人的提交</span></span><br><span class="line">$ git merge origin/serverfix</span><br><span class="line"><span class="comment">// 使用别人分享的远端分子</span></span><br><span class="line">$ git checkout -b serverfix origin/serverfix</span><br></pre></td></tr></table></figure>
+<h4 id="Tracking-Branches"><a href="#Tracking-Branches" class="headerlink" title="Tracking Branches"></a>Tracking Branches</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the branch it tracks is called an “upstream branch”</span></span><br><span class="line">$ git checkout --track origin/serverfix</span><br></pre></td></tr></table></figure>
+<h4 id="Pulling"><a href="#Pulling" class="headerlink" title="Pulling"></a>Pulling</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Deleting Remote Branches</span></span><br><span class="line">$ git push origin --<span class="keyword">delete</span> serverfix</span><br><span class="line"><span class="comment">// 本地分支推送到远端分支</span></span><br><span class="line"><span class="comment">// 远端分支不存在的时候使用</span></span><br><span class="line"><span class="comment">// the branch it tracks is called an “upstream branch”</span></span><br><span class="line">$ git push --set-upstream origin &lt;origin_name&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="Rebasing"><a href="#Rebasing" class="headerlink" title="Rebasing"></a>Rebasing</h4><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://github.com/israel-Liu/theForger/raw/master/images/rebase.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The Basic Rebase</span></span><br><span class="line">$ git checkout experiment   <span class="comment">// 移动C4到C3的后面</span></span><br><span class="line">$ git rebase master         <span class="comment">// 把experiment合并到master的线，不产生新节点</span></span><br><span class="line"><span class="comment">// 把master向前移动获取experiment上的提交</span></span><br><span class="line">$ git checkout master</span><br><span class="line">$ git merge experiment</span><br></pre></td></tr></table></figure>
+<h4 id="More-Interesting-Rebases"><a href="#More-Interesting-Rebases" class="headerlink" title="More Interesting Rebases"></a>More Interesting Rebases</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 比较复杂这里先不说了</span></span><br></pre></td></tr></table></figure>
+<h4 id="Set-Use-SSH"><a href="#Set-Use-SSH" class="headerlink" title="Set Use SSH"></a>Set Use SSH</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Command line instructions</span></span><br><span class="line">Git global setup</span><br><span class="line">git config --global user.name <span class="string">&quot;Israel.liu&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;israel.liu.theForger@gmail.com&quot;</span></span><br><span class="line"><span class="comment">// Create a new repository</span></span><br><span class="line">git clone https:<span class="comment">//Israel.liu@github.com/Israel.liu/tools.git</span></span><br><span class="line">cd tools</span><br><span class="line">touch README.md</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;add README&quot;</span></span><br><span class="line">git push -u origin master</span><br><span class="line"><span class="comment">// Existing folder</span></span><br><span class="line">cd existing_folder</span><br><span class="line">git init</span><br><span class="line">git remote add origin https:<span class="comment">//Israel.liu@github.com/Israel.liu/tools.git</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Initial commit&quot;</span></span><br><span class="line">git push -u origin master</span><br><span class="line"><span class="comment">// Existing Git repository</span></span><br><span class="line">cd existing_repo</span><br><span class="line">git remote add origin https:<span class="comment">//Israel.liu@github.com/Israel.liu/tools.git</span></span><br><span class="line">git push -u origin --all</span><br><span class="line">git push -u origin --tags</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ssh</span></span><br><span class="line">[Generating Your SSH Public Key](https:<span class="comment">//git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key)</span></span><br><span class="line"><span class="number">1.</span>使用命令 ssh-keygen -o 这个命令会在 .ssh 下面生成两个id_rsa文件，有后缀 .pub 的是贴到网站上面的。没有的是 <span class="keyword">private</span> key. 这个时候命令行已经可以了 .</span><br><span class="line"><span class="number">2.</span>一些gui工具比如小乌龟需要 .ppk 类型的 <span class="keyword">private</span> key。window上需要可以使用putty生成。https:<span class="comment">//www.putty.org/。</span></span><br><span class="line"><span class="number">3.l</span>oad那个 <span class="keyword">private</span> key 然后 save <span class="keyword">private</span> key 到另外一种格式 .ppk 给小乌龟用就行了 </span><br><span class="line">https:<span class="comment">//docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Set use ssh branch</span></span><br><span class="line">git remote set-url origin git@git.github.com:main/client.git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<pre><code>branch-n-g 上更改了 InstanceMgr 里面的代码
+branch-n 上也更改了 InstanceMgr 里面代码。
+
+使用 git merge origin/branch-n 为啥没用更改下来 branch-n 上面的代码？
+难道是因为我本地没有先执行 git merge origin/branch-n-g 把 branch-n-g 上面的代码更新下来？我记得我更新了啊
+那为啥 执行 git merge origin/branch-n 就可以更新下来代码，是因为 merge 时候自动选取的节点不对吗？
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2016/12/23/git/">https://israel-liu.github.io/2016/12/23/git/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2017/02/16/Using-Messages-and-Message-Queues/" title="Using Messages and Message Queues"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Using Messages and Message Queues</div></div></div></a><a class="pagination-related  no-desc" href="/2016/12/18/RAII/" title="RAII"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">RAII</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Your-identity"><span class="toc-text">Your identity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Your-editor"><span class="toc-text">Your editor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Checking-your-settings"><span class="toc-text">Checking your settings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Getting-a-git-repository"><span class="toc-text">Getting a git repository</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Three-States"><span class="toc-text">The Three States</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Recording-Changes-to-the-Repository"><span class="toc-text">Recording Changes to the Repository</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Viewing-the-Commit-History"><span class="toc-text">Viewing the Commit History</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undoing-Things"><span class="toc-text">Undoing Things</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Working-with-Remotes"><span class="toc-text">Working with Remotes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tagging"><span class="toc-text">Tagging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#A-branch-and-its-commit-history"><span class="toc-text">A branch and its commit history</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Branches-in-a-Nutshell"><span class="toc-text">Branches in a Nutshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Basic-Branching-and-Merging"><span class="toc-text">Basic Branching and Merging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Branch-Management"><span class="toc-text">Branch Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Branching-Workflows"><span class="toc-text">Branching Workflows</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Remote-Branches"><span class="toc-text">Remote Branches</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tracking-Branches"><span class="toc-text">Tracking Branches</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pulling"><span class="toc-text">Pulling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rebasing"><span class="toc-text">Rebasing</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#More-Interesting-Rebases"><span class="toc-text">More Interesting Rebases</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Set-Use-SSH"><span class="toc-text">Set Use SSH</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

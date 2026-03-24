@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Year Read Posts in 2019 | Licca的生活记录</title><meta name="author" content="Licca Chen"><meta name="copyright" content="Licca Chen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="函数几种调用约定讲解讲解函数调用约定的参数压栈和情况堆栈是调用者还是被调用者做，各种约定使用场景。 Beginner’s Guide to Linkers详细讲解了编译器和链接器怎么工作的，针对各种特殊情况如何解决。 Position Independent Code and x86-64 libraries位置无关代码是如何定位的，如何共享 data 区域，带来的好处等，其实没看那么清楚。 An">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Year Read Posts in 2019">
+<meta property="og:url" content="https://israel-liu.github.io/2019/04/09/Year-Read-Posts-in-2019/index.html">
+<meta property="og:site_name" content="Licca的生活记录">
+<meta property="og:description" content="函数几种调用约定讲解讲解函数调用约定的参数压栈和情况堆栈是调用者还是被调用者做，各种约定使用场景。 Beginner’s Guide to Linkers详细讲解了编译器和链接器怎么工作的，针对各种特殊情况如何解决。 Position Independent Code and x86-64 libraries位置无关代码是如何定位的，如何共享 data 区域，带来的好处等，其实没看那么清楚。 An">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg">
+<meta property="article:published_time" content="2019-04-09T07:22:34.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:43:37.766Z">
+<meta property="article:author" content="Licca Chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Year Read Posts in 2019",
+  "url": "https://israel-liu.github.io/2019/04/09/Year-Read-Posts-in-2019/",
+  "image": "https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg",
+  "datePublished": "2019-04-09T07:22:34.000Z",
+  "dateModified": "2026-03-24T05:43:37.766Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Licca Chen",
+      "url": "https://israel-liu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://israel-liu.github.io/2019/04/09/Year-Read-Posts-in-2019/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Year Read Posts in 2019',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Licca的生活记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Year Read Posts in 2019</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Year Read Posts in 2019</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-04-09T07:22:34.000Z" title="发表于 2019-04-09 15:22:34">2019-04-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-24T05:43:37.766Z" title="更新于 2026-03-24 13:43:37">2026-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h3 id="函数几种调用约定讲解"><a href="#函数几种调用约定讲解" class="headerlink" title="函数几种调用约定讲解"></a><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/1388/Calling-Conventions-Demystified">函数几种调用约定讲解</a></h3><p>讲解函数调用约定的参数压栈和情况堆栈是调用者还是被调用者做，各种约定使用场景。</p>
+<h3 id="Beginner’s-Guide-to-Linkers"><a href="#Beginner’s-Guide-to-Linkers" class="headerlink" title="Beginner’s Guide to Linkers"></a><a target="_blank" rel="noopener" href="http://www.lurklurk.org/linkers/linkers.html">Beginner’s Guide to Linkers</a></h3><p>详细讲解了编译器和链接器怎么工作的，针对各种特殊情况如何解决。</p>
+<h3 id="Position-Independent-Code-and-x86-64-libraries"><a href="#Position-Independent-Code-and-x86-64-libraries" class="headerlink" title="Position Independent Code and x86-64 libraries"></a><a target="_blank" rel="noopener" href="https://www.technovelty.org/c/position-independent-code-and-x86-64-libraries.html">Position Independent Code and x86-64 libraries</a></h3><p>位置无关代码是如何定位的，如何共享 data 区域，带来的好处等，其实没看那么清楚。</p>
+<h3 id="Anatomy-of-a-Program-in-Memory"><a href="#Anatomy-of-a-Program-in-Memory" class="headerlink" title="Anatomy of a Program in Memory"></a><a target="_blank" rel="noopener" href="https://manybutfinite.com/post/anatomy-of-a-program-in-memory/">Anatomy of a Program in Memory</a></h3><p>主要讲解虚拟内存如何分配的，每段地址保存什么内容，允许所需要的 stack 和 heap ，一般语言提供了对 stack 的管理，如果也提供了对 heap 的管理就是有垃圾回收了。<br>还讲解了动态链接库 二进制可以执行文件，各区域如何映射到虚拟内存中。</p>
+<h3 id="Windows-Sysinternals"><a href="#Windows-Sysinternals" class="headerlink" title="Windows Sysinternals"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/">Windows Sysinternals</a></h3><h3 id="Windows-Installer"><a href="#Windows-Installer" class="headerlink" title="Windows Installer"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/desktop/Msi/windows-installer-portal">Windows Installer</a></h3><h3 id="gn"><a href="#gn" class="headerlink" title="gn"></a><a target="_blank" rel="noopener" href="https://gn.googlesource.com/gn/">gn</a></h3><p>为 Ninja 生成编译文件的 meta-build system.</p>
+<h3 id="Ninja"><a href="#Ninja" class="headerlink" title="Ninja"></a><a target="_blank" rel="noopener" href="https://ninja-build.org/">Ninja</a></h3><p>Ninja is a small build system with a focus on speed。</p>
+<h3 id="GYP"><a href="#GYP" class="headerlink" title="GYP"></a><a target="_blank" rel="noopener" href="https://gyp.gsrc.io/">GYP</a></h3><p>GYP is a Meta-Build system: a build system that generates other build systems, similar to the CMake build tool.<br>用来生成 vs.sln 等。给ide使用的工程<a target="_blank" rel="noopener" href="https://chromium.googlesource.com/external/gyp/+/refs/heads/md-pages/index.md"></a></p>
+<h3 id="GNU-Make"><a href="#GNU-Make" class="headerlink" title="GNU Make"></a><a target="_blank" rel="noopener" href="https://www.gnu.org/software/make/">GNU Make</a></h3><p>make是一个工具程序（Utility software），经由读取叫做“makefile”的文件，自动化建构软件.</p>
+<h3 id="Building-V8-with-GN"><a href="#Building-V8-with-GN" class="headerlink" title="Building V8 with GN"></a><a target="_blank" rel="noopener" href="https://v8.dev/docs/build-gn">Building V8 with GN</a></h3><h3 id="Building-with-Gyp"><a href="#Building-with-Gyp" class="headerlink" title="Building with Gyp"></a><a target="_blank" rel="noopener" href="https://github.com/v8/v8/wiki/Building-with-Gyp/3ed2d265eb6f2152c1e77fee4b191b44d8acc000">Building with Gyp</a></h3><h3 id="use-command-line-parameters-to-install-visual-studio"><a href="#use-command-line-parameters-to-install-visual-studio" class="headerlink" title="use-command-line-parameters-to-install-visual-studio"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2017">use-command-line-parameters-to-install-visual-studio</a></h3><h3 id="visual-studio-2019-文档"><a href="#visual-studio-2019-文档" class="headerlink" title="visual-studio 2019 文档"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/visualstudio/ide/?view=vs-2019">visual-studio 2019 文档</a></h3><h3 id="visio"><a href="#visio" class="headerlink" title="visio"></a><a target="_blank" rel="noopener" href="https://support.office.com/zh-CN/visio">visio</a></h3><h3 id="v8-docs"><a href="#v8-docs" class="headerlink" title="v8-docs"></a><a target="_blank" rel="noopener" href="https://denolib.github.io/v8-docs/index.html">v8-docs</a></h3><h3 id="nodejs-编译错误"><a href="#nodejs-编译错误" class="headerlink" title="nodejs 编译错误"></a><a target="_blank" rel="noopener" href="https://github.com/nodejs/node/issues/25133">nodejs 编译错误</a></h3><h3 id="node-gyp"><a href="#node-gyp" class="headerlink" title="node-gyp"></a><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/node-gyp">node-gyp</a></h3><h3 id="Cygwin"><a href="#Cygwin" class="headerlink" title="Cygwin"></a><a target="_blank" rel="noopener" href="http://www.cygwin.com/">Cygwin</a></h3><p>Cygwin的主要目的是通过重新编译，将POSIX系统（例如Linux、BSD，以及其他Unix系统）上的软件移植到Windows上。<br>Cygwin包括了一套库，该库在Win32系统下实现了POSIX系统调用的API；<br>还有一套GNU开发工具集（比如GCC、GDB），这样可以进行简单的软件开发；还有一些UNIX系统下的常见程序。2001年，新增了X WindowSystem。<br>另外还有一个名为MinGW的库，可以跟Windows本地的MSVCRT库（Windows API）一起工作。MinGW占用内存、硬盘空间都比较少，能够链接到任意软件，但它对POSIX规范的实现没有Cygwin库完备。</p>
+<h3 id="nasm"><a href="#nasm" class="headerlink" title="nasm"></a><a target="_blank" rel="noopener" href="https://www.nasm.us/">nasm</a></h3><p>Netwide Assembler （简称 NASM）是一款基于英特尔 x86 架构的汇编与反汇编工具。</p>
+<h3 id="Visio-training"><a href="#Visio-training" class="headerlink" title="Visio training"></a><a target="_blank" rel="noopener" href="https://support.office.com/en-us/article/visio-training-e058bcfa-1d90-4653-afc6-e84d54cf94a6?ui=en-US&rs=en-US&ad=US">Visio training</a></h3><h3 id="Networking-Sequence-Diagrams"><a href="#Networking-Sequence-Diagrams" class="headerlink" title="Networking Sequence Diagrams"></a><a target="_blank" rel="noopener" href="http://www.eventhelix.com/RealtimeMantra/Networking/">Networking Sequence Diagrams</a></h3><p>各种协议沟通的序列图</p>
+<h3 id="EventStudio"><a href="#EventStudio" class="headerlink" title="EventStudio"></a><a target="_blank" rel="noopener" href="http://www.eventhelix.com/EventStudio/">EventStudio</a></h3><p>编写代码生成序列图等。</p>
+<h3 id="Linux-Kernel"><a href="#Linux-Kernel" class="headerlink" title="Linux Kernel"></a><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/">Linux Kernel</a></h3><h3 id="MSBuild"><a href="#MSBuild" class="headerlink" title="MSBuild"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/visualstudio/msbuild/msbuild?view=vs-2019">MSBuild</a></h3><h3 id="cpp-standard-library-reference"><a href="#cpp-standard-library-reference" class="headerlink" title="cpp-standard-library-reference"></a><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/standard-library/cpp-standard-library-reference?view=vs-2019">cpp-standard-library-reference</a></h3><h3 id="文档排版"><a href="#文档排版" class="headerlink" title="文档排版"></a><a target="_blank" rel="noopener" href="https://pandoc.org/">文档排版</a></h3><h3 id="Cpp-相关学习网站"><a href="#Cpp-相关学习网站" class="headerlink" title="Cpp 相关学习网站"></a><a target="_blank" rel="noopener" href="http://www-h.eng.cam.ac.uk/help/tpl/languages/C++.html">Cpp 相关学习网站</a></h3></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io">Licca Chen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://israel-liu.github.io/2019/04/09/Year-Read-Posts-in-2019/">https://israel-liu.github.io/2019/04/09/Year-Read-Posts-in-2019/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://israel-liu.github.io" target="_blank">Licca的生活记录</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" data-sites="wechat,weibo,qq,facebook,x"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2019/04/13/Windows-Installer/" title="Windows Installer"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Windows Installer</div></div></div></a><a class="pagination-related  no-desc" href="/2019/03/24/Algorithm-Design-and-Applications/" title="Algorithm Design and Applications"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Algorithm Design and Applications</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Licca Chen</div><div class="author-info-description">生活不止眼前的代码，还有诗和远方</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/israel-Liu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/israel-Liu" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的生活记录！这里有照片、视频和日常点滴。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%87%A0%E7%A7%8D%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A%E8%AE%B2%E8%A7%A3"><span class="toc-text">函数几种调用约定讲解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Beginner%E2%80%99s-Guide-to-Linkers"><span class="toc-text">Beginner’s Guide to Linkers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Position-Independent-Code-and-x86-64-libraries"><span class="toc-text">Position Independent Code and x86-64 libraries</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Anatomy-of-a-Program-in-Memory"><span class="toc-text">Anatomy of a Program in Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-Sysinternals"><span class="toc-text">Windows Sysinternals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-Installer"><span class="toc-text">Windows Installer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gn"><span class="toc-text">gn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ninja"><span class="toc-text">Ninja</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GYP"><span class="toc-text">GYP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GNU-Make"><span class="toc-text">GNU Make</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Building-V8-with-GN"><span class="toc-text">Building V8 with GN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Building-with-Gyp"><span class="toc-text">Building with Gyp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#use-command-line-parameters-to-install-visual-studio"><span class="toc-text">use-command-line-parameters-to-install-visual-studio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#visual-studio-2019-%E6%96%87%E6%A1%A3"><span class="toc-text">visual-studio 2019 文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#visio"><span class="toc-text">visio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#v8-docs"><span class="toc-text">v8-docs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodejs-%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF"><span class="toc-text">nodejs 编译错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#node-gyp"><span class="toc-text">node-gyp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cygwin"><span class="toc-text">Cygwin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nasm"><span class="toc-text">nasm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Visio-training"><span class="toc-text">Visio training</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Networking-Sequence-Diagrams"><span class="toc-text">Networking Sequence Diagrams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EventStudio"><span class="toc-text">EventStudio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-Kernel"><span class="toc-text">Linux Kernel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSBuild"><span class="toc-text">MSBuild</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cpp-standard-library-reference"><span class="toc-text">cpp-standard-library-reference</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%8E%92%E7%89%88"><span class="toc-text">文档排版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cpp-%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E7%BD%91%E7%AB%99"><span class="toc-text">Cpp 相关学习网站</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周末郊游 · 樱花季"/></a><div class="content"><a class="title" href="/2026/03/24/%E5%91%A8%E6%9C%AB%E9%83%8A%E6%B8%B8-%E6%A8%B1%E8%8A%B1%E5%AD%A3/" title="周末郊游 · 樱花季">周末郊游 · 樱花季</a><time datetime="2026-03-24T06:05:07.000Z" title="发表于 2026-03-24 14:05:07">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hexo/" title="hexo"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo"/></a><div class="content"><a class="title" href="/2026/03/24/hexo/" title="hexo">hexo</a><time datetime="2026-03-24T05:43:37.776Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/24/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/24/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-24T05:43:37.772Z" title="发表于 2026-03-24 13:43:37">2026-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/22/Visual-Studio/" title="Visual Studio"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/hinata.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visual Studio"/></a><div class="content"><a class="title" href="/2019/08/22/Visual-Studio/" title="Visual Studio">Visual Studio</a><time datetime="2019-08-22T08:43:54.000Z" title="发表于 2019-08-22 16:43:54">2019-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2019/08/11/Diary-2019/" title="Diary-2019"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/israel-Liu/blog-images@main/life/byosoku.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Diary-2019"/></a><div class="content"><a class="title" href="/2019/08/11/Diary-2019/" title="Diary-2019">Diary-2019</a><time datetime="2019-08-11T08:22:24.000Z" title="发表于 2019-08-11 16:22:24">2019-08-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Licca Chen</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></span></div><div class="footer_custom_text">用心记录生活的每一天</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
